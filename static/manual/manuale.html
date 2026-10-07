@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<!--
+     OSInt Graph - esplorazione grafica di dati OSINT per casi investigativi
+     Copyright (C) 2025-2026 Andrea Cumini <andrea@osintinfo.net> - www.osintinfo.net
+     SPDX-License-Identifier: GPL-3.0-or-later
+     Manuale d'uso in sei lingue (it, en, fr, de, es, ar): il testo e' nel
+     blocco M qui sotto, le schermate in img/. Si apre con ?lang=xx.
+-->
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OSInt Graph · Manuale</title>
+<link rel="icon" type="image/svg+xml" href="../icon.svg">
+<style>
+  :root { --bg:#1a1a1a; --panel:#2a2a2a; --line:#3a3a3a; --tx:#fff; --tx2:#aaa; --acc:#4ade80; --brand:#7B95DD; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:#e5e5e5; font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; line-height:1.6; }
+  header { position:sticky; top:0; z-index:10; background:var(--panel); border-bottom:2px solid var(--line); padding:10px 20px; display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+  header .logo { font-weight:800; font-size:22px; letter-spacing:.5px; }
+  header .logo b { color:var(--brand); font-weight:800; }
+  header .sub { color:var(--tx2); font-size:13px; }
+  .langs { margin-left:auto; display:flex; gap:6px; flex-wrap:wrap; }
+  .langs button { background:var(--line); color:#fff; border:0; border-radius:4px; padding:6px 12px; cursor:pointer; font-size:13px; }
+  .langs button.active { background:var(--acc); color:#000; font-weight:700; }
+  main { max-width: 980px; margin: 0 auto; padding: 20px 24px 60px; }
+  h1 { color:var(--acc); font-size:26px; margin:10px 0 4px; }
+  h2 { color:var(--acc); font-size:19px; margin:38px 0 10px; padding-top:14px; border-top:1px solid var(--line); scroll-margin-top:70px; }
+  h3 { font-size:15px; margin:18px 0 6px; color:#fff; }
+  p, li { font-size:14px; }
+  a { color:var(--acc); }
+  code, kbd { background:var(--panel); border:1px solid var(--line); border-radius:4px; padding:1px 6px; font-family:Consolas,'Courier New',monospace; font-size:13px; color:#fbbf24; }
+  kbd { color:#fff; }
+  table { border-collapse:collapse; width:100%; margin:10px 0 16px; font-size:13px; }
+  th, td { border:1px solid var(--line); padding:7px 10px; text-align:left; vertical-align:top; }
+  th { background:var(--panel); color:var(--acc); }
+  .note { background:var(--panel); border-left:4px solid var(--acc); border-radius:4px; padding:10px 14px; margin:14px 0; font-size:13px; }
+  .warn { border-left-color:#fbbf24; }
+  .toc { background:var(--panel); border-radius:6px; padding:12px 18px; columns:2; column-gap:30px; margin:16px 0 10px; }
+  .toc a { display:block; padding:2px 0; font-size:13px; text-decoration:none; }
+  .toc a:hover { text-decoration:underline; }
+  figure { margin:14px 0 20px; }
+  figure img { display:block; width:100%; height:auto; border:1px solid var(--line); border-radius:6px; }
+  figure.narrow img { max-width:320px; }
+  figcaption { color:var(--tx2); font-size:12px; margin-top:6px; }
+  .two { display:flex; gap:16px; flex-wrap:wrap; }
+  .two figure { flex:1 1 300px; }
+  .meta { color:var(--tx2); font-size:12px; margin-bottom:10px; }
+  html[dir="rtl"] th, html[dir="rtl"] td { text-align:right; }
+  html[dir="rtl"] .note { border-left:0; border-right:4px solid var(--acc); }
+  html[dir="rtl"] .note.warn { border-right-color:#fbbf24; }
+  @media print { header { position:static; } .langs { display:none; } body { background:#fff; color:#000; } h1,h2 { color:#000; } th { background:#eee; color:#000; } code, kbd, .note, .toc { background:#f2f2f2; color:#000; } figure img { border-color:#ccc; } }
+  @media (max-width:700px) { .toc { columns:1; } }
+</style>
+</head>
+<body>
+<header>
+  <div><div class="logo">OSInt<b>Graph</b></div><div class="sub" id="hsub"></div></div>
+  <div class="langs" id="langs"></div>
+</header>
+<main id="main"></main>
+<script>
+/* ------------------------------------------------------------------ testi --
+   M[lingua] = { title, sub, toc, kbd: {k, a}, sections: [{id, h, body}] }
+   Le immagini sono condivise: l'interfaccia nelle schermate e' in italiano. */
+const IMG = {
+  first: 'img/01-primo-avvio.jpg', over: 'img/02-panoramica.jpg', search: 'img/03-ricerca.jpg',
+  card: 'img/04-scheda-nodo.jpg', add: 'img/05-nuovo-nodo.jpg', edge: 'img/06-modifica-collegamento.jpg',
+  edit: 'img/07-modifica-valori.jpg', ctx: 'img/08-menu-contestuale.jpg', link: 'img/09-collega-nodi.jpg',
+  imp1: 'img/10-import-1-file.jpg', imp2: 'img/11-import-2-colonne.jpg', imp3: 'img/12-import-3-anteprima.jpg',
+  ai: 'img/13-configurazione-ai.jpg', lic: 'img/14-licenze.jpg', caseEdit: 'img/15-modifica-caso.jpg',
+  manual: 'img/16-modifiche-manuali.jpg', sideTop: 'img/17-pannello-alto.png', sideBottom: 'img/18-pannello-basso.png'
+};
+const fig = (src, cap, cls = '') => `<figure class="${cls}"><img src="${src}" alt="${cap.replace(/"/g, '&quot;')}" loading="lazy"><figcaption>${cap}</figcaption></figure>`;
+
+const M = {};
+
+/* ================================================================ ITALIANO */
+M.it = {
+  title: 'Manuale d\'uso', sub: 'OSInt Graph · esplorazione grafica di dati OSINT per casi investigativi',
+  toc: 'Indice', shortcuts: 'Scorciatoie da mouse e tastiera',
+  kbdHead: ['Azione', 'Effetto'],
+  kbd: [
+    ['Clic su un nodo', 'Espande il nodo (mostra i suoi collegamenti); un secondo clic lo contrae'],
+    ['Tasto destro su un nodo', 'Apre la scheda del nodo'],
+    ['Tasto destro su un collegamento', 'Apre la finestra di modifica del collegamento'],
+    ['Tasto destro sullo sfondo', 'Menu contestuale con «Nuovo nodo»'],
+    ['Ctrl+clic (o ⌘+clic) su un nodo', 'Aggiunge o toglie il nodo dalla selezione'],
+    ['Ctrl+trascina sullo sfondo', 'Riquadro di selezione: i nodi racchiusi si aggiungono alla selezione'],
+    ['Alt+clic su un nodo social', 'Apre il profilo (finestra affiancata, scheda di sfondo o copia del link, come scelto nel pannello)'],
+    ['H+clic su un nodo', 'Evidenzia il nodo e i suoi collegamenti, attenuando il resto; di nuovo per togliere'],
+    ['N+clic su un nodo', 'Nasconde il nodo dalla vista (solo visualizzazione, i dati restano)'],
+    ['Rotella del mouse / trascinamento', 'Zoom e spostamento del grafo'],
+    ['Esc', 'Chiude la finestra aperta'],
+    ['Invio nel campo nome di un collegamento', 'Salva'],
+    ['Barra del titolo di una finestra', 'Trascinala per spostare la finestra; doppio clic per ricentrarla'],
+  ],
+  sections: [
+   { id: 'intro', h: '1. Che cos\'è OSInt Graph', body: `
+<p>OSInt Graph rappresenta come <b>grafo</b> le informazioni di un caso investigativo: persone, telefoni, email, profili social, veicoli, luoghi, documenti e i collegamenti fra loro. Ogni elemento è un <b>nodo</b>, ogni relazione un <b>collegamento</b>. Il programma gira sul tuo computer: i dati non lasciano mai il PC, salvo l'uso facoltativo di un servizio di intelligenza artificiale che configuri tu.</p>
+<p>Si avvia con un doppio clic sull'eseguibile (oppure, dal codice sorgente, con <code>python app.py</code>): parte un piccolo server locale e si apre il browser all'indirizzo <code>http://127.0.0.1:5000</code>. La finestra della console mostra i messaggi del programma e serve a fermarlo (<kbd>Ctrl</kbd>+<kbd>C</kbd> o chiusura della finestra). La porta si cambia con la variabile d'ambiente <code>PORT</code>.</p>
+<div class="note">Il programma è software libero (GNU GPL v3 con obbligo di attribuzione). Le licenze del programma e di tutti i componenti si leggono dal link <b>Licenze</b> nel pannello di sinistra.</div>` },
+   { id: 'cases', h: '2. Casi: primo avvio e gestione', body: `
+<p>Tutto il lavoro è organizzato in <b>casi</b> (fascicoli). Ogni caso è un archivio separato con i propri nodi, collegamenti, note, viste e file importati. Al primo avvio non esiste alcun caso: il programma chiede subito di crearne uno, e finché non c'è un caso aperto non si possono aggiungere nodi né importare dati.</p>
+${fig(IMG.first, 'Primo avvio: nessun caso aperto, la finestra «Nuovo caso» si apre da sola.')}
+<p>Nel riquadro <b>Caso</b> in alto nel pannello:</p>
+<ul>
+<li>la <b>tendina</b> mostra il caso aperto; scegliendone un altro la pagina si ricarica con i suoi dati;</li>
+<li><b>Nuovo</b> crea un caso vuoto e lo apre; <b>Modifica</b> cambia nome e descrizione;</li>
+<li><b>Unisci</b> crea un nuovo caso con il contenuto di due o più casi: i nodi uguali (stessa persona, stesso telefono…) diventano uno solo e i dati diversi restano come schede separate dello stesso nodo; a scelta i casi originali vengono eliminati;</li>
+<li><b>Elimina</b> cancella il caso con tutto il suo contenuto. L'operazione non si può annullare: se era l'ultimo caso si torna allo stato iniziale senza casi.</li>
+</ul>
+${fig(IMG.caseEdit, 'Modifica di nome e descrizione del caso.')}` },
+   { id: 'interface', h: '3. L\'interfaccia', body: `
+<p>A sinistra il <b>pannello dei comandi</b>, a destra il <b>grafo</b> su sfondo bianco. Il pannello si scorre verticalmente e contiene, dall'alto: logo e crediti, il caso, la ricerca, i pulsanti principali, l'intelligenza artificiale, le viste salvate, le fonti documentali, i filtri per categoria, le opzioni dei collegamenti e del layout, l'esportazione, la selezione, la legenda e la riga di stato.</p>
+${fig(IMG.over, 'Panoramica: pannello a sinistra, grafo a destra. Il nodo dorato è il target, le linee tratteggiate rosse i collegamenti personalizzati.')}
+<div class="two">
+${fig(IMG.sideTop, 'Parte alta del pannello.', 'narrow')}
+${fig(IMG.sideBottom, 'Parte bassa del pannello: layout, esportazione, selezione, legenda.', 'narrow')}
+</div>
+<p>I nodi hanno un'icona e un colore per tipo (persona, telefono, email, social con il logo della piattaforma, veicolo, luogo, link, testo, foto). Il <b>target</b> ha dimensione maggiore, bordo e nome dorati. I nodi che provengono dai dati di partenza hanno il bordo rosso. Un nodo espanso ha il bordo doppio.</p>` },
+   { id: 'search', h: '4. Cercare e portare nodi sul grafo', body: `
+<p>Scrivi almeno tre caratteri nel campo <b>Cerca nodo</b>: l'elenco mostra i nodi che contengono il testo nel nome, negli alias, nelle note e nei valori delle schede. Un clic su un risultato porta il nodo sul grafo e lo centra. <b>Aggiungi tutti i risultati</b> li porta tutti insieme; <b>Carica tutti i target</b> aggiunge i target del caso.</p>
+${fig(IMG.search, 'Risultati della ricerca con tipo del nodo e segno di spunta per quelli già sul grafo.')}
+<p>Con <b>Ricerca approssimata</b> si trovano anche le grafie vicine (errori di battitura, traslitterazioni diverse); il livello da 1 a 6 indica quante differenze tollerare. <b>Svuota grafo</b> toglie tutti i nodi dalla vista senza cancellare nulla.</p>` },
+   { id: 'graph', h: '5. Muoversi nel grafo', body: `
+<p>Il grafo si sposta trascinando lo sfondo e si ingrandisce con la rotella. <b>Adatta</b> riporta tutto nella finestra. Un <b>clic su un nodo</b> lo espande, mostrando i nodi collegati entro la profondità scelta in <b>Prof.</b> (1 = solo i vicini diretti); un <b>secondo clic</b> lo contrae, nascondendo i vicini che si vedevano grazie a lui (restano quelli collegati ad altri nodi espansi o selezionati). <b>Espandi tutto</b> e <b>Comprimi</b> agiscono su tutti i nodi visibili.</p>
+<p>Il <b>tasto destro</b> su un nodo apre la sua scheda; su un collegamento apre la finestra del collegamento; sullo sfondo apre un menu con <b>Nuovo nodo</b>.</p>
+${fig(IMG.ctx, 'Tasto destro sullo sfondo: menu contestuale.')}
+<p>Con <kbd>Ctrl</kbd>+clic (o <kbd>Ctrl</kbd>+trascinamento di un riquadro) si costruisce una <b>selezione</b> di nodi, elencata nel riquadro <b>Selezione</b>: da lì si evidenziano tutti i percorsi fra i nodi scelti (entro un numero massimo di salti) e si creano collegamenti fra loro. <kbd>H</kbd>+clic evidenzia un nodo e i suoi collegamenti attenuando il resto; <kbd>N</kbd>+clic nasconde un nodo (il pulsante <b>Mostra nascosti</b> li fa ricomparire). <kbd>Alt</kbd>+clic su un profilo social lo apre nel browser secondo la scelta in <b>Alt+Click sui social</b>.</p>
+<p><b>Mostra nodi con</b> filtra il grafo per numero minimo di collegamenti: utile per far emergere i nodi più connessi.</p>` },
+   { id: 'card', h: '6. La scheda del nodo', body: `
+<p>La scheda (tasto destro sul nodo) riunisce tutto ciò che si sa di quel nodo: la <b>nota</b> dell'utente, il <b>riepilogo dei collegamenti</b> raggruppati per categoria (social per piattaforma, poi telefoni, email, luoghi, veicoli…), le <b>schede</b> con i dati grezzi e le immagini. Ogni valore si copia negli appunti con un clic; i nomi dei nodi collegati sono cliccabili e portano al nodo.</p>
+${fig(IMG.card, 'Scheda del target con nota, riepilogo dei collegamenti e pulsanti in basso.')}
+<p>I pulsanti in basso: <b>Espandi ramo / Comprimi</b>, <b>Centra nel grafo</b>, <b>Cerca nelle fonti</b> (i termini della scheda nei documenti indicizzati), <b>Aggiungi</b> (un nuovo nodo collegato a questo), <b>Importa con AI</b> (testo libero interpretato dall'AI), <b>Rinomina</b>, <b>Modifica valori</b>, <b>Nota</b>, <b>PDF</b> (la scheda stampabile) ed <b>Elimina nodo</b>. Un nodo dei dati eliminato finisce fra i <b>Nodi cancellati</b>, da cui si può ripristinare; un nodo creato a mano viene cancellato davvero.</p>` },
+   { id: 'add', h: '7. Aggiungere un nodo', body: `
+<p><b>Nuovo nodo</b> nel pannello (o nel menu del tasto destro sullo sfondo) crea un nodo indipendente; <b>Aggiungi</b> nella scheda di un nodo crea un nodo già collegato a quello. Si sceglie il <b>tipo</b> e si compilano i campi relativi: URL del profilo per i social (la piattaforma viene riconosciuta dall'indirizzo), numero, email, username, cognome, nome e data di nascita per le persone, città, indirizzo, civico e coordinate per i luoghi, targa e colore per i veicoli, titolo e testo per gli appunti, immagine per le foto, più gli elementi investigativi (armi, stupefacenti, documenti…).</p>
+${fig(IMG.add, 'Nuovo nodo collegato a un target: tipo, valore, spunta target, proprietà del collegamento e anteprima.')}
+<p>Qualsiasi nodo può essere evidenziato come <b>target</b> con la spunta <b>Evidenzia come target</b>. Se il nodo nasce collegato a un altro, in basso ci sono le <b>proprietà del collegamento</b>: nome, forma della linea, tipo di linea, spessore e colore. Le <b>frecce</b> si impostano direttamente sull'<b>anteprima</b>: un clic accanto a un nodo mette o toglie la punta della freccia verso quel nodo (al passaggio del mouse compare la punta in trasparenza).</p>
+<p>Il pulsante <b>✨ AI</b> in alto nella finestra passa alla modalità testo libero: incolli un testo (un verbale, una segnalazione, un messaggio) e l'AI propone persone, telefoni, email, profili, luoghi e veicoli con le loro relazioni; prima di crearli si controllano in un'anteprima.</p>` },
+   { id: 'links', h: '8. Collegamenti', body: `
+<p>Per collegare nodi già presenti: selezionali con <kbd>Ctrl</kbd>+clic e premi <b>Collega i nodi selezionati</b>. Con due nodi si sceglie il verso (il pulsante ⇄ li scambia); con più nodi si collegano tutte le coppie. Fra due nodi possono esistere più collegamenti, ognuno con il proprio nome.</p>
+${fig(IMG.link, 'Collega nodi: nome, forma, linea, spessore, colore e frecce dall\'anteprima (qui in entrambi i versi).')}
+<p>Il <b>tasto destro su un collegamento</b> apre la sua finestra: si modificano nome e aspetto, si invertono le frecce, si passa agli altri collegamenti fra gli stessi nodi, se ne crea un altro, e per i collegamenti creati a mano si elimina. Per i collegamenti che vengono dai dati si cambia solo l'aspetto; <b>Stile predefinito</b> lo riporta com'era.</p>
+${fig(IMG.edge, 'Modifica di un collegamento: arco curvo rosso tratteggiato con frecce in entrambi i versi.')}
+<p>Nel pannello, <b>Stile dei collegamenti</b> applica forma, tipo di linea e spessore a <b>tutti</b> i collegamenti del grafo contemporaneamente; è una preferenza di visualizzazione che non modifica i dati e si annulla scegliendo «come impostati».</p>` },
+   { id: 'edit', h: '9. Modificare i valori di un nodo', body: `
+<p>Dalla scheda, <b>Modifica valori</b> apre tutti i dati del nodo: etichetta, URL (aperto con Alt+clic), nota, la spunta <b>Evidenzia come target</b> e i campi di ogni scheda. I valori si cambiano o si segnano come cancellati con ✕; si possono aggiungere campi liberi. Le modifiche non toccano i file di origine: restano nel caso e si applicano al volo. <b>Annulla tutte le modifiche</b> riporta il nodo ai dati originali.</p>
+${fig(IMG.edit, 'Modifica valori: campi generali, spunta target e campi della scheda (compresi quelli importati da un CSV).')}` },
+   { id: 'import', h: '10. Importare da CSV o Excel', body: `
+<p><b>Importa CSV/Excel</b> crea molti nodi e collegamenti in una volta, in tre passi. Il file ha una riga per collegamento: nodo 1, collegamento, nodo 2; senza nodo 2 si crea un nodo isolato.</p>
+${fig(IMG.imp1, 'Passo 1: il file. Il pulsante «Scarica un file di esempio» produce un modello già compilato.')}
+<p>Nel <b>passo 2</b> ogni colonna del file compare con alcuni valori di esempio e una tendina <b>Importa come</b>. Le colonne con intestazioni riconosciute sono già assegnate; le altre vengono proposte come <b>campo aggiuntivo del nodo 1</b>, così finiscono nella scheda del nodo con il nome della colonna e nessun valore va perso. Si possono indicare un tipo predefinito per i nodi senza colonna tipo, un nome predefinito per il collegamento e se la prima riga contiene le intestazioni.</p>
+${fig(IMG.imp2, 'Passo 2: mappatura delle colonne.')}
+<p>Il <b>passo 3</b> mostra cosa verrà creato riga per riga: nodi nuovi, nodi già presenti (in corsivo), collegamenti ed eventuali errori. Le righe si possono escludere singolarmente; poi <b>Importa</b>.</p>
+${fig(IMG.imp3, 'Passo 3: anteprima e importazione.')}
+<h3>Intestazioni riconosciute</h3>
+<table>
+<tr><th>Dato</th><th>Intestazioni (italiano / inglese), con 1 o 2 per il lato</th></tr>
+<tr><td>Nome o valore del nodo</td><td>nome, nome1, nome2, name, valore, value, da/a, from/to</td></tr>
+<tr><td>Tipo</td><td>tipo, type (persona, telefono, email, username, social o direttamente instagram/facebook/…, link, luogo, veicolo, testo, target)</td></tr>
+<tr><td>Altri dati del nodo</td><td>etichetta/label, url, piattaforma/platform, testo/text, cognome/surname, nascita/birthdate, colore/color (veicolo), target (sì/no), indirizzo/address, civico/housenumber, lat, lon, nota/note</td></tr>
+<tr><td>Collegamento</td><td>collegamento/relation, frecce/arrow (-> &lt;- &lt;-&gt;), forma/shape (retta, curva, spezzata, angolo, cuneo), colore/color, linea/line (continua, tratteggiata, punteggiata), spessore/width</td></tr>
+</table>
+<div class="note warn">Una persona è identificata da <b>nome e data di nascita insieme</b>: se la data compare solo in alcune righe, «Rossi Mario (12/03/1980)» e «Rossi Mario» diventano due nodi distinti, collegati da un tratteggio. Nel file ripeti la data su ogni riga della stessa persona. Due file di esempio completi sono nella cartella <code>esempi</code> del programma.</div>` },
+   { id: 'filters', h: '11. Categorie, layout e aspetto', body: `
+<p>I pulsanti <b>Categorie</b> spengono o accendono intere categorie di nodi (telefoni, social, luoghi…), ognuno con il colore della categoria e il conteggio; <b>Nascondi tutto / Mostra tutto</b> agisce su tutte. Un'azione esplicita (espansione, aggiunta) riporta comunque visibili i nodi coinvolti.</p>
+<p><b>Layout</b>: <b>Organico</b> dispone i nodi per forza (i collegati vicini), <b>Circolare</b> in cerchio, <b>Gerarchico</b> ad albero, <b>Griglia</b> in righe e colonne; <b>Riduci incroci</b> riordina il grafo attuale per diminuire gli incroci. L'espansione di un nodo dispone soltanto i nodi nuovi in corona attorno a lui, senza muovere gli altri né la camera.</p>
+<p><b>Identificatori</b> mostra o nasconde i nodi identificativi (telefoni, email, username) usati come ponte fra persone. La <b>legenda</b> in fondo al pannello riporta i colori delle categorie presenti.</p>` },
+   { id: 'views', h: '12. Viste salvate', body: `
+<p>Una <b>vista</b> è la fotografia del grafo com'è ora: nodi visibili, espansi, posizioni, zoom e selezione. Scrivi un nome e premi <b>Salva vista</b>; la tendina elenca le viste del caso, <b>Apri</b> la ripristina e 🗑 la elimina. Le viste servono a riprendere un ragionamento o a preparare la schermata da esportare.</p>` },
+   { id: 'sources', h: '13. Fonti documentali e OCR', body: `
+<p>Metti i documenti (PDF, Word, Excel, CSV, testo, immagini) nella cartella <code>fonti</code> accanto al programma e premi <b>Scansiona</b>: il contenuto viene indicizzato nel programma. Da quel momento <b>Cerca nelle fonti</b>, nel pannello o nella scheda di un nodo, trova in quali documenti compaiono un termine o i valori del nodo (numeri, nomi, email), con il brano di contesto e il link per aprire il file.</p>
+<p>Le <b>immagini</b> (foto di documenti, screenshot) si leggono con l'<b>OCR</b> di Tesseract. Se la riga di stato dice «OCR non disponibile», su Windows basta il pulsante <b>Scarica Tesseract (OCR)</b>: il programma scarica l'installer ufficiale (circa 50 MB), lo estrae nella cartella <code>tools/tesseract</code> accanto al programma e attiva l'OCR senza riavviare. Su Linux e Mac si installa Tesseract dal gestore pacchetti.</p>` },
+   { id: 'ai', h: '14. Intelligenza artificiale', body: `
+<p>Il programma può usare un <b>chatbot</b> (un server compatibile Ollama oppure con API OpenAI, locale o remoto) per due cose: <b>creare nodi da un testo libero</b> e <b>traslitterare</b> in caratteri latini i nomi scritti in altri alfabeti. L'AI è facoltativa: con l'interruttore <b>AI attiva</b> spento il programma non si collega a nulla e usa solo la traslitterazione locale.</p>
+${fig(IMG.ai, 'Configurazione AI: endpoint, chiave, modello, formato API, timeout e traslitterazione automatica.')}
+<p><b>Configura</b> apre le impostazioni: indirizzo del server, chiave API (salvata nel file <code>chatbot.conf</code> accanto al programma, mai pubblicarlo), modello, formato delle richieste, tempo massimo di attesa, intestazione e prefisso della chiave. <b>Prova connessione</b> verifica che il server risponda. Il pulsante <b>Traslittera con AI</b> compare nel pannello quando ci sono parole da traslitterare.</p>
+<div class="note warn">I testi che incolli nella modalità AI e i nomi da traslitterare vengono inviati al server che hai configurato. Usa un server di cui ti fidi, o uno locale, se i dati sono riservati.</div>` },
+   { id: 'manual', h: '15. Modifiche manuali e nodi cancellati', body: `
+<p><b>Modifiche manuali</b> elenca tutto ciò che è stato creato o cambiato a mano nel caso: nodi aggiunti (anche quelli importati da file o proposti dall'AI), collegamenti creati ed etichette rinominate, con un filtro per nome. Da qui si elimina ciò che non serve più. <b>Nodi cancellati</b> elenca i nodi dei dati tolti dal grafo e permette di ripristinarli uno per uno o tutti insieme.</p>
+${fig(IMG.manual, 'Modifiche manuali: nodi aggiunti a mano con data e collegamenti.')}` },
+   { id: 'export', h: '16. Esportare', body: `
+<p><b>Grafo in PDF</b> stampa il grafo com'è a schermo, con legenda e intestazione del caso. <b>Scheda tabellare</b> produce un documento con tutti i nodi visibili e i loro dati, in tabella, pronto per la stampa o il salvataggio in PDF dal browser. Dalla scheda di un nodo, <b>PDF</b> esporta quella sola scheda. Il file CSV d'esempio si scarica dalla finestra di importazione.</p>` },
+   { id: 'lang', h: '17. Lingue, licenze e crediti', body: `
+<p>La lingua dell'interfaccia si sceglie dalla tendina accanto al logo (italiano, inglese, francese, tedesco, spagnolo, arabo con testo da destra a sinistra); i contenuti dei dati non vengono tradotti. Sotto il logo ci sono i crediti dell'autore e il link <b>Licenze</b>, che elenca il programma e tutti i componenti di terze parti con i testi completi delle licenze.</p>
+${fig(IMG.lic, 'Finestra delle licenze: a sinistra i componenti, a destra il testo.')}` },
+   { id: 'files', h: '18. Dati, cartelle e file', body: `
+<table>
+<tr><th>Cartella / file</th><th>Contenuto</th></tr>
+<tr><td><code>data/</code></td><td>Tutti i dati: l'archivio generale (casi, dizionario di traslitterazione, indice delle fonti) e la cartella <code>cases</code> con un database per ogni caso. Salvane una copia per il backup.</td></tr>
+<tr><td><code>data/media/</code></td><td>Le immagini caricate nei nodi foto.</td></tr>
+<tr><td><code>fonti/</code></td><td>I documenti da indicizzare per la ricerca nelle fonti.</td></tr>
+<tr><td><code>chatbot.conf</code></td><td>Configurazione dell'AI con la chiave del server: non va condiviso. <code>chatbot.conf.example</code> è il modello vuoto.</td></tr>
+<tr><td><code>tools/tesseract/</code></td><td>Tesseract OCR scaricato dal programma.</td></tr>
+<tr><td><code>esempi/</code></td><td>File CSV di esempio per l'importazione.</td></tr>
+<tr><td><code>LICENSE</code>, <code>NOTICE</code>, <code>THIRD-PARTY-NOTICES.md</code></td><td>Licenza del programma, termini aggiuntivi e licenze dei componenti.</td></tr>
+</table>
+<p>Il programma è portabile: la cartella si può copiare su un altro PC con tutti i dati. Per il backup è sufficiente copiare la cartella <code>data</code> (e <code>fonti</code>, se serve).</p>` },
+  ]
+};
+
+/* ================================================================= ENGLISH */
+M.en = {
+  title: 'User manual', sub: 'OSInt Graph · graph exploration of OSINT data for investigative cases',
+  toc: 'Contents', shortcuts: 'Mouse and keyboard shortcuts',
+  kbdHead: ['Action', 'Effect'],
+  kbd: [
+    ['Click a node', 'Expands the node (shows its connections); a second click collapses it'],
+    ['Right-click a node', 'Opens the node card'],
+    ['Right-click a connection', 'Opens the connection editor'],
+    ['Right-click the background', 'Context menu with “New node”'],
+    ['Ctrl+click (or ⌘+click) a node', 'Adds the node to the selection or removes it'],
+    ['Ctrl+drag on the background', 'Selection box: enclosed nodes are added to the selection'],
+    ['Alt+click a social node', 'Opens the profile (side window, background tab or copy of the link, as chosen in the panel)'],
+    ['H+click a node', 'Highlights the node and its connections, dimming the rest; again to clear'],
+    ['N+click a node', 'Hides the node from view (display only, data is kept)'],
+    ['Mouse wheel / drag', 'Zoom and pan the graph'],
+    ['Esc', 'Closes the open window'],
+    ['Enter in a connection name field', 'Saves'],
+    ['Title bar of a window', 'Drag to move the window; double-click to re-centre it'],
+  ],
+  sections: [
+   { id: 'intro', h: '1. What OSInt Graph is', body: `
+<p>OSInt Graph shows the information of an investigative case as a <b>graph</b>: people, phones, emails, social profiles, vehicles, places, documents and the connections between them. Every item is a <b>node</b>, every relation a <b>connection</b>. The program runs on your computer: data never leaves the PC, except for the optional artificial-intelligence service you configure yourself.</p>
+<p>Start it by double-clicking the executable (or, from source, with <code>python app.py</code>): a small local server starts and the browser opens at <code>http://127.0.0.1:5000</code>. The console window shows the program's messages and is the way to stop it (<kbd>Ctrl</kbd>+<kbd>C</kbd> or closing the window). The port can be changed with the <code>PORT</code> environment variable.</p>
+<div class="note">The program is free software (GNU GPL v3 with an attribution requirement). The licenses of the program and of all its components can be read from the <b>Licenses</b> link in the left panel.</div>` },
+   { id: 'cases', h: '2. Cases: first start and management', body: `
+<p>All work is organised in <b>cases</b>. Each case is a separate archive with its own nodes, connections, notes, views and imported files. On first start there is no case: the program immediately asks you to create one, and until a case is open no nodes can be added and no data imported.</p>
+${fig(IMG.first, 'First start: no case is open, the “New case” window opens by itself.')}
+<p>In the <b>Case</b> box at the top of the panel:</p>
+<ul>
+<li>the <b>drop-down</b> shows the open case; choosing another one reloads the page with its data;</li>
+<li><b>New</b> creates an empty case and opens it; <b>Edit</b> changes name and description;</li>
+<li><b>Merge</b> creates a new case with the content of two or more cases: identical nodes (same person, same phone…) become one and differing data stays as separate records of the same node; optionally the original cases are deleted;</li>
+<li><b>Delete</b> removes the case with all its content. This cannot be undone: if it was the last case the program returns to the initial state with no cases.</li>
+</ul>
+${fig(IMG.caseEdit, 'Editing the case name and description.')}` },
+   { id: 'interface', h: '3. The interface', body: `
+<p>On the left the <b>command panel</b>, on the right the <b>graph</b> on a white background. The panel scrolls vertically and contains, from the top: logo and credits, the case, the search, the main buttons, artificial intelligence, saved views, document sources, category filters, connection and layout options, export, selection, the legend and the status line.</p>
+${fig(IMG.over, 'Overview: panel on the left, graph on the right. The golden node is the target, the red dashed lines are customised connections.')}
+<div class="two">
+${fig(IMG.sideTop, 'Upper part of the panel.', 'narrow')}
+${fig(IMG.sideBottom, 'Lower part of the panel: layout, export, selection, legend.', 'narrow')}
+</div>
+<p>Nodes have an icon and a colour per type (person, phone, email, social with the platform logo, vehicle, place, link, text, photo). The <b>target</b> is larger, with a golden border and name. Nodes coming from the initial data have a red border. An expanded node has a double border.</p>` },
+   { id: 'search', h: '4. Searching and bringing nodes onto the graph', body: `
+<p>Type at least three characters in <b>Search node</b>: the list shows the nodes containing the text in their name, aliases, notes and record values. Clicking a result brings the node onto the graph and centres it. <b>Add all results</b> brings them all at once; <b>Load all targets</b> adds the targets of the case.</p>
+${fig(IMG.search, 'Search results with the node type and a tick for those already on the graph.')}
+<p>With <b>Fuzzy search</b> nearby spellings are found too (typos, different transliterations); the level from 1 to 6 sets how many differences to tolerate. <b>Clear graph</b> removes every node from view without deleting anything.</p>` },
+   { id: 'graph', h: '5. Moving around the graph', body: `
+<p>Drag the background to pan and use the wheel to zoom. <b>Fit</b> brings everything back into the window. A <b>click on a node</b> expands it, showing the connected nodes within the depth chosen in <b>Depth</b> (1 = direct neighbours only); a <b>second click</b> collapses it, hiding the neighbours that were visible because of it (those connected to other expanded or selected nodes stay). <b>Expand all</b> and <b>Collapse</b> act on every visible node.</p>
+<p><b>Right-click</b> on a node opens its card; on a connection it opens the connection window; on the background it opens a menu with <b>New node</b>.</p>
+${fig(IMG.ctx, 'Right-click on the background: context menu.')}
+<p>With <kbd>Ctrl</kbd>+click (or <kbd>Ctrl</kbd>+dragging a box) you build a <b>selection</b> of nodes, listed in the <b>Selection</b> box: from there you highlight all paths between the chosen nodes (within a maximum number of hops) and create connections between them. <kbd>H</kbd>+click highlights a node and its connections while dimming the rest; <kbd>N</kbd>+click hides a node (the <b>Show hidden</b> button brings them back). <kbd>Alt</kbd>+click on a social profile opens it in the browser according to the choice in <b>Alt+Click on social</b>.</p>
+<p><b>Show nodes with</b> filters the graph by minimum number of connections: useful to bring out the most connected nodes.</p>` },
+   { id: 'card', h: '6. The node card', body: `
+<p>The card (right-click on the node) gathers everything known about that node: the user's <b>note</b>, the <b>summary of connections</b> grouped by category (social by platform, then phones, emails, places, vehicles…), the <b>records</b> with raw data and images. Every value is copied to the clipboard with one click; the names of connected nodes are clickable and lead to the node.</p>
+${fig(IMG.card, 'Card of the target with note, summary of connections and buttons at the bottom.')}
+<p>The buttons at the bottom: <b>Expand branch / Collapse</b>, <b>Centre in graph</b>, <b>Search in sources</b> (the card's terms in the indexed documents), <b>Add</b> (a new node connected to this one), <b>Import with AI</b> (free text interpreted by the AI), <b>Rename</b>, <b>Edit values</b>, <b>Note</b>, <b>PDF</b> (the printable card) and <b>Delete node</b>. A deleted data node goes to <b>Deleted nodes</b>, from where it can be restored; a hand-made node is really deleted.</p>` },
+   { id: 'add', h: '7. Adding a node', body: `
+<p><b>New node</b> in the panel (or in the background right-click menu) creates a standalone node; <b>Add</b> in a node's card creates a node already connected to it. Choose the <b>type</b> and fill in its fields: profile URL for social accounts (the platform is recognised from the address), number, email, username, surname, first name and date of birth for people, city, address, house number and coordinates for places, plate and colour for vehicles, title and text for notes, image for photos, plus the investigative items (weapons, drugs, documents…).</p>
+${fig(IMG.add, 'New node connected to a target: type, value, target flag, connection properties and preview.')}
+<p>Any node can be highlighted as a <b>target</b> with the <b>Highlight as target</b> box. If the node is born connected to another, the <b>connection properties</b> are at the bottom: name, line shape, line style, width and colour. <b>Arrows</b> are set directly on the <b>preview</b>: a click next to a node adds or removes the arrowhead towards that node (a translucent head appears on hover).</p>
+<p>The <b>✨ AI</b> button at the top of the window switches to free-text mode: paste a text (a report, a tip, a message) and the AI proposes people, phones, emails, profiles, places and vehicles with their relations; you check them in a preview before creating them.</p>` },
+   { id: 'links', h: '8. Connections', body: `
+<p>To connect existing nodes: select them with <kbd>Ctrl</kbd>+click and press <b>Connect selected nodes</b>. With two nodes you choose the direction (the ⇄ button swaps them); with more nodes every pair is connected. Several connections may exist between two nodes, each with its own name.</p>
+${fig(IMG.link, 'Connect nodes: name, shape, line, width, colour and arrows from the preview (here in both directions).')}
+<p><b>Right-click on a connection</b> opens its window: change name and appearance, swap the arrows, move to the other connections between the same nodes, create another one, and delete hand-made connections. For connections coming from the data only the appearance changes; <b>Default style</b> restores it.</p>
+${fig(IMG.edge, 'Editing a connection: red dashed curved arc with arrows in both directions.')}
+<p>In the panel, <b>Connection style</b> applies shape, line style and width to <b>all</b> connections of the graph at once; it is a display preference that does not change the data and is undone by choosing “as set”.</p>` },
+   { id: 'edit', h: '9. Editing a node\'s values', body: `
+<p>From the card, <b>Edit values</b> opens all the node's data: label, URL (opened with Alt+click), note, the <b>Highlight as target</b> box and the fields of every record. Values can be changed or marked as deleted with ✕; free fields can be added. Changes never touch the source files: they stay in the case and are applied on the fly. <b>Undo all changes</b> brings the node back to the original data.</p>
+${fig(IMG.edit, 'Edit values: general fields, target flag and record fields (including those imported from a CSV).')}` },
+   { id: 'import', h: '10. Importing from CSV or Excel', body: `
+<p><b>Import CSV/Excel</b> creates many nodes and connections at once, in three steps. The file has one row per connection: node 1, connection, node 2; without node 2 a standalone node is created.</p>
+${fig(IMG.imp1, 'Step 1: the file. “Download a sample file” produces a pre-filled template.')}
+<p>In <b>step 2</b> every column of the file appears with a few sample values and an <b>Import as</b> drop-down. Columns with recognised headers are already assigned; the others are proposed as <b>extra field of node 1</b>, so they end up in the node's record under the column name and no value is lost. You can set a default type for nodes without a type column, a default connection name and whether the first row holds the headers.</p>
+${fig(IMG.imp2, 'Step 2: column mapping.')}
+<p><b>Step 3</b> shows what will be created row by row: new nodes, existing nodes (in italics), connections and any errors. Rows can be excluded one by one; then <b>Import</b>.</p>
+${fig(IMG.imp3, 'Step 3: preview and import.')}
+<h3>Recognised headers</h3>
+<table>
+<tr><th>Data</th><th>Headers (English / Italian), with 1 or 2 for the side</th></tr>
+<tr><td>Node name or value</td><td>name, name1, name2, nome, value, valore, from/to, da/a</td></tr>
+<tr><td>Type</td><td>type, tipo (person, phone, email, username, social or directly instagram/facebook/…, link, place, vehicle, text, target)</td></tr>
+<tr><td>Other node data</td><td>label, url, platform, text, surname, birthdate, color (vehicle), target (yes/no), address, housenumber, lat, lon, note</td></tr>
+<tr><td>Connection</td><td>relation, arrow (-> &lt;- &lt;-&gt;), shape (straight, curve, segments, right angle, wedge), color, line (solid, dashed, dotted), width</td></tr>
+</table>
+<div class="note warn">A person is identified by <b>name and date of birth together</b>: if the date appears only in some rows, “John Smith (12/03/1980)” and “John Smith” become two distinct nodes joined by a dashed line. Repeat the date on every row of the same person. Two complete sample files are in the program's <code>esempi</code> folder.</div>` },
+   { id: 'filters', h: '11. Categories, layout and appearance', body: `
+<p>The <b>Categories</b> buttons switch whole categories of nodes off and on (phones, social, places…), each in the category colour with its count; <b>Hide all / Show all</b> acts on all of them. An explicit action (expansion, addition) makes the involved nodes visible again anyway.</p>
+<p><b>Layout</b>: <b>Organic</b> arranges nodes by force (connected ones close together), <b>Circular</b> in a circle, <b>Hierarchical</b> as a tree, <b>Grid</b> in rows and columns; <b>Reduce crossings</b> rearranges the current graph to lower the number of crossings. Expanding a node places only the new nodes in a ring around it, without moving the others or the camera.</p>
+<p><b>Identifiers</b> shows or hides the identifier nodes (phones, emails, usernames) used as bridges between people. The <b>legend</b> at the bottom of the panel shows the colours of the categories present.</p>` },
+   { id: 'views', h: '12. Saved views', body: `
+<p>A <b>view</b> is a snapshot of the graph as it is now: visible and expanded nodes, positions, zoom and selection. Type a name and press <b>Save view</b>; the drop-down lists the case's views, <b>Open</b> restores one and 🗑 deletes it. Views are useful to resume a line of reasoning or to prepare the screen to export.</p>` },
+   { id: 'sources', h: '13. Document sources and OCR', body: `
+<p>Put the documents (PDF, Word, Excel, CSV, text, images) in the <code>fonti</code> folder next to the program and press <b>Scan</b>: their content is indexed inside the program. From then on <b>Search in sources</b>, in the panel or in a node's card, finds in which documents a term or the node's values (numbers, names, emails) appear, with the context snippet and a link to open the file.</p>
+<p><b>Images</b> (photos of documents, screenshots) are read with Tesseract <b>OCR</b>. If the status line says “OCR not available”, on Windows the <b>Download Tesseract (OCR)</b> button is enough: the program downloads the official installer (about 50 MB), extracts it into the <code>tools/tesseract</code> folder next to the program and enables OCR without restarting. On Linux and Mac install Tesseract from the package manager.</p>` },
+   { id: 'ai', h: '14. Artificial intelligence', body: `
+<p>The program can use a <b>chatbot</b> (an Ollama-compatible server or one with an OpenAI API, local or remote) for two things: <b>creating nodes from free text</b> and <b>transliterating</b> into Latin characters the names written in other alphabets. The AI is optional: with the <b>AI active</b> switch off the program connects to nothing and uses only local transliteration.</p>
+${fig(IMG.ai, 'AI configuration: endpoint, key, model, API format, timeout and automatic transliteration.')}
+<p><b>Configure</b> opens the settings: server address, API key (saved in the <code>chatbot.conf</code> file next to the program, never publish it), model, request format, maximum waiting time, key header and prefix. <b>Test connection</b> checks that the server answers. The <b>Transliterate with AI</b> button appears in the panel when there are words to transliterate.</p>
+<div class="note warn">The texts you paste in AI mode and the names to transliterate are sent to the server you configured. Use a server you trust, or a local one, if the data is confidential.</div>` },
+   { id: 'manual', h: '15. Manual changes and deleted nodes', body: `
+<p><b>Manual changes</b> lists everything created or changed by hand in the case: added nodes (including those imported from files or proposed by the AI), created connections and renamed labels, with a name filter. From here you delete what is no longer needed. <b>Deleted nodes</b> lists the data nodes removed from the graph and lets you restore them one by one or all together.</p>
+${fig(IMG.manual, 'Manual changes: hand-added nodes with date and connections.')}` },
+   { id: 'export', h: '16. Exporting', body: `
+<p><b>Graph to PDF</b> prints the graph as shown on screen, with legend and case header. <b>Table sheet</b> produces a document with all visible nodes and their data in a table, ready to print or save as PDF from the browser. From a node's card, <b>PDF</b> exports that single card. The sample CSV is downloaded from the import window.</p>` },
+   { id: 'lang', h: '17. Languages, licenses and credits', body: `
+<p>The interface language is chosen from the drop-down next to the logo (Italian, English, French, German, Spanish, Arabic with right-to-left text); data content is not translated. Under the logo are the author's credits and the <b>Licenses</b> link, which lists the program and all third-party components with the full license texts.</p>
+${fig(IMG.lic, 'Licenses window: components on the left, text on the right.')}` },
+   { id: 'files', h: '18. Data, folders and files', body: `
+<table>
+<tr><th>Folder / file</th><th>Content</th></tr>
+<tr><td><code>data/</code></td><td>All data: the general archive (cases, transliteration dictionary, sources index) and the <code>cases</code> folder with one database per case. Keep a copy as a backup.</td></tr>
+<tr><td><code>data/media/</code></td><td>Images uploaded into photo nodes.</td></tr>
+<tr><td><code>fonti/</code></td><td>Documents to index for the search in sources.</td></tr>
+<tr><td><code>chatbot.conf</code></td><td>AI configuration with the server key: do not share it. <code>chatbot.conf.example</code> is the empty template.</td></tr>
+<tr><td><code>tools/tesseract/</code></td><td>Tesseract OCR downloaded by the program.</td></tr>
+<tr><td><code>esempi/</code></td><td>Sample CSV files for the import.</td></tr>
+<tr><td><code>LICENSE</code>, <code>NOTICE</code>, <code>THIRD-PARTY-NOTICES.md</code></td><td>Program license, additional terms and component licenses.</td></tr>
+</table>
+<p>The program is portable: the folder can be copied to another PC with all its data. For a backup it is enough to copy the <code>data</code> folder (and <code>fonti</code>, if needed).</p>` },
+  ]
+};
+
+/* ================================================================ FRANÇAIS */
+M.fr = {
+  title: 'Manuel d\'utilisation', sub: 'OSInt Graph · exploration graphique de données OSINT pour les dossiers d\'enquête',
+  toc: 'Sommaire', shortcuts: 'Raccourcis souris et clavier',
+  kbdHead: ['Action', 'Effet'],
+  kbd: [
+    ['Clic sur un nœud', 'Développe le nœud (affiche ses liaisons) ; un second clic le replie'],
+    ['Clic droit sur un nœud', 'Ouvre la fiche du nœud'],
+    ['Clic droit sur une liaison', 'Ouvre la fenêtre de modification de la liaison'],
+    ['Clic droit sur le fond', 'Menu contextuel avec « Nouveau nœud »'],
+    ['Ctrl+clic (ou ⌘+clic) sur un nœud', 'Ajoute le nœud à la sélection ou l\'en retire'],
+    ['Ctrl+glisser sur le fond', 'Rectangle de sélection : les nœuds inclus s\'ajoutent à la sélection'],
+    ['Alt+clic sur un nœud social', 'Ouvre le profil (fenêtre côte à côte, onglet d\'arrière-plan ou copie du lien, selon le choix dans le panneau)'],
+    ['H+clic sur un nœud', 'Met en évidence le nœud et ses liaisons en atténuant le reste ; à nouveau pour annuler'],
+    ['N+clic sur un nœud', 'Masque le nœud (affichage seulement, les données restent)'],
+    ['Molette / glisser', 'Zoom et déplacement du graphe'],
+    ['Échap', 'Ferme la fenêtre ouverte'],
+    ['Entrée dans le champ nom d\'une liaison', 'Enregistre'],
+    ['Barre de titre d\'une fenêtre', 'Glisser pour déplacer la fenêtre ; double-clic pour la recentrer'],
+  ],
+  sections: [
+   { id: 'intro', h: '1. Qu\'est-ce qu\'OSInt Graph', body: `
+<p>OSInt Graph représente sous forme de <b>graphe</b> les informations d'un dossier d'enquête : personnes, téléphones, e-mails, profils sociaux, véhicules, lieux, documents et les liaisons entre eux. Chaque élément est un <b>nœud</b>, chaque relation une <b>liaison</b>. Le programme tourne sur votre ordinateur : les données ne quittent jamais le PC, sauf pour le service d'intelligence artificielle facultatif que vous configurez vous-même.</p>
+<p>Lancez-le par un double-clic sur l'exécutable (ou, depuis le code source, avec <code>python app.py</code>) : un petit serveur local démarre et le navigateur s'ouvre à l'adresse <code>http://127.0.0.1:5000</code>. La fenêtre de console affiche les messages du programme et sert à l'arrêter (<kbd>Ctrl</kbd>+<kbd>C</kbd> ou fermeture de la fenêtre). Le port se change avec la variable d'environnement <code>PORT</code>.</p>
+<div class="note">Le programme est un logiciel libre (GNU GPL v3 avec obligation d'attribution). Les licences du programme et de tous ses composants se lisent depuis le lien <b>Licences</b> du panneau de gauche.</div>` },
+   { id: 'cases', h: '2. Dossiers : premier démarrage et gestion', body: `
+<p>Tout le travail est organisé en <b>dossiers</b>. Chaque dossier est une archive séparée avec ses propres nœuds, liaisons, notes, vues et fichiers importés. Au premier démarrage il n'existe aucun dossier : le programme demande aussitôt d'en créer un, et tant qu'aucun dossier n'est ouvert on ne peut ni ajouter de nœuds ni importer de données.</p>
+${fig(IMG.first, 'Premier démarrage : aucun dossier ouvert, la fenêtre « Nouveau dossier » s\'ouvre d\'elle-même.')}
+<p>Dans le cadre <b>Dossier</b> en haut du panneau :</p>
+<ul>
+<li>la <b>liste déroulante</b> montre le dossier ouvert ; en choisir un autre recharge la page avec ses données ;</li>
+<li><b>Nouveau</b> crée un dossier vide et l'ouvre ; <b>Modifier</b> change le nom et la description ;</li>
+<li><b>Fusionner</b> crée un nouveau dossier avec le contenu de deux dossiers ou plus : les nœuds identiques (même personne, même téléphone…) n'en font plus qu'un et les données différentes restent des fiches distinctes du même nœud ; au choix, les dossiers d'origine sont supprimés ;</li>
+<li><b>Supprimer</b> efface le dossier avec tout son contenu. L'opération est irréversible : si c'était le dernier dossier, on revient à l'état initial sans dossier.</li>
+</ul>
+${fig(IMG.caseEdit, 'Modification du nom et de la description du dossier.')}` },
+   { id: 'interface', h: '3. L\'interface', body: `
+<p>À gauche le <b>panneau de commandes</b>, à droite le <b>graphe</b> sur fond blanc. Le panneau défile verticalement et contient, de haut en bas : logo et crédits, le dossier, la recherche, les boutons principaux, l'intelligence artificielle, les vues enregistrées, les sources documentaires, les filtres par catégorie, les options des liaisons et de la disposition, l'export, la sélection, la légende et la ligne d'état.</p>
+${fig(IMG.over, 'Vue d\'ensemble : panneau à gauche, graphe à droite. Le nœud doré est la cible, les lignes rouges en pointillé sont des liaisons personnalisées.')}
+<div class="two">
+${fig(IMG.sideTop, 'Partie haute du panneau.', 'narrow')}
+${fig(IMG.sideBottom, 'Partie basse du panneau : disposition, export, sélection, légende.', 'narrow')}
+</div>
+<p>Les nœuds ont une icône et une couleur par type (personne, téléphone, e-mail, social avec le logo de la plateforme, véhicule, lieu, lien, texte, photo). La <b>cible</b> est plus grande, avec bordure et nom dorés. Les nœuds issus des données de départ ont une bordure rouge. Un nœud développé a une bordure double.</p>` },
+   { id: 'search', h: '4. Rechercher et amener des nœuds sur le graphe', body: `
+<p>Tapez au moins trois caractères dans <b>Rechercher un nœud</b> : la liste montre les nœuds contenant le texte dans leur nom, leurs alias, leurs notes et les valeurs de leurs fiches. Un clic sur un résultat amène le nœud sur le graphe et le centre. <b>Ajouter tous les résultats</b> les amène tous ensemble ; <b>Charger toutes les cibles</b> ajoute les cibles du dossier.</p>
+${fig(IMG.search, 'Résultats de recherche avec le type du nœud et une coche pour ceux déjà sur le graphe.')}
+<p>Avec la <b>recherche approximative</b> on trouve aussi les graphies proches (fautes de frappe, translittérations différentes) ; le niveau de 1 à 6 indique combien de différences tolérer. <b>Vider le graphe</b> retire tous les nœuds de la vue sans rien supprimer.</p>` },
+   { id: 'graph', h: '5. Se déplacer dans le graphe', body: `
+<p>Glissez le fond pour déplacer le graphe et utilisez la molette pour zoomer. <b>Ajuster</b> ramène tout dans la fenêtre. Un <b>clic sur un nœud</b> le développe, montrant les nœuds reliés dans la profondeur choisie dans <b>Prof.</b> (1 = voisins directs seulement) ; un <b>second clic</b> le replie, masquant les voisins visibles grâce à lui (ceux reliés à d'autres nœuds développés ou sélectionnés restent). <b>Tout développer</b> et <b>Replier</b> agissent sur tous les nœuds visibles.</p>
+<p>Le <b>clic droit</b> sur un nœud ouvre sa fiche ; sur une liaison il ouvre la fenêtre de la liaison ; sur le fond il ouvre un menu avec <b>Nouveau nœud</b>.</p>
+${fig(IMG.ctx, 'Clic droit sur le fond : menu contextuel.')}
+<p>Avec <kbd>Ctrl</kbd>+clic (ou <kbd>Ctrl</kbd>+glisser un rectangle) on construit une <b>sélection</b> de nœuds, listée dans le cadre <b>Sélection</b> : de là on met en évidence tous les chemins entre les nœuds choisis (dans un nombre maximal de sauts) et on crée des liaisons entre eux. <kbd>H</kbd>+clic met en évidence un nœud et ses liaisons en atténuant le reste ; <kbd>N</kbd>+clic masque un nœud (le bouton <b>Afficher les masqués</b> les fait réapparaître). <kbd>Alt</kbd>+clic sur un profil social l'ouvre dans le navigateur selon le choix de <b>Alt+clic sur les réseaux sociaux</b>.</p>
+<p><b>Afficher les nœuds avec</b> filtre le graphe par nombre minimal de liaisons : utile pour faire ressortir les nœuds les plus connectés.</p>` },
+   { id: 'card', h: '6. La fiche du nœud', body: `
+<p>La fiche (clic droit sur le nœud) réunit tout ce que l'on sait de ce nœud : la <b>note</b> de l'utilisateur, le <b>résumé des liaisons</b> groupées par catégorie (réseaux sociaux par plateforme, puis téléphones, e-mails, lieux, véhicules…), les <b>fiches</b> avec les données brutes et les images. Chaque valeur se copie dans le presse-papiers d'un clic ; les noms des nœuds reliés sont cliquables et mènent au nœud.</p>
+${fig(IMG.card, 'Fiche de la cible avec note, résumé des liaisons et boutons en bas.')}
+<p>Les boutons du bas : <b>Développer la branche / Replier</b>, <b>Centrer dans le graphe</b>, <b>Chercher dans les sources</b> (les termes de la fiche dans les documents indexés), <b>Ajouter</b> (un nouveau nœud relié à celui-ci), <b>Importer avec l'IA</b> (texte libre interprété par l'IA), <b>Renommer</b>, <b>Modifier les valeurs</b>, <b>Note</b>, <b>PDF</b> (la fiche imprimable) et <b>Supprimer le nœud</b>. Un nœud des données supprimé passe dans les <b>Nœuds supprimés</b>, d'où il peut être restauré ; un nœud créé à la main est réellement supprimé.</p>` },
+   { id: 'add', h: '7. Ajouter un nœud', body: `
+<p><b>Nouveau nœud</b> dans le panneau (ou dans le menu du clic droit sur le fond) crée un nœud indépendant ; <b>Ajouter</b> dans la fiche d'un nœud crée un nœud déjà relié à celui-ci. On choisit le <b>type</b> et on remplit ses champs : URL du profil pour les réseaux sociaux (la plateforme est reconnue d'après l'adresse), numéro, e-mail, nom d'utilisateur, nom, prénom et date de naissance pour les personnes, ville, adresse, numéro et coordonnées pour les lieux, plaque et couleur pour les véhicules, titre et texte pour les notes, image pour les photos, plus les éléments d'enquête (armes, stupéfiants, documents…).</p>
+${fig(IMG.add, 'Nouveau nœud relié à une cible : type, valeur, case cible, propriétés de la liaison et aperçu.')}
+<p>N'importe quel nœud peut être mis en évidence comme <b>cible</b> avec la case <b>Marquer comme cible</b>. Si le nœud naît relié à un autre, les <b>propriétés de la liaison</b> sont en bas : nom, forme de la ligne, type de ligne, épaisseur et couleur. Les <b>flèches</b> se règlent directement sur l'<b>aperçu</b> : un clic près d'un nœud ajoute ou retire la pointe de flèche vers ce nœud (une pointe translucide apparaît au survol).</p>
+<p>Le bouton <b>✨ IA</b> en haut de la fenêtre passe en mode texte libre : collez un texte (procès-verbal, signalement, message) et l'IA propose personnes, téléphones, e-mails, profils, lieux et véhicules avec leurs relations ; vous les vérifiez dans un aperçu avant de les créer.</p>` },
+   { id: 'links', h: '8. Liaisons', body: `
+<p>Pour relier des nœuds déjà présents : sélectionnez-les avec <kbd>Ctrl</kbd>+clic et appuyez sur <b>Relier les nœuds sélectionnés</b>. Avec deux nœuds on choisit le sens (le bouton ⇄ les échange) ; avec davantage, toutes les paires sont reliées. Plusieurs liaisons peuvent exister entre deux nœuds, chacune avec son nom.</p>
+${fig(IMG.link, 'Relier des nœuds : nom, forme, ligne, épaisseur, couleur et flèches depuis l\'aperçu (ici dans les deux sens).')}
+<p>Le <b>clic droit sur une liaison</b> ouvre sa fenêtre : on modifie le nom et l'aspect, on inverse les flèches, on passe aux autres liaisons entre les mêmes nœuds, on en crée une autre, et on supprime les liaisons créées à la main. Pour les liaisons issues des données, seul l'aspect change ; <b>Style par défaut</b> le rétablit.</p>
+${fig(IMG.edge, 'Modification d\'une liaison : arc courbe rouge en pointillé avec flèches dans les deux sens.')}
+<p>Dans le panneau, <b>Style des liaisons</b> applique forme, type de ligne et épaisseur à <b>toutes</b> les liaisons du graphe en même temps ; c'est une préférence d'affichage qui ne modifie pas les données et s'annule en choisissant « comme définies ».</p>` },
+   { id: 'edit', h: '9. Modifier les valeurs d\'un nœud', body: `
+<p>Depuis la fiche, <b>Modifier les valeurs</b> ouvre toutes les données du nœud : libellé, URL (ouverte par Alt+clic), note, la case <b>Marquer comme cible</b> et les champs de chaque fiche. Les valeurs se changent ou se marquent comme supprimées avec ✕ ; on peut ajouter des champs libres. Les modifications ne touchent jamais les fichiers d'origine : elles restent dans le dossier et s'appliquent à la volée. <b>Annuler toutes les modifications</b> ramène le nœud aux données d'origine.</p>
+${fig(IMG.edit, 'Modifier les valeurs : champs généraux, case cible et champs de la fiche (y compris ceux importés d\'un CSV).')}` },
+   { id: 'import', h: '10. Importer depuis CSV ou Excel', body: `
+<p><b>Importer CSV/Excel</b> crée de nombreux nœuds et liaisons en une fois, en trois étapes. Le fichier a une ligne par liaison : nœud 1, liaison, nœud 2 ; sans nœud 2 un nœud isolé est créé.</p>
+${fig(IMG.imp1, 'Étape 1 : le fichier. « Télécharger un fichier d\'exemple » produit un modèle déjà rempli.')}
+<p>À l'<b>étape 2</b>, chaque colonne du fichier apparaît avec quelques valeurs d'exemple et une liste <b>Importer comme</b>. Les colonnes aux en-têtes reconnus sont déjà attribuées ; les autres sont proposées comme <b>champ supplémentaire du nœud 1</b>, de sorte qu'elles vont dans la fiche du nœud sous le nom de la colonne et qu'aucune valeur n'est perdue. On peut indiquer un type par défaut pour les nœuds sans colonne type, un nom par défaut pour la liaison et si la première ligne contient les en-têtes.</p>
+${fig(IMG.imp2, 'Étape 2 : correspondance des colonnes.')}
+<p>L'<b>étape 3</b> montre ce qui sera créé ligne par ligne : nouveaux nœuds, nœuds déjà présents (en italique), liaisons et erreurs éventuelles. Les lignes peuvent être exclues une à une ; puis <b>Importer</b>.</p>
+${fig(IMG.imp3, 'Étape 3 : aperçu et importation.')}
+<h3>En-têtes reconnus</h3>
+<table>
+<tr><th>Donnée</th><th>En-têtes (anglais / italien), avec 1 ou 2 pour le côté</th></tr>
+<tr><td>Nom ou valeur du nœud</td><td>name, name1, name2, nome, value, valore, from/to, da/a</td></tr>
+<tr><td>Type</td><td>type, tipo (person, phone, email, username, social ou directement instagram/facebook/…, link, place, vehicle, text, target)</td></tr>
+<tr><td>Autres données du nœud</td><td>label, url, platform, text, surname, birthdate, color (véhicule), target (oui/non), address, housenumber, lat, lon, note</td></tr>
+<tr><td>Liaison</td><td>relation, arrow (-> &lt;- &lt;-&gt;), shape (straight, curve, segments, right angle, wedge), color, line (solid, dashed, dotted), width</td></tr>
+</table>
+<div class="note warn">Une personne est identifiée par <b>le nom et la date de naissance ensemble</b> : si la date n'apparaît que sur certaines lignes, « Rossi Mario (12/03/1980) » et « Rossi Mario » deviennent deux nœuds distincts reliés par un pointillé. Répétez la date sur chaque ligne de la même personne. Deux fichiers d'exemple complets se trouvent dans le dossier <code>esempi</code> du programme.</div>` },
+   { id: 'filters', h: '11. Catégories, disposition et aspect', body: `
+<p>Les boutons <b>Catégories</b> éteignent ou rallument des catégories entières de nœuds (téléphones, réseaux sociaux, lieux…), chacun dans la couleur de la catégorie avec son nombre ; <b>Tout masquer / Tout afficher</b> agit sur toutes. Une action explicite (développement, ajout) rend quand même visibles les nœuds concernés.</p>
+<p><b>Disposition</b> : <b>Organique</b> place les nœuds par forces (les reliés proches), <b>Circulaire</b> en cercle, <b>Hiérarchique</b> en arbre, <b>Grille</b> en lignes et colonnes ; <b>Réduire les croisements</b> réordonne le graphe actuel pour diminuer les croisements. Le développement d'un nœud place seulement les nouveaux nœuds en couronne autour de lui, sans déplacer les autres ni la caméra.</p>
+<p><b>Identifiants</b> affiche ou masque les nœuds identifiants (téléphones, e-mails, noms d'utilisateur) servant de pont entre personnes. La <b>légende</b> en bas du panneau donne les couleurs des catégories présentes.</p>` },
+   { id: 'views', h: '12. Vues enregistrées', body: `
+<p>Une <b>vue</b> est l'instantané du graphe tel qu'il est : nœuds visibles et développés, positions, zoom et sélection. Tapez un nom et appuyez sur <b>Enregistrer la vue</b> ; la liste présente les vues du dossier, <b>Ouvrir</b> en restaure une et 🗑 la supprime. Les vues servent à reprendre un raisonnement ou à préparer l'écran à exporter.</p>` },
+   { id: 'sources', h: '13. Sources documentaires et OCR', body: `
+<p>Placez les documents (PDF, Word, Excel, CSV, texte, images) dans le dossier <code>fonti</code> à côté du programme et appuyez sur <b>Analyser</b> : leur contenu est indexé dans le programme. Dès lors, <b>Chercher dans les sources</b>, dans le panneau ou dans la fiche d'un nœud, trouve dans quels documents apparaissent un terme ou les valeurs du nœud (numéros, noms, e-mails), avec l'extrait de contexte et le lien pour ouvrir le fichier.</p>
+<p>Les <b>images</b> (photos de documents, captures d'écran) sont lues avec l'<b>OCR</b> Tesseract. Si la ligne d'état indique « OCR non disponible », sous Windows le bouton <b>Télécharger Tesseract (OCR)</b> suffit : le programme télécharge l'installateur officiel (environ 50 Mo), l'extrait dans le dossier <code>tools/tesseract</code> à côté du programme et active l'OCR sans redémarrer. Sous Linux et Mac, installez Tesseract avec le gestionnaire de paquets.</p>` },
+   { id: 'ai', h: '14. Intelligence artificielle', body: `
+<p>Le programme peut utiliser un <b>chatbot</b> (serveur compatible Ollama ou à API OpenAI, local ou distant) pour deux choses : <b>créer des nœuds à partir d'un texte libre</b> et <b>translittérer</b> en caractères latins les noms écrits dans d'autres alphabets. L'IA est facultative : avec l'interrupteur <b>IA active</b> éteint, le programme ne se connecte à rien et n'utilise que la translittération locale.</p>
+${fig(IMG.ai, 'Configuration de l\'IA : point d\'accès, clé, modèle, format d\'API, délai et translittération automatique.')}
+<p><b>Configurer</b> ouvre les réglages : adresse du serveur, clé API (enregistrée dans le fichier <code>chatbot.conf</code> à côté du programme, à ne jamais publier), modèle, format des requêtes, délai maximal, en-tête et préfixe de la clé. <b>Tester la connexion</b> vérifie que le serveur répond. Le bouton <b>Translittérer avec l'IA</b> apparaît dans le panneau quand il y a des mots à translittérer.</p>
+<div class="note warn">Les textes collés en mode IA et les noms à translittérer sont envoyés au serveur que vous avez configuré. Utilisez un serveur de confiance, ou local, si les données sont confidentielles.</div>` },
+   { id: 'manual', h: '15. Modifications manuelles et nœuds supprimés', body: `
+<p><b>Modifications manuelles</b> liste tout ce qui a été créé ou changé à la main dans le dossier : nœuds ajoutés (y compris ceux importés depuis des fichiers ou proposés par l'IA), liaisons créées et libellés renommés, avec un filtre par nom. De là on supprime ce qui ne sert plus. <b>Nœuds supprimés</b> liste les nœuds des données retirés du graphe et permet de les restaurer un à un ou tous ensemble.</p>
+${fig(IMG.manual, 'Modifications manuelles : nœuds ajoutés à la main avec date et liaisons.')}` },
+   { id: 'export', h: '16. Exporter', body: `
+<p><b>Graphe en PDF</b> imprime le graphe tel qu'affiché, avec légende et en-tête du dossier. <b>Fiche tabulaire</b> produit un document avec tous les nœuds visibles et leurs données, en tableau, prêt à imprimer ou à enregistrer en PDF depuis le navigateur. Depuis la fiche d'un nœud, <b>PDF</b> exporte cette seule fiche. Le CSV d'exemple se télécharge depuis la fenêtre d'importation.</p>` },
+   { id: 'lang', h: '17. Langues, licences et crédits', body: `
+<p>La langue de l'interface se choisit dans la liste à côté du logo (italien, anglais, français, allemand, espagnol, arabe avec texte de droite à gauche) ; le contenu des données n'est pas traduit. Sous le logo se trouvent les crédits de l'auteur et le lien <b>Licences</b>, qui liste le programme et tous les composants tiers avec le texte complet des licences.</p>
+${fig(IMG.lic, 'Fenêtre des licences : composants à gauche, texte à droite.')}` },
+   { id: 'files', h: '18. Données, dossiers et fichiers', body: `
+<table>
+<tr><th>Dossier / fichier</th><th>Contenu</th></tr>
+<tr><td><code>data/</code></td><td>Toutes les données : l'archive générale (dossiers, dictionnaire de translittération, index des sources) et le dossier <code>cases</code> avec une base par dossier d'enquête. Gardez-en une copie de sauvegarde.</td></tr>
+<tr><td><code>data/media/</code></td><td>Les images chargées dans les nœuds photo.</td></tr>
+<tr><td><code>fonti/</code></td><td>Les documents à indexer pour la recherche dans les sources.</td></tr>
+<tr><td><code>chatbot.conf</code></td><td>Configuration de l'IA avec la clé du serveur : à ne pas partager. <code>chatbot.conf.example</code> est le modèle vide.</td></tr>
+<tr><td><code>tools/tesseract/</code></td><td>Tesseract OCR téléchargé par le programme.</td></tr>
+<tr><td><code>esempi/</code></td><td>Fichiers CSV d'exemple pour l'importation.</td></tr>
+<tr><td><code>LICENSE</code>, <code>NOTICE</code>, <code>THIRD-PARTY-NOTICES.md</code></td><td>Licence du programme, termes additionnels et licences des composants.</td></tr>
+</table>
+<p>Le programme est portable : le dossier peut être copié sur un autre PC avec toutes ses données. Pour une sauvegarde il suffit de copier le dossier <code>data</code> (et <code>fonti</code>, si besoin).</p>` },
+  ]
+};
+
+/* ================================================================= DEUTSCH */
+M.de = {
+  title: 'Benutzerhandbuch', sub: 'OSInt Graph · grafische Erkundung von OSINT-Daten für Ermittlungsfälle',
+  toc: 'Inhalt', shortcuts: 'Maus- und Tastaturkürzel',
+  kbdHead: ['Aktion', 'Wirkung'],
+  kbd: [
+    ['Klick auf einen Knoten', 'Erweitert den Knoten (zeigt seine Verbindungen); ein zweiter Klick klappt ihn ein'],
+    ['Rechtsklick auf einen Knoten', 'Öffnet die Knotenkarte'],
+    ['Rechtsklick auf eine Verbindung', 'Öffnet das Fenster zum Bearbeiten der Verbindung'],
+    ['Rechtsklick auf den Hintergrund', 'Kontextmenü mit „Neuer Knoten“'],
+    ['Strg+Klick (oder ⌘+Klick) auf einen Knoten', 'Nimmt den Knoten in die Auswahl auf oder entfernt ihn'],
+    ['Strg+Ziehen auf dem Hintergrund', 'Auswahlrahmen: die umschlossenen Knoten kommen zur Auswahl hinzu'],
+    ['Alt+Klick auf einen Social-Knoten', 'Öffnet das Profil (Nebenfenster, Hintergrund-Tab oder Kopie des Links, je nach Wahl im Panel)'],
+    ['H+Klick auf einen Knoten', 'Hebt den Knoten und seine Verbindungen hervor und blendet den Rest ab; erneut zum Aufheben'],
+    ['N+Klick auf einen Knoten', 'Blendet den Knoten aus (nur Anzeige, die Daten bleiben)'],
+    ['Mausrad / Ziehen', 'Zoom und Verschieben des Graphen'],
+    ['Esc', 'Schließt das offene Fenster'],
+    ['Eingabe im Namensfeld einer Verbindung', 'Speichert'],
+    ['Titelleiste eines Fensters', 'Ziehen, um das Fenster zu verschieben; Doppelklick zentriert es wieder'],
+  ],
+  sections: [
+   { id: 'intro', h: '1. Was OSInt Graph ist', body: `
+<p>OSInt Graph stellt die Informationen eines Ermittlungsfalls als <b>Graph</b> dar: Personen, Telefone, E-Mails, Social-Media-Profile, Fahrzeuge, Orte, Dokumente und die Verbindungen zwischen ihnen. Jedes Element ist ein <b>Knoten</b>, jede Beziehung eine <b>Verbindung</b>. Das Programm läuft auf Ihrem Rechner: Die Daten verlassen den PC nie, abgesehen vom optionalen KI-Dienst, den Sie selbst konfigurieren.</p>
+<p>Gestartet wird es per Doppelklick auf die ausführbare Datei (oder aus dem Quellcode mit <code>python app.py</code>): Ein kleiner lokaler Server startet und der Browser öffnet <code>http://127.0.0.1:5000</code>. Das Konsolenfenster zeigt die Meldungen des Programms und dient zum Beenden (<kbd>Strg</kbd>+<kbd>C</kbd> oder Schließen des Fensters). Der Port lässt sich mit der Umgebungsvariablen <code>PORT</code> ändern.</p>
+<div class="note">Das Programm ist freie Software (GNU GPL v3 mit Namensnennungspflicht). Die Lizenzen des Programms und aller Komponenten sind über den Link <b>Lizenzen</b> im linken Panel einsehbar.</div>` },
+   { id: 'cases', h: '2. Fälle: erster Start und Verwaltung', body: `
+<p>Die gesamte Arbeit ist in <b>Fällen</b> organisiert. Jeder Fall ist ein eigenes Archiv mit eigenen Knoten, Verbindungen, Notizen, Ansichten und importierten Dateien. Beim ersten Start gibt es keinen Fall: Das Programm bittet sofort, einen anzulegen, und solange kein Fall offen ist, lassen sich weder Knoten hinzufügen noch Daten importieren.</p>
+${fig(IMG.first, 'Erster Start: kein Fall offen, das Fenster „Neuer Fall“ öffnet sich von selbst.')}
+<p>Im Kasten <b>Fall</b> oben im Panel:</p>
+<ul>
+<li>die <b>Auswahlliste</b> zeigt den offenen Fall; die Wahl eines anderen lädt die Seite mit dessen Daten neu;</li>
+<li><b>Neu</b> legt einen leeren Fall an und öffnet ihn; <b>Bearbeiten</b> ändert Name und Beschreibung;</li>
+<li><b>Zusammenführen</b> erzeugt einen neuen Fall mit dem Inhalt von zwei oder mehr Fällen: gleiche Knoten (dieselbe Person, dasselbe Telefon …) werden zu einem, abweichende Daten bleiben als getrennte Karten desselben Knotens; wahlweise werden die Ursprungsfälle gelöscht;</li>
+<li><b>Löschen</b> entfernt den Fall mit seinem gesamten Inhalt. Das lässt sich nicht rückgängig machen: War es der letzte Fall, kehrt das Programm in den Anfangszustand ohne Fälle zurück.</li>
+</ul>
+${fig(IMG.caseEdit, 'Bearbeiten von Name und Beschreibung des Falls.')}` },
+   { id: 'interface', h: '3. Die Oberfläche', body: `
+<p>Links das <b>Bedienpanel</b>, rechts der <b>Graph</b> auf weißem Hintergrund. Das Panel scrollt senkrecht und enthält von oben nach unten: Logo und Credits, den Fall, die Suche, die Hauptschaltflächen, die künstliche Intelligenz, gespeicherte Ansichten, Dokumentquellen, Kategoriefilter, Optionen für Verbindungen und Layout, Export, Auswahl, Legende und Statuszeile.</p>
+${fig(IMG.over, 'Überblick: Panel links, Graph rechts. Der goldene Knoten ist die Zielperson, die roten gestrichelten Linien sind angepasste Verbindungen.')}
+<div class="two">
+${fig(IMG.sideTop, 'Oberer Teil des Panels.', 'narrow')}
+${fig(IMG.sideBottom, 'Unterer Teil des Panels: Layout, Export, Auswahl, Legende.', 'narrow')}
+</div>
+<p>Knoten haben je Typ ein Symbol und eine Farbe (Person, Telefon, E-Mail, Social mit dem Logo der Plattform, Fahrzeug, Ort, Link, Text, Foto). Die <b>Zielperson</b> ist größer, mit goldenem Rand und Namen. Knoten aus den Ausgangsdaten haben einen roten Rand. Ein erweiterter Knoten hat einen doppelten Rand.</p>` },
+   { id: 'search', h: '4. Suchen und Knoten in den Graphen holen', body: `
+<p>Geben Sie mindestens drei Zeichen in <b>Knoten suchen</b> ein: Die Liste zeigt die Knoten, die den Text im Namen, in Aliasnamen, Notizen und Kartenwerten enthalten. Ein Klick auf ein Ergebnis holt den Knoten in den Graphen und zentriert ihn. <b>Alle Ergebnisse hinzufügen</b> holt sie alle zusammen; <b>Alle Zielpersonen laden</b> fügt die Zielpersonen des Falls hinzu.</p>
+${fig(IMG.search, 'Suchergebnisse mit Knotentyp und Häkchen bei den bereits im Graphen vorhandenen.')}
+<p>Mit der <b>unscharfen Suche</b> werden auch ähnliche Schreibweisen gefunden (Tippfehler, andere Transliterationen); die Stufe von 1 bis 6 gibt an, wie viele Abweichungen toleriert werden. <b>Graph leeren</b> entfernt alle Knoten aus der Ansicht, ohne etwas zu löschen.</p>` },
+   { id: 'graph', h: '5. Im Graphen bewegen', body: `
+<p>Ziehen Sie den Hintergrund zum Verschieben und nutzen Sie das Mausrad zum Zoomen. <b>Anpassen</b> holt alles ins Fenster zurück. Ein <b>Klick auf einen Knoten</b> erweitert ihn und zeigt die verbundenen Knoten bis zur in <b>Tiefe</b> gewählten Stufe (1 = nur direkte Nachbarn); ein <b>zweiter Klick</b> klappt ihn ein und blendet die Nachbarn aus, die seinetwegen sichtbar waren (die mit anderen erweiterten oder ausgewählten Knoten verbundenen bleiben). <b>Alle erweitern</b> und <b>Einklappen</b> wirken auf alle sichtbaren Knoten.</p>
+<p>Der <b>Rechtsklick</b> auf einen Knoten öffnet seine Karte; auf eine Verbindung das Verbindungsfenster; auf den Hintergrund ein Menü mit <b>Neuer Knoten</b>.</p>
+${fig(IMG.ctx, 'Rechtsklick auf den Hintergrund: Kontextmenü.')}
+<p>Mit <kbd>Strg</kbd>+Klick (oder <kbd>Strg</kbd>+Ziehen eines Rahmens) baut man eine <b>Auswahl</b> von Knoten auf, die im Kasten <b>Auswahl</b> aufgelistet ist: Von dort werden alle Pfade zwischen den gewählten Knoten hervorgehoben (bis zu einer Höchstzahl von Schritten) und Verbindungen zwischen ihnen erstellt. <kbd>H</kbd>+Klick hebt einen Knoten und seine Verbindungen hervor und blendet den Rest ab; <kbd>N</kbd>+Klick blendet einen Knoten aus (die Schaltfläche <b>Ausgeblendete anzeigen</b> holt sie zurück). <kbd>Alt</kbd>+Klick auf ein Social-Profil öffnet es im Browser gemäß der Wahl unter <b>Alt+Klick auf soziale Netzwerke</b>.</p>
+<p><b>Knoten anzeigen mit</b> filtert den Graphen nach der Mindestzahl an Verbindungen: nützlich, um die am stärksten vernetzten Knoten hervortreten zu lassen.</p>` },
+   { id: 'card', h: '6. Die Knotenkarte', body: `
+<p>Die Karte (Rechtsklick auf den Knoten) versammelt alles, was über diesen Knoten bekannt ist: die <b>Notiz</b> des Benutzers, die nach Kategorien gruppierte <b>Übersicht der Verbindungen</b> (Social nach Plattform, dann Telefone, E-Mails, Orte, Fahrzeuge …), die <b>Karten</b> mit Rohdaten und Bildern. Jeder Wert wird mit einem Klick in die Zwischenablage kopiert; die Namen verbundener Knoten sind anklickbar und führen zum Knoten.</p>
+${fig(IMG.card, 'Karte der Zielperson mit Notiz, Verbindungsübersicht und Schaltflächen unten.')}
+<p>Die Schaltflächen unten: <b>Zweig erweitern / Einklappen</b>, <b>Im Graphen zentrieren</b>, <b>In Quellen suchen</b> (die Begriffe der Karte in den indizierten Dokumenten), <b>Hinzufügen</b> (ein neuer, mit diesem verbundener Knoten), <b>Mit KI importieren</b> (von der KI ausgewerteter Freitext), <b>Umbenennen</b>, <b>Werte bearbeiten</b>, <b>Notiz</b>, <b>PDF</b> (die druckbare Karte) und <b>Knoten löschen</b>. Ein gelöschter Datenknoten landet unter <b>Gelöschte Knoten</b>, von wo er wiederhergestellt werden kann; ein von Hand erstellter Knoten wird wirklich gelöscht.</p>` },
+   { id: 'add', h: '7. Einen Knoten hinzufügen', body: `
+<p><b>Neuer Knoten</b> im Panel (oder im Rechtsklick-Menü des Hintergrunds) erstellt einen eigenständigen Knoten; <b>Hinzufügen</b> in der Karte eines Knotens erstellt einen bereits mit ihm verbundenen Knoten. Man wählt den <b>Typ</b> und füllt seine Felder aus: Profil-URL für soziale Netzwerke (die Plattform wird an der Adresse erkannt), Nummer, E-Mail, Benutzername, Nachname, Vorname und Geburtsdatum für Personen, Stadt, Adresse, Hausnummer und Koordinaten für Orte, Kennzeichen und Farbe für Fahrzeuge, Titel und Text für Notizen, Bild für Fotos sowie die Ermittlungsobjekte (Waffen, Betäubungsmittel, Dokumente …).</p>
+${fig(IMG.add, 'Neuer Knoten, verbunden mit einer Zielperson: Typ, Wert, Zielperson-Häkchen, Verbindungseigenschaften und Vorschau.')}
+<p>Jeder Knoten kann mit dem Häkchen <b>Als Zielperson markieren</b> hervorgehoben werden. Entsteht der Knoten verbunden mit einem anderen, stehen unten die <b>Verbindungseigenschaften</b>: Name, Linienform, Linienart, Stärke und Farbe. Die <b>Pfeile</b> werden direkt in der <b>Vorschau</b> gesetzt: Ein Klick neben einen Knoten setzt oder entfernt die Pfeilspitze zu diesem Knoten (beim Überfahren erscheint die Spitze halbtransparent).</p>
+<p>Die Schaltfläche <b>✨ KI</b> oben im Fenster wechselt in den Freitextmodus: Fügen Sie einen Text ein (Protokoll, Hinweis, Nachricht), und die KI schlägt Personen, Telefone, E-Mails, Profile, Orte und Fahrzeuge mit ihren Beziehungen vor; vor dem Anlegen prüfen Sie sie in einer Vorschau.</p>` },
+   { id: 'links', h: '8. Verbindungen', body: `
+<p>Um vorhandene Knoten zu verbinden: mit <kbd>Strg</kbd>+Klick auswählen und <b>Ausgewählte Knoten verbinden</b> drücken. Bei zwei Knoten wählt man die Richtung (die Schaltfläche ⇄ tauscht sie); bei mehreren wird jedes Paar verbunden. Zwischen zwei Knoten können mehrere Verbindungen bestehen, jede mit eigenem Namen.</p>
+${fig(IMG.link, 'Knoten verbinden: Name, Form, Linie, Stärke, Farbe und Pfeile aus der Vorschau (hier in beide Richtungen).')}
+<p>Der <b>Rechtsklick auf eine Verbindung</b> öffnet ihr Fenster: Name und Aussehen ändern, Pfeile umkehren, zu den anderen Verbindungen zwischen denselben Knoten wechseln, eine weitere anlegen und von Hand erstellte Verbindungen löschen. Bei Verbindungen aus den Daten ändert sich nur das Aussehen; <b>Standardstil</b> stellt es wieder her.</p>
+${fig(IMG.edge, 'Bearbeiten einer Verbindung: roter gestrichelter Bogen mit Pfeilen in beide Richtungen.')}
+<p>Im Panel wendet <b>Stil der Verbindungen</b> Form, Linienart und Stärke auf <b>alle</b> Verbindungen des Graphen gleichzeitig an; es ist eine Anzeigeeinstellung, die die Daten nicht verändert und mit „wie festgelegt“ zurückgenommen wird.</p>` },
+   { id: 'edit', h: '9. Werte eines Knotens bearbeiten', body: `
+<p>Aus der Karte öffnet <b>Werte bearbeiten</b> alle Daten des Knotens: Beschriftung, URL (geöffnet mit Alt+Klick), Notiz, das Häkchen <b>Als Zielperson markieren</b> und die Felder jeder Karte. Werte werden geändert oder mit ✕ als gelöscht markiert; freie Felder können hinzugefügt werden. Änderungen berühren die Quelldateien nie: Sie bleiben im Fall und werden sofort angewendet. <b>Alle Änderungen verwerfen</b> setzt den Knoten auf die Originaldaten zurück.</p>
+${fig(IMG.edit, 'Werte bearbeiten: allgemeine Felder, Zielperson-Häkchen und Kartenfelder (auch die aus einer CSV importierten).')}` },
+   { id: 'import', h: '10. Aus CSV oder Excel importieren', body: `
+<p><b>CSV/Excel importieren</b> erstellt viele Knoten und Verbindungen auf einmal, in drei Schritten. Die Datei hat eine Zeile je Verbindung: Knoten 1, Verbindung, Knoten 2; ohne Knoten 2 entsteht ein einzelner Knoten.</p>
+${fig(IMG.imp1, 'Schritt 1: die Datei. „Beispieldatei herunterladen“ erzeugt eine vorausgefüllte Vorlage.')}
+<p>In <b>Schritt 2</b> erscheint jede Spalte der Datei mit einigen Beispielwerten und einer Auswahl <b>Importieren als</b>. Spalten mit erkannten Überschriften sind bereits zugeordnet; die übrigen werden als <b>Zusatzfeld von Knoten 1</b> vorgeschlagen, sodass sie unter dem Spaltennamen in der Karte des Knotens landen und kein Wert verloren geht. Man kann einen Standardtyp für Knoten ohne Typspalte, einen Standardnamen für die Verbindung und angeben, ob die erste Zeile die Überschriften enthält.</p>
+${fig(IMG.imp2, 'Schritt 2: Zuordnung der Spalten.')}
+<p><b>Schritt 3</b> zeigt Zeile für Zeile, was angelegt wird: neue Knoten, bereits vorhandene (kursiv), Verbindungen und etwaige Fehler. Zeilen lassen sich einzeln ausschließen; dann <b>Importieren</b>.</p>
+${fig(IMG.imp3, 'Schritt 3: Vorschau und Import.')}
+<h3>Erkannte Überschriften</h3>
+<table>
+<tr><th>Angabe</th><th>Überschriften (Englisch / Italienisch), mit 1 oder 2 für die Seite</th></tr>
+<tr><td>Name oder Wert des Knotens</td><td>name, name1, name2, nome, value, valore, from/to, da/a</td></tr>
+<tr><td>Typ</td><td>type, tipo (person, phone, email, username, social oder direkt instagram/facebook/…, link, place, vehicle, text, target)</td></tr>
+<tr><td>Weitere Knotenangaben</td><td>label, url, platform, text, surname, birthdate, color (Fahrzeug), target (ja/nein), address, housenumber, lat, lon, note</td></tr>
+<tr><td>Verbindung</td><td>relation, arrow (-> &lt;- &lt;-&gt;), shape (straight, curve, segments, right angle, wedge), color, line (solid, dashed, dotted), width</td></tr>
+</table>
+<div class="note warn">Eine Person wird durch <b>Name und Geburtsdatum zusammen</b> identifiziert: Steht das Datum nur in einigen Zeilen, werden „Rossi Mario (12/03/1980)“ und „Rossi Mario“ zu zwei verschiedenen, durch eine gestrichelte Linie verbundenen Knoten. Wiederholen Sie das Datum in jeder Zeile derselben Person. Zwei vollständige Beispieldateien liegen im Ordner <code>esempi</code> des Programms.</div>` },
+   { id: 'filters', h: '11. Kategorien, Layout und Aussehen', body: `
+<p>Die Schaltflächen <b>Kategorien</b> schalten ganze Knotenkategorien aus und ein (Telefone, Social, Orte …), jede in der Kategoriefarbe mit ihrer Anzahl; <b>Alle ausblenden / Alle anzeigen</b> wirkt auf alle. Eine ausdrückliche Aktion (Erweitern, Hinzufügen) macht die betroffenen Knoten trotzdem wieder sichtbar.</p>
+<p><b>Layout</b>: <b>Organisch</b> ordnet die Knoten kraftbasiert an (verbundene nah beieinander), <b>Kreisförmig</b> im Kreis, <b>Hierarchisch</b> als Baum, <b>Raster</b> in Zeilen und Spalten; <b>Kreuzungen verringern</b> ordnet den aktuellen Graphen neu, um Kreuzungen zu reduzieren. Das Erweitern eines Knotens platziert nur die neuen Knoten ringförmig um ihn, ohne die anderen oder die Kamera zu bewegen.</p>
+<p><b>Kennungen</b> zeigt oder verbirgt die Kennungsknoten (Telefone, E-Mails, Benutzernamen), die als Brücken zwischen Personen dienen. Die <b>Legende</b> unten im Panel zeigt die Farben der vorhandenen Kategorien.</p>` },
+   { id: 'views', h: '12. Gespeicherte Ansichten', body: `
+<p>Eine <b>Ansicht</b> ist eine Momentaufnahme des Graphen: sichtbare und erweiterte Knoten, Positionen, Zoom und Auswahl. Geben Sie einen Namen ein und drücken Sie <b>Ansicht speichern</b>; die Liste zeigt die Ansichten des Falls, <b>Öffnen</b> stellt eine wieder her und 🗑 löscht sie. Ansichten helfen, einen Gedankengang wieder aufzunehmen oder den Bildschirm für den Export vorzubereiten.</p>` },
+   { id: 'sources', h: '13. Dokumentquellen und OCR', body: `
+<p>Legen Sie die Dokumente (PDF, Word, Excel, CSV, Text, Bilder) in den Ordner <code>fonti</code> neben dem Programm und drücken Sie <b>Scannen</b>: Ihr Inhalt wird im Programm indiziert. Von da an findet <b>In Quellen suchen</b>, im Panel oder in der Karte eines Knotens, in welchen Dokumenten ein Begriff oder die Werte des Knotens (Nummern, Namen, E-Mails) vorkommen, mit Kontextausschnitt und Link zum Öffnen der Datei.</p>
+<p><b>Bilder</b> (Fotos von Dokumenten, Screenshots) werden mit der <b>OCR</b> von Tesseract gelesen. Meldet die Statuszeile „OCR nicht verfügbar“, genügt unter Windows die Schaltfläche <b>Tesseract herunterladen (OCR)</b>: Das Programm lädt den offiziellen Installer (ca. 50 MB), entpackt ihn in den Ordner <code>tools/tesseract</code> neben dem Programm und aktiviert die OCR ohne Neustart. Unter Linux und Mac installieren Sie Tesseract über die Paketverwaltung.</p>` },
+   { id: 'ai', h: '14. Künstliche Intelligenz', body: `
+<p>Das Programm kann einen <b>Chatbot</b> (Ollama-kompatibler Server oder einer mit OpenAI-API, lokal oder entfernt) für zwei Dinge nutzen: <b>Knoten aus Freitext erstellen</b> und Namen aus anderen Alphabeten in lateinische Zeichen <b>transliterieren</b>. Die KI ist optional: Ist der Schalter <b>KI aktiv</b> aus, verbindet sich das Programm mit nichts und nutzt nur die lokale Transliteration.</p>
+${fig(IMG.ai, 'KI-Konfiguration: Endpunkt, Schlüssel, Modell, API-Format, Zeitlimit und automatische Transliteration.')}
+<p><b>Konfigurieren</b> öffnet die Einstellungen: Serveradresse, API-Schlüssel (gespeichert in der Datei <code>chatbot.conf</code> neben dem Programm, niemals veröffentlichen), Modell, Anfrageformat, maximale Wartezeit, Kopfzeile und Präfix des Schlüssels. <b>Verbindung testen</b> prüft, ob der Server antwortet. Die Schaltfläche <b>Mit KI transliterieren</b> erscheint im Panel, wenn es Wörter zu transliterieren gibt.</p>
+<div class="note warn">Die im KI-Modus eingefügten Texte und die zu transliterierenden Namen werden an den konfigurierten Server gesendet. Verwenden Sie einen vertrauenswürdigen oder lokalen Server, wenn die Daten vertraulich sind.</div>` },
+   { id: 'manual', h: '15. Manuelle Änderungen und gelöschte Knoten', body: `
+<p><b>Manuelle Änderungen</b> listet alles auf, was im Fall von Hand erstellt oder geändert wurde: hinzugefügte Knoten (auch aus Dateien importierte oder von der KI vorgeschlagene), erstellte Verbindungen und umbenannte Beschriftungen, mit Namensfilter. Von hier löscht man, was nicht mehr gebraucht wird. <b>Gelöschte Knoten</b> listet die aus dem Graphen entfernten Datenknoten auf und erlaubt, sie einzeln oder alle zusammen wiederherzustellen.</p>
+${fig(IMG.manual, 'Manuelle Änderungen: von Hand hinzugefügte Knoten mit Datum und Verbindungen.')}` },
+   { id: 'export', h: '16. Exportieren', body: `
+<p><b>Graph als PDF</b> druckt den Graphen wie am Bildschirm, mit Legende und Fallkopf. <b>Tabellenblatt</b> erzeugt ein Dokument mit allen sichtbaren Knoten und ihren Daten als Tabelle, bereit zum Drucken oder zum Speichern als PDF aus dem Browser. Aus der Karte eines Knotens exportiert <b>PDF</b> nur diese Karte. Die Beispiel-CSV wird im Importfenster heruntergeladen.</p>` },
+   { id: 'lang', h: '17. Sprachen, Lizenzen und Credits', body: `
+<p>Die Sprache der Oberfläche wird in der Liste neben dem Logo gewählt (Italienisch, Englisch, Französisch, Deutsch, Spanisch, Arabisch mit Text von rechts nach links); die Dateninhalte werden nicht übersetzt. Unter dem Logo stehen die Credits des Autors und der Link <b>Lizenzen</b>, der das Programm und alle Drittkomponenten mit den vollständigen Lizenztexten auflistet.</p>
+${fig(IMG.lic, 'Lizenzfenster: links die Komponenten, rechts der Text.')}` },
+   { id: 'files', h: '18. Daten, Ordner und Dateien', body: `
+<table>
+<tr><th>Ordner / Datei</th><th>Inhalt</th></tr>
+<tr><td><code>data/</code></td><td>Alle Daten: das allgemeine Archiv (Fälle, Transliterationswörterbuch, Quellenindex) und der Ordner <code>cases</code> mit einer Datenbank je Fall. Bewahren Sie eine Kopie als Sicherung auf.</td></tr>
+<tr><td><code>data/media/</code></td><td>In Fotoknoten hochgeladene Bilder.</td></tr>
+<tr><td><code>fonti/</code></td><td>Die für die Quellensuche zu indizierenden Dokumente.</td></tr>
+<tr><td><code>chatbot.conf</code></td><td>KI-Konfiguration mit dem Serverschlüssel: nicht weitergeben. <code>chatbot.conf.example</code> ist die leere Vorlage.</td></tr>
+<tr><td><code>tools/tesseract/</code></td><td>Vom Programm heruntergeladenes Tesseract OCR.</td></tr>
+<tr><td><code>esempi/</code></td><td>Beispiel-CSV-Dateien für den Import.</td></tr>
+<tr><td><code>LICENSE</code>, <code>NOTICE</code>, <code>THIRD-PARTY-NOTICES.md</code></td><td>Programmlizenz, Zusatzbedingungen und Lizenzen der Komponenten.</td></tr>
+</table>
+<p>Das Programm ist portabel: Der Ordner kann mit allen Daten auf einen anderen PC kopiert werden. Für eine Sicherung genügt es, den Ordner <code>data</code> (und bei Bedarf <code>fonti</code>) zu kopieren.</p>` },
+  ]
+};
+
+/* ================================================================= ESPAÑOL */
+M.es = {
+  title: 'Manual de uso', sub: 'OSInt Graph · exploración gráfica de datos OSINT para casos de investigación',
+  toc: 'Índice', shortcuts: 'Atajos de ratón y teclado',
+  kbdHead: ['Acción', 'Efecto'],
+  kbd: [
+    ['Clic en un nodo', 'Expande el nodo (muestra sus conexiones); un segundo clic lo contrae'],
+    ['Clic derecho en un nodo', 'Abre la ficha del nodo'],
+    ['Clic derecho en una conexión', 'Abre la ventana de edición de la conexión'],
+    ['Clic derecho en el fondo', 'Menú contextual con «Nuevo nodo»'],
+    ['Ctrl+clic (o ⌘+clic) en un nodo', 'Añade el nodo a la selección o lo quita'],
+    ['Ctrl+arrastrar en el fondo', 'Recuadro de selección: los nodos incluidos se añaden a la selección'],
+    ['Alt+clic en un nodo social', 'Abre el perfil (ventana lateral, pestaña de fondo o copia del enlace, según la opción del panel)'],
+    ['H+clic en un nodo', 'Resalta el nodo y sus conexiones atenuando el resto; de nuevo para quitar'],
+    ['N+clic en un nodo', 'Oculta el nodo de la vista (solo visualización, los datos se conservan)'],
+    ['Rueda del ratón / arrastrar', 'Zoom y desplazamiento del grafo'],
+    ['Esc', 'Cierra la ventana abierta'],
+    ['Intro en el campo nombre de una conexión', 'Guarda'],
+    ['Barra de título de una ventana', 'Arrástrala para mover la ventana; doble clic para volver a centrarla'],
+  ],
+  sections: [
+   { id: 'intro', h: '1. Qué es OSInt Graph', body: `
+<p>OSInt Graph representa como <b>grafo</b> la información de un caso de investigación: personas, teléfonos, correos, perfiles sociales, vehículos, lugares, documentos y las conexiones entre ellos. Cada elemento es un <b>nodo</b>, cada relación una <b>conexión</b>. El programa se ejecuta en tu ordenador: los datos nunca salen del PC, salvo por el servicio opcional de inteligencia artificial que configures tú mismo.</p>
+<p>Se inicia con doble clic en el ejecutable (o, desde el código fuente, con <code>python app.py</code>): arranca un pequeño servidor local y el navegador se abre en <code>http://127.0.0.1:5000</code>. La ventana de consola muestra los mensajes del programa y sirve para detenerlo (<kbd>Ctrl</kbd>+<kbd>C</kbd> o cerrando la ventana). El puerto se cambia con la variable de entorno <code>PORT</code>.</p>
+<div class="note">El programa es software libre (GNU GPL v3 con obligación de atribución). Las licencias del programa y de todos sus componentes se leen desde el enlace <b>Licencias</b> del panel izquierdo.</div>` },
+   { id: 'cases', h: '2. Casos: primer inicio y gestión', body: `
+<p>Todo el trabajo se organiza en <b>casos</b>. Cada caso es un archivo separado con sus propios nodos, conexiones, notas, vistas y archivos importados. En el primer inicio no existe ningún caso: el programa pide enseguida crear uno, y mientras no haya un caso abierto no se pueden añadir nodos ni importar datos.</p>
+${fig(IMG.first, 'Primer inicio: ningún caso abierto, la ventana «Nuevo caso» se abre sola.')}
+<p>En el recuadro <b>Caso</b>, arriba en el panel:</p>
+<ul>
+<li>el <b>desplegable</b> muestra el caso abierto; al elegir otro la página se recarga con sus datos;</li>
+<li><b>Nuevo</b> crea un caso vacío y lo abre; <b>Modificar</b> cambia nombre y descripción;</li>
+<li><b>Unir</b> crea un nuevo caso con el contenido de dos o más casos: los nodos iguales (misma persona, mismo teléfono…) se convierten en uno y los datos distintos quedan como fichas separadas del mismo nodo; opcionalmente se eliminan los casos originales;</li>
+<li><b>Eliminar</b> borra el caso con todo su contenido. No se puede deshacer: si era el último caso se vuelve al estado inicial sin casos.</li>
+</ul>
+${fig(IMG.caseEdit, 'Modificación del nombre y la descripción del caso.')}` },
+   { id: 'interface', h: '3. La interfaz', body: `
+<p>A la izquierda el <b>panel de mandos</b>, a la derecha el <b>grafo</b> sobre fondo blanco. El panel se desplaza verticalmente y contiene, de arriba abajo: logotipo y créditos, el caso, la búsqueda, los botones principales, la inteligencia artificial, las vistas guardadas, las fuentes documentales, los filtros por categoría, las opciones de conexiones y disposición, la exportación, la selección, la leyenda y la línea de estado.</p>
+${fig(IMG.over, 'Vista general: panel a la izquierda, grafo a la derecha. El nodo dorado es el objetivo, las líneas rojas discontinuas son conexiones personalizadas.')}
+<div class="two">
+${fig(IMG.sideTop, 'Parte alta del panel.', 'narrow')}
+${fig(IMG.sideBottom, 'Parte baja del panel: disposición, exportación, selección, leyenda.', 'narrow')}
+</div>
+<p>Los nodos tienen un icono y un color por tipo (persona, teléfono, correo, social con el logotipo de la plataforma, vehículo, lugar, enlace, texto, foto). El <b>objetivo</b> es más grande, con borde y nombre dorados. Los nodos procedentes de los datos de partida tienen borde rojo. Un nodo expandido tiene borde doble.</p>` },
+   { id: 'search', h: '4. Buscar y llevar nodos al grafo', body: `
+<p>Escribe al menos tres caracteres en <b>Buscar nodo</b>: la lista muestra los nodos que contienen el texto en el nombre, los alias, las notas y los valores de las fichas. Un clic en un resultado lleva el nodo al grafo y lo centra. <b>Añadir todos los resultados</b> los lleva todos a la vez; <b>Cargar todos los objetivos</b> añade los objetivos del caso.</p>
+${fig(IMG.search, 'Resultados de la búsqueda con el tipo del nodo y una marca para los que ya están en el grafo.')}
+<p>Con la <b>búsqueda aproximada</b> se encuentran también grafías cercanas (erratas, transliteraciones distintas); el nivel de 1 a 6 indica cuántas diferencias tolerar. <b>Vaciar grafo</b> quita todos los nodos de la vista sin borrar nada.</p>` },
+   { id: 'graph', h: '5. Moverse por el grafo', body: `
+<p>Arrastra el fondo para desplazarte y usa la rueda para hacer zoom. <b>Ajustar</b> devuelve todo a la ventana. Un <b>clic en un nodo</b> lo expande, mostrando los nodos conectados hasta la profundidad elegida en <b>Prof.</b> (1 = solo vecinos directos); un <b>segundo clic</b> lo contrae, ocultando los vecinos que se veían gracias a él (quedan los conectados a otros nodos expandidos o seleccionados). <b>Expandir todo</b> y <b>Contraer</b> actúan sobre todos los nodos visibles.</p>
+<p>El <b>clic derecho</b> en un nodo abre su ficha; en una conexión abre la ventana de la conexión; en el fondo abre un menú con <b>Nuevo nodo</b>.</p>
+${fig(IMG.ctx, 'Clic derecho en el fondo: menú contextual.')}
+<p>Con <kbd>Ctrl</kbd>+clic (o <kbd>Ctrl</kbd>+arrastrando un recuadro) se construye una <b>selección</b> de nodos, listada en el recuadro <b>Selección</b>: desde ahí se resaltan todos los caminos entre los nodos elegidos (dentro de un número máximo de saltos) y se crean conexiones entre ellos. <kbd>H</kbd>+clic resalta un nodo y sus conexiones atenuando el resto; <kbd>N</kbd>+clic oculta un nodo (el botón <b>Mostrar ocultos</b> los hace reaparecer). <kbd>Alt</kbd>+clic en un perfil social lo abre en el navegador según la opción de <b>Alt+clic en redes sociales</b>.</p>
+<p><b>Mostrar nodos con</b> filtra el grafo por número mínimo de conexiones: útil para hacer emerger los nodos más conectados.</p>` },
+   { id: 'card', h: '6. La ficha del nodo', body: `
+<p>La ficha (clic derecho en el nodo) reúne todo lo que se sabe de ese nodo: la <b>nota</b> del usuario, el <b>resumen de conexiones</b> agrupadas por categoría (redes sociales por plataforma, luego teléfonos, correos, lugares, vehículos…), las <b>fichas</b> con los datos en bruto y las imágenes. Cada valor se copia al portapapeles con un clic; los nombres de los nodos conectados son pulsables y llevan al nodo.</p>
+${fig(IMG.card, 'Ficha del objetivo con nota, resumen de conexiones y botones abajo.')}
+<p>Los botones de abajo: <b>Expandir rama / Contraer</b>, <b>Centrar en el grafo</b>, <b>Buscar en las fuentes</b> (los términos de la ficha en los documentos indexados), <b>Añadir</b> (un nuevo nodo conectado a este), <b>Importar con IA</b> (texto libre interpretado por la IA), <b>Renombrar</b>, <b>Modificar valores</b>, <b>Nota</b>, <b>PDF</b> (la ficha imprimible) y <b>Eliminar nodo</b>. Un nodo de los datos eliminado pasa a <b>Nodos eliminados</b>, desde donde se puede restaurar; un nodo creado a mano se borra de verdad.</p>` },
+   { id: 'add', h: '7. Añadir un nodo', body: `
+<p><b>Nuevo nodo</b> en el panel (o en el menú del clic derecho sobre el fondo) crea un nodo independiente; <b>Añadir</b> en la ficha de un nodo crea un nodo ya conectado a él. Se elige el <b>tipo</b> y se rellenan sus campos: URL del perfil para redes sociales (la plataforma se reconoce por la dirección), número, correo, nombre de usuario, apellido, nombre y fecha de nacimiento para las personas, ciudad, dirección, número y coordenadas para los lugares, matrícula y color para los vehículos, título y texto para las notas, imagen para las fotos, más los elementos de investigación (armas, estupefacientes, documentos…).</p>
+${fig(IMG.add, 'Nuevo nodo conectado a un objetivo: tipo, valor, casilla objetivo, propiedades de la conexión y vista previa.')}
+<p>Cualquier nodo puede resaltarse como <b>objetivo</b> con la casilla <b>Marcar como objetivo</b>. Si el nodo nace conectado a otro, abajo están las <b>propiedades de la conexión</b>: nombre, forma de la línea, tipo de línea, grosor y color. Las <b>flechas</b> se ajustan directamente en la <b>vista previa</b>: un clic junto a un nodo pone o quita la punta de flecha hacia ese nodo (al pasar el ratón aparece la punta translúcida).</p>
+<p>El botón <b>✨ IA</b> arriba en la ventana pasa al modo de texto libre: pegas un texto (un acta, un aviso, un mensaje) y la IA propone personas, teléfonos, correos, perfiles, lugares y vehículos con sus relaciones; antes de crearlos se revisan en una vista previa.</p>` },
+   { id: 'links', h: '8. Conexiones', body: `
+<p>Para conectar nodos ya presentes: selecciónalos con <kbd>Ctrl</kbd>+clic y pulsa <b>Conectar los nodos seleccionados</b>. Con dos nodos se elige el sentido (el botón ⇄ los intercambia); con más nodos se conectan todas las parejas. Entre dos nodos pueden existir varias conexiones, cada una con su nombre.</p>
+${fig(IMG.link, 'Conectar nodos: nombre, forma, línea, grosor, color y flechas desde la vista previa (aquí en ambos sentidos).')}
+<p>El <b>clic derecho en una conexión</b> abre su ventana: se modifican nombre y aspecto, se invierten las flechas, se pasa a las otras conexiones entre los mismos nodos, se crea otra y, para las creadas a mano, se elimina. En las conexiones que vienen de los datos solo cambia el aspecto; <b>Estilo predeterminado</b> lo restablece.</p>
+${fig(IMG.edge, 'Modificación de una conexión: arco curvo rojo discontinuo con flechas en ambos sentidos.')}
+<p>En el panel, <b>Estilo de las conexiones</b> aplica forma, tipo de línea y grosor a <b>todas</b> las conexiones del grafo a la vez; es una preferencia de visualización que no modifica los datos y se anula eligiendo «como están».</p>` },
+   { id: 'edit', h: '9. Modificar los valores de un nodo', body: `
+<p>Desde la ficha, <b>Modificar valores</b> abre todos los datos del nodo: etiqueta, URL (se abre con Alt+clic), nota, la casilla <b>Marcar como objetivo</b> y los campos de cada ficha. Los valores se cambian o se marcan como eliminados con ✕; se pueden añadir campos libres. Las modificaciones nunca tocan los archivos de origen: quedan en el caso y se aplican al vuelo. <b>Deshacer todas las modificaciones</b> devuelve el nodo a los datos originales.</p>
+${fig(IMG.edit, 'Modificar valores: campos generales, casilla objetivo y campos de la ficha (incluidos los importados de un CSV).')}` },
+   { id: 'import', h: '10. Importar desde CSV o Excel', body: `
+<p><b>Importar CSV/Excel</b> crea muchos nodos y conexiones de una vez, en tres pasos. El archivo tiene una fila por conexión: nodo 1, conexión, nodo 2; sin nodo 2 se crea un nodo aislado.</p>
+${fig(IMG.imp1, 'Paso 1: el archivo. «Descargar un archivo de ejemplo» produce una plantilla ya rellena.')}
+<p>En el <b>paso 2</b> cada columna del archivo aparece con algunos valores de ejemplo y un desplegable <b>Importar como</b>. Las columnas con encabezados reconocidos ya están asignadas; las demás se proponen como <b>campo adicional del nodo 1</b>, de modo que van a la ficha del nodo con el nombre de la columna y no se pierde ningún valor. Se puede indicar un tipo predeterminado para los nodos sin columna de tipo, un nombre predeterminado para la conexión y si la primera fila contiene los encabezados.</p>
+${fig(IMG.imp2, 'Paso 2: asignación de las columnas.')}
+<p>El <b>paso 3</b> muestra lo que se creará fila por fila: nodos nuevos, nodos ya presentes (en cursiva), conexiones y posibles errores. Las filas se pueden excluir una a una; después <b>Importar</b>.</p>
+${fig(IMG.imp3, 'Paso 3: vista previa e importación.')}
+<h3>Encabezados reconocidos</h3>
+<table>
+<tr><th>Dato</th><th>Encabezados (inglés / italiano), con 1 o 2 para el lado</th></tr>
+<tr><td>Nombre o valor del nodo</td><td>name, name1, name2, nome, value, valore, from/to, da/a</td></tr>
+<tr><td>Tipo</td><td>type, tipo (person, phone, email, username, social o directamente instagram/facebook/…, link, place, vehicle, text, target)</td></tr>
+<tr><td>Otros datos del nodo</td><td>label, url, platform, text, surname, birthdate, color (vehículo), target (sí/no), address, housenumber, lat, lon, note</td></tr>
+<tr><td>Conexión</td><td>relation, arrow (-> &lt;- &lt;-&gt;), shape (straight, curve, segments, right angle, wedge), color, line (solid, dashed, dotted), width</td></tr>
+</table>
+<div class="note warn">Una persona se identifica por <b>nombre y fecha de nacimiento juntos</b>: si la fecha aparece solo en algunas filas, «Rossi Mario (12/03/1980)» y «Rossi Mario» se convierten en dos nodos distintos unidos por una línea discontinua. Repite la fecha en cada fila de la misma persona. Dos archivos de ejemplo completos están en la carpeta <code>esempi</code> del programa.</div>` },
+   { id: 'filters', h: '11. Categorías, disposición y aspecto', body: `
+<p>Los botones <b>Categorías</b> apagan o encienden categorías enteras de nodos (teléfonos, redes sociales, lugares…), cada uno con el color de la categoría y su recuento; <b>Ocultar todo / Mostrar todo</b> actúa sobre todas. Una acción explícita (expansión, adición) vuelve a hacer visibles de todos modos los nodos implicados.</p>
+<p><b>Disposición</b>: <b>Orgánica</b> coloca los nodos por fuerzas (los conectados cerca), <b>Circular</b> en círculo, <b>Jerárquica</b> en árbol, <b>Rejilla</b> en filas y columnas; <b>Reducir cruces</b> reordena el grafo actual para disminuir los cruces. La expansión de un nodo coloca solo los nodos nuevos en corona a su alrededor, sin mover los demás ni la cámara.</p>
+<p><b>Identificadores</b> muestra u oculta los nodos identificativos (teléfonos, correos, nombres de usuario) usados como puente entre personas. La <b>leyenda</b> al final del panel recoge los colores de las categorías presentes.</p>` },
+   { id: 'views', h: '12. Vistas guardadas', body: `
+<p>Una <b>vista</b> es la fotografía del grafo tal como está: nodos visibles y expandidos, posiciones, zoom y selección. Escribe un nombre y pulsa <b>Guardar vista</b>; el desplegable lista las vistas del caso, <b>Abrir</b> la restaura y 🗑 la elimina. Las vistas sirven para retomar un razonamiento o preparar la pantalla que se va a exportar.</p>` },
+   { id: 'sources', h: '13. Fuentes documentales y OCR', body: `
+<p>Pon los documentos (PDF, Word, Excel, CSV, texto, imágenes) en la carpeta <code>fonti</code> junto al programa y pulsa <b>Escanear</b>: su contenido se indexa en el programa. Desde entonces <b>Buscar en las fuentes</b>, en el panel o en la ficha de un nodo, encuentra en qué documentos aparecen un término o los valores del nodo (números, nombres, correos), con el fragmento de contexto y el enlace para abrir el archivo.</p>
+<p>Las <b>imágenes</b> (fotos de documentos, capturas) se leen con el <b>OCR</b> de Tesseract. Si la línea de estado dice «OCR no disponible», en Windows basta el botón <b>Descargar Tesseract (OCR)</b>: el programa descarga el instalador oficial (unos 50 MB), lo extrae en la carpeta <code>tools/tesseract</code> junto al programa y activa el OCR sin reiniciar. En Linux y Mac se instala Tesseract desde el gestor de paquetes.</p>` },
+   { id: 'ai', h: '14. Inteligencia artificial', body: `
+<p>El programa puede usar un <b>chatbot</b> (un servidor compatible con Ollama o con API de OpenAI, local o remoto) para dos cosas: <b>crear nodos a partir de texto libre</b> y <b>transliterar</b> a caracteres latinos los nombres escritos en otros alfabetos. La IA es opcional: con el interruptor <b>IA activa</b> apagado el programa no se conecta a nada y usa solo la transliteración local.</p>
+${fig(IMG.ai, 'Configuración de la IA: endpoint, clave, modelo, formato de API, tiempo de espera y transliteración automática.')}
+<p><b>Configurar</b> abre los ajustes: dirección del servidor, clave API (guardada en el archivo <code>chatbot.conf</code> junto al programa, nunca lo publiques), modelo, formato de las peticiones, tiempo máximo de espera, cabecera y prefijo de la clave. <b>Probar conexión</b> comprueba que el servidor responde. El botón <b>Transliterar con IA</b> aparece en el panel cuando hay palabras que transliterar.</p>
+<div class="note warn">Los textos que pegas en el modo IA y los nombres por transliterar se envían al servidor que hayas configurado. Usa un servidor de confianza, o uno local, si los datos son reservados.</div>` },
+   { id: 'manual', h: '15. Modificaciones manuales y nodos eliminados', body: `
+<p><b>Modificaciones manuales</b> lista todo lo creado o cambiado a mano en el caso: nodos añadidos (también los importados de archivos o propuestos por la IA), conexiones creadas y etiquetas renombradas, con un filtro por nombre. Desde aquí se elimina lo que ya no sirve. <b>Nodos eliminados</b> lista los nodos de los datos quitados del grafo y permite restaurarlos uno a uno o todos juntos.</p>
+${fig(IMG.manual, 'Modificaciones manuales: nodos añadidos a mano con fecha y conexiones.')}` },
+   { id: 'export', h: '16. Exportar', body: `
+<p><b>Grafo en PDF</b> imprime el grafo tal como está en pantalla, con leyenda y encabezado del caso. <b>Ficha tabular</b> produce un documento con todos los nodos visibles y sus datos, en tabla, listo para imprimir o guardar en PDF desde el navegador. Desde la ficha de un nodo, <b>PDF</b> exporta solo esa ficha. El CSV de ejemplo se descarga desde la ventana de importación.</p>` },
+   { id: 'lang', h: '17. Idiomas, licencias y créditos', body: `
+<p>El idioma de la interfaz se elige en el desplegable junto al logotipo (italiano, inglés, francés, alemán, español, árabe con texto de derecha a izquierda); el contenido de los datos no se traduce. Bajo el logotipo están los créditos del autor y el enlace <b>Licencias</b>, que lista el programa y todos los componentes de terceros con los textos completos de las licencias.</p>
+${fig(IMG.lic, 'Ventana de licencias: a la izquierda los componentes, a la derecha el texto.')}` },
+   { id: 'files', h: '18. Datos, carpetas y archivos', body: `
+<table>
+<tr><th>Carpeta / archivo</th><th>Contenido</th></tr>
+<tr><td><code>data/</code></td><td>Todos los datos: el archivo general (casos, diccionario de transliteración, índice de fuentes) y la carpeta <code>cases</code> con una base de datos por caso. Guarda una copia como respaldo.</td></tr>
+<tr><td><code>data/media/</code></td><td>Las imágenes cargadas en los nodos foto.</td></tr>
+<tr><td><code>fonti/</code></td><td>Los documentos que indexar para la búsqueda en las fuentes.</td></tr>
+<tr><td><code>chatbot.conf</code></td><td>Configuración de la IA con la clave del servidor: no debe compartirse. <code>chatbot.conf.example</code> es la plantilla vacía.</td></tr>
+<tr><td><code>tools/tesseract/</code></td><td>Tesseract OCR descargado por el programa.</td></tr>
+<tr><td><code>esempi/</code></td><td>Archivos CSV de ejemplo para la importación.</td></tr>
+<tr><td><code>LICENSE</code>, <code>NOTICE</code>, <code>THIRD-PARTY-NOTICES.md</code></td><td>Licencia del programa, términos adicionales y licencias de los componentes.</td></tr>
+</table>
+<p>El programa es portable: la carpeta se puede copiar a otro PC con todos los datos. Para el respaldo basta copiar la carpeta <code>data</code> (y <code>fonti</code>, si hace falta).</p>` },
+  ]
+};
+
+/* ================================================================= العربية */
+M.ar = {
+  title: 'دليل الاستخدام', sub: 'OSInt Graph · استكشاف بياني لبيانات OSINT في القضايا التحقيقية',
+  toc: 'الفهرس', shortcuts: 'اختصارات الفأرة ولوحة المفاتيح',
+  kbdHead: ['الإجراء', 'الأثر'],
+  kbd: [
+    ['نقرة على عقدة', 'توسّع العقدة (تعرض روابطها)؛ النقرة الثانية تطويها'],
+    ['نقرة يمنى على عقدة', 'تفتح بطاقة العقدة'],
+    ['نقرة يمنى على رابط', 'تفتح نافذة تعديل الرابط'],
+    ['نقرة يمنى على الخلفية', 'قائمة سياقية فيها «عقدة جديدة»'],
+    ['Ctrl+نقرة (أو ⌘+نقرة) على عقدة', 'تضيف العقدة إلى التحديد أو تزيلها منه'],
+    ['Ctrl+سحب على الخلفية', 'مستطيل تحديد: العقد الواقعة داخله تُضاف إلى التحديد'],
+    ['Alt+نقرة على عقدة اجتماعية', 'تفتح الحساب (نافذة جانبية أو تبويب خلفي أو نسخ الرابط حسب الخيار في اللوحة)'],
+    ['H+نقرة على عقدة', 'تُبرز العقدة وروابطها وتخفّف الباقي؛ مرة أخرى للإلغاء'],
+    ['N+نقرة على عقدة', 'تخفي العقدة من العرض (عرض فقط، البيانات تبقى)'],
+    ['عجلة الفأرة / السحب', 'تكبير وتحريك الرسم'],
+    ['Esc', 'يغلق النافذة المفتوحة'],
+    ['Enter في حقل اسم الرابط', 'يحفظ'],
+    ['شريط عنوان النافذة', 'اسحبه لتحريك النافذة؛ نقرة مزدوجة لإعادتها إلى الوسط'],
+  ],
+  sections: [
+   { id: 'intro', h: '1. ما هو OSInt Graph', body: `
+<p>يمثّل OSInt Graph معلومات القضية التحقيقية على شكل <b>رسم بياني</b>: أشخاص وهواتف وبريد إلكتروني وحسابات اجتماعية ومركبات وأماكن ووثائق والروابط بينها. كل عنصر <b>عقدة</b>، وكل علاقة <b>رابط</b>. يعمل البرنامج على حاسوبك: لا تغادر البيانات الجهاز أبداً، باستثناء خدمة الذكاء الاصطناعي الاختيارية التي تضبطها بنفسك.</p>
+<p>يُشغَّل بنقرة مزدوجة على الملف التنفيذي (أو من الشيفرة المصدرية بالأمر <code>python app.py</code>): يبدأ خادم محلي صغير ويُفتح المتصفح على <code>http://127.0.0.1:5000</code>. تعرض نافذة الطرفية رسائل البرنامج وتُستخدم لإيقافه (<kbd>Ctrl</kbd>+<kbd>C</kbd> أو إغلاق النافذة). يُغيَّر المنفذ بمتغير البيئة <code>PORT</code>.</p>
+<div class="note">البرنامج برمجية حرة (GNU GPL v3 مع وجوب الإسناد). يمكن قراءة تراخيص البرنامج وكل مكوّناته من رابط <b>التراخيص</b> في اللوحة اليسرى.</div>` },
+   { id: 'cases', h: '2. القضايا: التشغيل الأول والإدارة', body: `
+<p>كل العمل منظّم في <b>قضايا</b>. كل قضية أرشيف منفصل له عقده وروابطه وملاحظاته وطرق عرضه وملفاته المستوردة. عند التشغيل الأول لا توجد أي قضية: يطلب البرنامج فوراً إنشاء واحدة، وما دامت لا توجد قضية مفتوحة لا يمكن إضافة عقد ولا استيراد بيانات.</p>
+${fig(IMG.first, 'التشغيل الأول: لا قضية مفتوحة، ونافذة «قضية جديدة» تُفتح تلقائياً.')}
+<p>في مربع <b>القضية</b> أعلى اللوحة:</p>
+<ul>
+<li>تعرض <b>القائمة المنسدلة</b> القضية المفتوحة؛ اختيار أخرى يعيد تحميل الصفحة ببياناتها؛</li>
+<li><b>جديد</b> ينشئ قضية فارغة ويفتحها؛ <b>تعديل</b> يغيّر الاسم والوصف؛</li>
+<li><b>دمج</b> ينشئ قضية جديدة بمحتوى قضيتين أو أكثر: العقد المتطابقة (الشخص نفسه، الهاتف نفسه…) تصبح واحدة، والبيانات المختلفة تبقى بطاقات منفصلة للعقدة نفسها؛ ويمكن اختيار حذف القضايا الأصلية؛</li>
+<li><b>حذف</b> يمسح القضية بكل محتواها. لا يمكن التراجع عن ذلك: إن كانت آخر قضية يعود البرنامج إلى الحالة الأولى بلا قضايا.</li>
+</ul>
+${fig(IMG.caseEdit, 'تعديل اسم القضية ووصفها.')}` },
+   { id: 'interface', h: '3. الواجهة', body: `
+<p>على اليسار <b>لوحة الأوامر</b>، وعلى اليمين <b>الرسم البياني</b> على خلفية بيضاء. تُمرَّر اللوحة عمودياً وتحتوي من الأعلى: الشعار والاعتمادات، القضية، البحث، الأزرار الرئيسية، الذكاء الاصطناعي، طرق العرض المحفوظة، المصادر الوثائقية، مرشّحات الفئات، خيارات الروابط والتخطيط، التصدير، التحديد، المفتاح، وسطر الحالة.</p>
+${fig(IMG.over, 'نظرة عامة: اللوحة على اليسار والرسم على اليمين. العقدة الذهبية هي الهدف، والخطوط الحمراء المتقطعة روابط مخصّصة.')}
+<div class="two">
+${fig(IMG.sideTop, 'الجزء العلوي من اللوحة.', 'narrow')}
+${fig(IMG.sideBottom, 'الجزء السفلي من اللوحة: التخطيط، التصدير، التحديد، المفتاح.', 'narrow')}
+</div>
+<p>لكل نوع من العقد أيقونة ولون (شخص، هاتف، بريد، حساب اجتماعي بشعار المنصة، مركبة، مكان، رابط، نص، صورة). <b>الهدف</b> أكبر حجماً وبإطار واسم ذهبيين. العقد الآتية من بيانات البداية لها إطار أحمر. العقدة الموسّعة لها إطار مزدوج.</p>` },
+   { id: 'search', h: '4. البحث وجلب العقد إلى الرسم', body: `
+<p>اكتب ثلاثة أحرف على الأقل في <b>ابحث عن عقدة</b>: تعرض القائمة العقد التي تحتوي النص في الاسم أو الأسماء البديلة أو الملاحظات أو قيم البطاقات. النقر على نتيجة يجلب العقدة إلى الرسم ويضعها في الوسط. <b>إضافة كل النتائج</b> يجلبها دفعة واحدة؛ <b>تحميل كل الأهداف</b> يضيف أهداف القضية.</p>
+${fig(IMG.search, 'نتائج البحث مع نوع العقدة وعلامة للعقد الموجودة في الرسم.')}
+<p>مع <b>البحث التقريبي</b> تُعثر أيضاً على الكتابات القريبة (أخطاء إملائية، نقحرات مختلفة)؛ يحدد المستوى من 1 إلى 6 عدد الاختلافات المقبولة. <b>تفريغ الرسم</b> يزيل كل العقد من العرض دون حذف شيء.</p>` },
+   { id: 'graph', h: '5. التنقل في الرسم', body: `
+<p>اسحب الخلفية للتحريك واستخدم العجلة للتكبير. <b>ملاءمة</b> يعيد كل شيء إلى النافذة. <b>نقرة على عقدة</b> توسّعها فتظهر العقد المتصلة ضمن العمق المختار في <b>العمق</b> (1 = الجيران المباشرون فقط)؛ <b>النقرة الثانية</b> تطويها وتخفي الجيران الذين ظهروا بسببها (يبقى المتصلون بعقد أخرى موسّعة أو محدّدة). <b>توسيع الكل</b> و<b>طي</b> يعملان على كل العقد الظاهرة.</p>
+<p><b>النقرة اليمنى</b> على عقدة تفتح بطاقتها؛ وعلى رابط تفتح نافذة الرابط؛ وعلى الخلفية تفتح قائمة فيها <b>عقدة جديدة</b>.</p>
+${fig(IMG.ctx, 'نقرة يمنى على الخلفية: القائمة السياقية.')}
+<p>بـ <kbd>Ctrl</kbd>+نقرة (أو <kbd>Ctrl</kbd>+سحب مستطيل) تبني <b>تحديداً</b> من العقد يظهر في مربع <b>التحديد</b>: ومنه تُبرز كل المسارات بين العقد المختارة (ضمن حد أقصى من القفزات) وتنشئ روابط بينها. <kbd>H</kbd>+نقرة تُبرز عقدة وروابطها وتخفّف الباقي؛ <kbd>N</kbd>+نقرة تخفي عقدة (زر <b>إظهار المخفية</b> يعيدها). <kbd>Alt</kbd>+نقرة على حساب اجتماعي تفتحه في المتصفح حسب الخيار في <b>Alt+نقرة على الشبكات الاجتماعية</b>.</p>
+<p><b>إظهار العقد التي لها</b> يرشّح الرسم حسب الحد الأدنى لعدد الروابط: مفيد لإبراز العقد الأكثر اتصالاً.</p>` },
+   { id: 'card', h: '6. بطاقة العقدة', body: `
+<p>تجمع البطاقة (نقرة يمنى على العقدة) كل ما يُعرف عن تلك العقدة: <b>ملاحظة</b> المستخدم، و<b>ملخص الروابط</b> مجمّعة حسب الفئة (الشبكات الاجتماعية حسب المنصة، ثم الهواتف والبريد والأماكن والمركبات…)، و<b>البطاقات</b> بالبيانات الخام والصور. تُنسخ كل قيمة إلى الحافظة بنقرة؛ وأسماء العقد المتصلة قابلة للنقر وتقود إلى العقدة.</p>
+${fig(IMG.card, 'بطاقة الهدف مع الملاحظة وملخص الروابط والأزرار في الأسفل.')}
+<p>الأزرار في الأسفل: <b>توسيع الفرع / طي</b>، <b>توسيط في الرسم</b>، <b>البحث في المصادر</b> (مصطلحات البطاقة في الوثائق المفهرسة)، <b>إضافة</b> (عقدة جديدة متصلة بهذه)، <b>استيراد بالذكاء الاصطناعي</b> (نص حر يفسّره الذكاء الاصطناعي)، <b>إعادة تسمية</b>، <b>تعديل القيم</b>، <b>ملاحظة</b>، <b>PDF</b> (البطاقة القابلة للطباعة) و<b>حذف العقدة</b>. العقدة المحذوفة من البيانات تنتقل إلى <b>العقد المحذوفة</b> ويمكن استعادتها؛ أما العقدة المنشأة يدوياً فتُحذف فعلاً.</p>` },
+   { id: 'add', h: '7. إضافة عقدة', body: `
+<p><b>عقدة جديدة</b> في اللوحة (أو في قائمة النقرة اليمنى على الخلفية) تنشئ عقدة مستقلة؛ و<b>إضافة</b> في بطاقة عقدة تنشئ عقدة متصلة بها مسبقاً. يُختار <b>النوع</b> وتُملأ حقوله: رابط الحساب للشبكات الاجتماعية (تُعرف المنصة من العنوان)، الرقم، البريد، اسم المستخدم، اسم العائلة والاسم وتاريخ الميلاد للأشخاص، المدينة والعنوان ورقم المبنى والإحداثيات للأماكن، اللوحة واللون للمركبات، العنوان والنص للملاحظات، الصورة للصور، إضافة إلى عناصر التحقيق (أسلحة، مخدرات، وثائق…).</p>
+${fig(IMG.add, 'عقدة جديدة متصلة بهدف: النوع، القيمة، خانة الهدف، خصائص الرابط والمعاينة.')}
+<p>يمكن تمييز أي عقدة <b>هدفاً</b> بخانة <b>تمييز كهدف</b>. إن وُلدت العقدة متصلة بأخرى، ففي الأسفل <b>خصائص الرابط</b>: الاسم وشكل الخط ونوعه والسماكة واللون. تُضبط <b>الأسهم</b> مباشرة على <b>المعاينة</b>: نقرة بجوار عقدة تضيف رأس السهم نحو تلك العقدة أو تزيله (يظهر الرأس شفافاً عند التمرير).</p>
+<p>زر <b>✨ الذكاء الاصطناعي</b> أعلى النافذة ينتقل إلى وضع النص الحر: الصق نصاً (محضراً، بلاغاً، رسالة) فيقترح الذكاء الاصطناعي أشخاصاً وهواتف وبريداً وحسابات وأماكن ومركبات مع علاقاتها؛ وتراجعها في معاينة قبل إنشائها.</p>` },
+   { id: 'links', h: '8. الروابط', body: `
+<p>لربط عقد موجودة: حدّدها بـ <kbd>Ctrl</kbd>+نقرة واضغط <b>ربط العقد المحددة</b>. مع عقدتين تختار الاتجاه (زر ⇄ يبدّلهما)؛ ومع أكثر تُربط كل الأزواج. يمكن أن توجد عدة روابط بين عقدتين، لكل منها اسمه.</p>
+${fig(IMG.link, 'ربط العقد: الاسم والشكل والخط والسماكة واللون والأسهم من المعاينة (هنا في الاتجاهين).')}
+<p><b>النقرة اليمنى على رابط</b> تفتح نافذته: تعديل الاسم والمظهر، عكس الأسهم، الانتقال إلى الروابط الأخرى بين العقدتين نفسيهما، إنشاء رابط آخر، وحذف الروابط المنشأة يدوياً. أما الروابط الآتية من البيانات فيتغير مظهرها فقط؛ و<b>النمط الافتراضي</b> يعيده.</p>
+${fig(IMG.edge, 'تعديل رابط: قوس منحنٍ أحمر متقطع بأسهم في الاتجاهين.')}
+<p>في اللوحة، يطبّق <b>نمط الروابط</b> الشكل ونوع الخط والسماكة على <b>كل</b> روابط الرسم معاً؛ وهو تفضيل عرض لا يغيّر البيانات ويُلغى باختيار «كما هي مضبوطة».</p>` },
+   { id: 'edit', h: '9. تعديل قيم عقدة', body: `
+<p>من البطاقة، يفتح <b>تعديل القيم</b> كل بيانات العقدة: التسمية، الرابط (يُفتح بـ Alt+نقرة)، الملاحظة، خانة <b>تمييز كهدف</b> وحقول كل بطاقة. تُغيَّر القيم أو تُعلَّم محذوفة بـ ✕؛ ويمكن إضافة حقول حرة. لا تمسّ التعديلات ملفات المصدر أبداً: تبقى في القضية وتُطبَّق فوراً. <b>التراجع عن كل التعديلات</b> يعيد العقدة إلى بياناتها الأصلية.</p>
+${fig(IMG.edit, 'تعديل القيم: الحقول العامة وخانة الهدف وحقول البطاقة (بما فيها المستوردة من CSV).')}` },
+   { id: 'import', h: '10. الاستيراد من CSV أو Excel', body: `
+<p><b>استيراد CSV/Excel</b> ينشئ عقداً وروابط كثيرة دفعة واحدة، في ثلاث خطوات. في الملف صف لكل رابط: العقدة 1، الرابط، العقدة 2؛ ومن دون عقدة 2 تُنشأ عقدة منفردة.</p>
+${fig(IMG.imp1, 'الخطوة 1: الملف. «تنزيل ملف نموذجي» ينتج قالباً معبّأً.')}
+<p>في <b>الخطوة 2</b> يظهر كل عمود من الملف مع بعض القيم النموذجية وقائمة <b>استيراد كـ</b>. الأعمدة ذات العناوين المعروفة مُسندة مسبقاً؛ والأخرى تُقترح <b>حقلاً إضافياً للعقدة 1</b> فتُحفظ في بطاقة العقدة باسم العمود ولا تضيع أي قيمة. يمكن تحديد نوع افتراضي للعقد بلا عمود نوع، واسم افتراضي للرابط، وما إذا كان الصف الأول يحتوي العناوين.</p>
+${fig(IMG.imp2, 'الخطوة 2: مطابقة الأعمدة.')}
+<p>تعرض <b>الخطوة 3</b> ما سيُنشأ صفاً صفاً: عقد جديدة، عقد موجودة (بخط مائل)، روابط وأخطاء إن وُجدت. يمكن استثناء الصفوف واحداً واحداً؛ ثم <b>استيراد</b>.</p>
+${fig(IMG.imp3, 'الخطوة 3: المعاينة والاستيراد.')}
+<h3>العناوين المعروفة</h3>
+<table>
+<tr><th>البيان</th><th>العناوين (إنجليزية / إيطالية) مع 1 أو 2 للجهة</th></tr>
+<tr><td>اسم العقدة أو قيمتها</td><td>name, name1, name2, nome, value, valore, from/to, da/a</td></tr>
+<tr><td>النوع</td><td>type, tipo (person, phone, email, username, social أو مباشرة instagram/facebook/…, link, place, vehicle, text, target)</td></tr>
+<tr><td>بيانات أخرى للعقدة</td><td>label, url, platform, text, surname, birthdate, color (مركبة), target (نعم/لا), address, housenumber, lat, lon, note</td></tr>
+<tr><td>الرابط</td><td>relation, arrow (-> &lt;- &lt;-&gt;), shape (straight, curve, segments, right angle, wedge), color, line (solid, dashed, dotted), width</td></tr>
+</table>
+<div class="note warn">يُعرَّف الشخص بـ <b>الاسم وتاريخ الميلاد معاً</b>: إن ظهر التاريخ في بعض الصفوف فقط، يصبح «Rossi Mario (12/03/1980)» و«Rossi Mario» عقدتين مختلفتين يصلهما خط متقطع. كرّر التاريخ في كل صف للشخص نفسه. يوجد ملفان نموذجيان كاملان في مجلد <code>esempi</code> في البرنامج.</div>` },
+   { id: 'filters', h: '11. الفئات والتخطيط والمظهر', body: `
+<p>أزرار <b>الفئات</b> تطفئ فئات كاملة من العقد أو تشغّلها (هواتف، شبكات اجتماعية، أماكن…)، كل زر بلون فئته وعددها؛ <b>إخفاء الكل / إظهار الكل</b> يعمل على جميعها. أي إجراء صريح (توسيع، إضافة) يعيد العقد المعنية ظاهرة على أي حال.</p>
+<p><b>التخطيط</b>: <b>عضوي</b> يرتب العقد بالقوى (المتصلة متقاربة)، <b>دائري</b> في دائرة، <b>هرمي</b> كشجرة، <b>شبكة</b> في صفوف وأعمدة؛ <b>تقليل التقاطعات</b> يعيد ترتيب الرسم الحالي لتقليل التقاطعات. توسيع عقدة يضع العقد الجديدة فقط في حلقة حولها دون تحريك الأخرى أو الكاميرا.</p>
+<p><b>المعرّفات</b> يُظهر أو يخفي عقد التعريف (هواتف، بريد، أسماء مستخدمين) المستخدمة جسوراً بين الأشخاص. <b>المفتاح</b> أسفل اللوحة يبيّن ألوان الفئات الموجودة.</p>` },
+   { id: 'views', h: '12. طرق العرض المحفوظة', body: `
+<p><b>طريقة العرض</b> لقطة للرسم كما هو الآن: العقد الظاهرة والموسّعة والمواضع والتكبير والتحديد. اكتب اسماً واضغط <b>حفظ طريقة العرض</b>؛ تعرض القائمة طرق عرض القضية، <b>فتح</b> يستعيد إحداها و🗑 يحذفها. تفيد طرق العرض لاستئناف خط تفكير أو تجهيز الشاشة للتصدير.</p>` },
+   { id: 'sources', h: '13. المصادر الوثائقية والتعرف الضوئي', body: `
+<p>ضع الوثائق (PDF وWord وExcel وCSV ونصوص وصور) في مجلد <code>fonti</code> بجوار البرنامج واضغط <b>مسح</b>: يُفهرس محتواها داخل البرنامج. من حينها يعثر <b>البحث في المصادر</b>، في اللوحة أو في بطاقة عقدة، على الوثائق التي يظهر فيها مصطلح أو قيم العقدة (أرقام، أسماء، بريد)، مع مقتطف السياق ورابط لفتح الملف.</p>
+<p>تُقرأ <b>الصور</b> (صور الوثائق، لقطات الشاشة) بواسطة <b>التعرف الضوئي</b> Tesseract. إذا ذكر سطر الحالة «التعرف الضوئي غير متاح»، يكفي في Windows زر <b>تنزيل Tesseract (OCR)</b>: ينزّل البرنامج المثبّت الرسمي (نحو 50 ميغابايت) ويستخرجه في مجلد <code>tools/tesseract</code> بجوار البرنامج ويفعّل التعرف الضوئي دون إعادة تشغيل. في Linux وMac يُثبَّت Tesseract من مدير الحزم.</p>` },
+   { id: 'ai', h: '14. الذكاء الاصطناعي', body: `
+<p>يمكن للبرنامج استخدام <b>روبوت محادثة</b> (خادم متوافق مع Ollama أو بواجهة OpenAI، محلي أو بعيد) لأمرين: <b>إنشاء عقد من نص حر</b> و<b>نقحرة</b> الأسماء المكتوبة بأبجديات أخرى إلى الحروف اللاتينية. الذكاء الاصطناعي اختياري: مع إطفاء مفتاح <b>الذكاء الاصطناعي مفعّل</b> لا يتصل البرنامج بشيء ويستخدم النقحرة المحلية فقط.</p>
+${fig(IMG.ai, 'إعدادات الذكاء الاصطناعي: نقطة النهاية، المفتاح، النموذج، صيغة الواجهة، المهلة والنقحرة التلقائية.')}
+<p><b>إعداد</b> يفتح الإعدادات: عنوان الخادم، مفتاح الواجهة (يُحفظ في ملف <code>chatbot.conf</code> بجوار البرنامج ولا يُنشر أبداً)، النموذج، صيغة الطلبات، أقصى مدة انتظار، ترويسة المفتاح وبادئته. <b>اختبار الاتصال</b> يتحقق من استجابة الخادم. يظهر زر <b>النقحرة بالذكاء الاصطناعي</b> في اللوحة عند وجود كلمات تحتاج نقحرة.</p>
+<div class="note warn">النصوص التي تلصقها في وضع الذكاء الاصطناعي والأسماء المطلوب نقحرتها تُرسل إلى الخادم الذي ضبطته. استخدم خادماً موثوقاً أو محلياً إن كانت البيانات سرية.</div>` },
+   { id: 'manual', h: '15. التعديلات اليدوية والعقد المحذوفة', body: `
+<p>يعرض <b>التعديلات اليدوية</b> كل ما أُنشئ أو غُيّر يدوياً في القضية: العقد المضافة (بما فيها المستوردة من ملفات أو المقترحة من الذكاء الاصطناعي)، الروابط المنشأة والتسميات المعاد تسميتها، مع مرشّح بالاسم. من هنا تحذف ما لم يعد لازماً. <b>العقد المحذوفة</b> يعرض عقد البيانات المزالة من الرسم ويتيح استعادتها واحدة واحدة أو كلها معاً.</p>
+${fig(IMG.manual, 'التعديلات اليدوية: عقد مضافة يدوياً مع التاريخ والروابط.')}` },
+   { id: 'export', h: '16. التصدير', body: `
+<p><b>الرسم إلى PDF</b> يطبع الرسم كما يظهر على الشاشة مع المفتاح وترويسة القضية. <b>ورقة جدولية</b> تنتج مستنداً بكل العقد الظاهرة وبياناتها في جدول، جاهزاً للطباعة أو الحفظ PDF من المتصفح. ومن بطاقة عقدة يصدّر <b>PDF</b> تلك البطاقة وحدها. يُنزَّل ملف CSV النموذجي من نافذة الاستيراد.</p>` },
+   { id: 'lang', h: '17. اللغات والتراخيص والاعتمادات', body: `
+<p>تُختار لغة الواجهة من القائمة بجوار الشعار (الإيطالية، الإنجليزية، الفرنسية، الألمانية، الإسبانية، العربية بنص من اليمين إلى اليسار)؛ ولا تُترجم محتويات البيانات. تحت الشعار اعتمادات المؤلف ورابط <b>التراخيص</b> الذي يعرض البرنامج وكل مكوّنات الطرف الثالث مع النصوص الكاملة للتراخيص.</p>
+${fig(IMG.lic, 'نافذة التراخيص: المكوّنات على اليسار والنص على اليمين.')}` },
+   { id: 'files', h: '18. البيانات والمجلدات والملفات', body: `
+<table>
+<tr><th>المجلد / الملف</th><th>المحتوى</th></tr>
+<tr><td><code>data/</code></td><td>كل البيانات: الأرشيف العام (القضايا، قاموس النقحرة، فهرس المصادر) ومجلد <code>cases</code> بقاعدة بيانات لكل قضية. احتفظ بنسخة احتياطية منه.</td></tr>
+<tr><td><code>data/media/</code></td><td>الصور المرفوعة في عقد الصور.</td></tr>
+<tr><td><code>fonti/</code></td><td>الوثائق المراد فهرستها للبحث في المصادر.</td></tr>
+<tr><td><code>chatbot.conf</code></td><td>إعدادات الذكاء الاصطناعي مع مفتاح الخادم: لا يُشارَك. <code>chatbot.conf.example</code> هو القالب الفارغ.</td></tr>
+<tr><td><code>tools/tesseract/</code></td><td>Tesseract OCR الذي نزّله البرنامج.</td></tr>
+<tr><td><code>esempi/</code></td><td>ملفات CSV نموذجية للاستيراد.</td></tr>
+<tr><td><code>LICENSE</code>, <code>NOTICE</code>, <code>THIRD-PARTY-NOTICES.md</code></td><td>ترخيص البرنامج والشروط الإضافية وتراخيص المكوّنات.</td></tr>
+</table>
+<p>البرنامج محمول: يمكن نسخ المجلد إلى حاسوب آخر بكل بياناته. وللنسخ الاحتياطي يكفي نسخ مجلد <code>data</code> (و<code>fonti</code> عند الحاجة).</p>` },
+  ]
+};
+
+/* ------------------------------------------------------------- rendering -- */
+const LANGS = [['it', 'Italiano'], ['en', 'English'], ['fr', 'Français'], ['de', 'Deutsch'], ['es', 'Español'], ['ar', 'العربية']];
+function pickLang() {
+  const q = new URLSearchParams(location.search).get('lang');
+  if (q && M[q]) return q;
+  try { const s = localStorage.getItem('manualLang'); if (s && M[s]) return s; } catch (_) {}
+  const nav = (navigator.language || 'it').slice(0, 2).toLowerCase();
+  return M[nav] ? nav : 'it';
+}
+function render(lang) {
+  const m = M[lang];
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  document.title = `OSInt Graph · ${m.title}`;
+  document.getElementById('hsub').textContent = m.sub;
+  document.getElementById('langs').innerHTML = LANGS.map(([c, n]) =>
+    `<button type="button" data-lang="${c}" class="${c === lang ? 'active' : ''}">${n}</button>`).join('');
+  const toc = m.sections.map(s => `<a href="#${s.id}">${s.h}</a>`).join('') + `<a href="#shortcuts">${m.shortcuts}</a>`;
+  const kbd = `<h2 id="shortcuts">${m.shortcuts}</h2><table><tr><th>${m.kbdHead[0]}</th><th>${m.kbdHead[1]}</th></tr>` +
+    m.kbd.map(([k, a]) => `<tr><td><kbd>${k}</kbd></td><td>${a}</td></tr>`).join('') + '</table>';
+  document.getElementById('main').innerHTML =
+    `<h1>${m.title}</h1><div class="meta">OSInt Graph · Andrea Cumini · <a href="https://www.osintinfo.net" target="_blank" rel="noopener">www.osintinfo.net</a></div>` +
+    `<div class="toc"><b>${m.toc}</b>${toc}</div>` +
+    m.sections.map(s => `<h2 id="${s.id}">${s.h}</h2>${s.body}`).join('') + kbd;
+  try { localStorage.setItem('manualLang', lang); } catch (_) {}
+  history.replaceState(null, '', `?lang=${lang}${location.hash}`);
+}
+document.getElementById('langs').addEventListener('click', e => {
+  const b = e.target.closest('[data-lang]');
+  if (b) { render(b.dataset.lang); window.scrollTo(0, 0); }
+});
+render(pickLang());
+</script>
+</body>
+</html>

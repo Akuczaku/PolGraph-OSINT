@@ -1,0 +1,16 @@
+﻿name1,type1,label1,birthdate1,target1,note1,relation,arrow,shape,color,line,width,name2,type2,label2,url2,birthdate2,address2,housenumber2,lat2,lon2,color2,note2,Source,Date observed
+John Smith,person,,1980-03-12,yes,Main subject of the investigation,phone in use,->,straight,,,,+44 7700 900123,phone,,,,,,,,,Number registered to a third party,Tip-off,2026-01-15
+John Smith,person,,1980-03-12,,,profile,->,,blue,,,https://www.instagram.com/john.smith.80/,social,john.smith.80,,,,,,,,,OSINT research,2026-01-16
+John Smith,person,,1980-03-12,,,email,->,,,,,john.smith80@example.com,email,,,,,,,,,,OSINT research,2026-01-16
+John Smith,person,,1980-03-12,,,business partner,<->,curve,red,dashed,3,David Brown,person,,,1975-07-05,,,,,,,Company register,2026-01-20
+David Brown,person,,1975-07-05,,,phone in use,->,,,,,+44 7700 900456,phone,,,,,,,,,,Tip-off,2026-01-20
+David Brown,person,,1975-07-05,,,director,->,,,,,ACME Logistics Ltd,person,ACME Logistics Ltd (company),,,,,,,,,Company register,2026-01-20
+ACME Logistics Ltd,person,,,,,registered office,->,segments,,,,London,place,,,,Baker Street,221B,51.5237,-0.1585,,,Company register,2026-01-20
+ACME Logistics Ltd,person,,,,,website,->,,,,,https://www.acme-logistics.example,link,ACME Logistics website,,,,,,,,,OSINT research,2026-01-21
+John Smith,person,,1980-03-12,,,vehicle in use,->,,,dotted,,AB12 CDE,vehicle,Ford Focus,,,,,,,Black,,Roadside check,2026-02-02
+David Brown,person,,1975-07-05,,,vehicle in use,->,,,dotted,,AB12 CDE,vehicle,Ford Focus,,,,,,,Black,,Roadside check,2026-02-05
+John Smith,person,,1980-03-12,,,home address,->,right angle,,,,Manchester,place,,,,Oxford Road,25,,,,,Tip-off,2026-01-15
++44 7700 900123,phone,,,,,frequent contacts,<->,curve,,,,+44 7700 900456,phone,,,,,,,,,,Call records,2026-02-10
+John Smith,person,,1980-03-12,,,note,->,,,,,Meeting on 10 Feb,text,,,,,,,,,Meeting observed at a cafe on Oxford Road; two unidentified people were also present.,Surveillance,2026-02-10
+Anna Green,person,,1990-11-22,,To be investigated,,,,,,,,,,,,,,,,,,Anonymous tip,2026-02-12
+Anna Green,person,,1990-11-22,,,profile,->,,,,,https://t.me/anna_green90,social,,,,,,,,,,OSINT research,2026-02-12

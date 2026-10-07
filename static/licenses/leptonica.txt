@@ -1,0 +1,5 @@
+Leptonica - http://www.leptonica.org
+
+Leptonica is distributed under a BSD 2-clause style license (see the file
+leptonica-license.txt in the Tesseract installation). It is not part of
+OSInt Graph: it is downloaded together with Tesseract into tools/tesseract.

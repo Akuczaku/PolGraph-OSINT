@@ -1,0 +1,11 @@
+Simple Icons - https://simpleicons.org
+
+The SVG icons are released under the CC0 1.0 Universal Public Domain
+Dedication <https://creativecommons.org/publicdomain/zero/1.0/>: to the
+extent possible under law, the authors have waived all copyright and related
+rights to the icons.
+
+The brands' names and logos remain the property and trademarks of their
+respective owners. OSInt Graph uses them only to identify the platform a
+profile belongs to. OSInt Graph is not affiliated with, endorsed by or
+sponsored by any of these companies.

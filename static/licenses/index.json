@@ -1,0 +1,452 @@
+[
+ {
+  "id": "osint-graph",
+  "name": "OSInt Graph",
+  "version": "",
+  "license": "GNU GPL v3 con clausole aggiuntive (attribuzione, nome e logo)",
+  "copyright": "Copyright (C) 2025-2026 Andrea Cumini",
+  "url": "https://www.osintinfo.net",
+  "role": {
+   "it": "Il programma: licenza e termini aggiuntivi",
+   "en": "The program: license and additional terms"
+  },
+  "file": "NOTICE.txt",
+  "group": "program",
+  "bundled": true
+ },
+ {
+  "id": "gpl-3.0",
+  "name": "GNU General Public License",
+  "version": "versione 3",
+  "license": "GPL-3.0",
+  "copyright": "Free Software Foundation",
+  "url": "https://www.gnu.org/licenses/gpl-3.0.html",
+  "role": {
+   "it": "Testo integrale della licenza del programma",
+   "en": "Full text of the program's license"
+  },
+  "file": "GPL-3.0.txt",
+  "group": "program",
+  "bundled": true
+ },
+ {
+  "id": "cytoscape",
+  "name": "Cytoscape.js",
+  "version": "3.30.2",
+  "license": "MIT",
+  "copyright": "Copyright (c) 2016-2024, The Cytoscape Consortium",
+  "url": "https://js.cytoscape.org",
+  "role": {
+   "it": "Disegno e interazione del grafo",
+   "en": "Graph rendering and interaction"
+  },
+  "file": "cytoscape.txt",
+  "group": "js",
+  "bundled": true
+ },
+ {
+  "id": "cytoscape-fcose",
+  "name": "cytoscape-fcose",
+  "version": "2.2.0",
+  "license": "MIT",
+  "copyright": "Copyright (c) i-Vis Research Group, Bilkent University",
+  "url": "https://github.com/iVis-at-Bilkent/cytoscape-fcose",
+  "role": {
+   "it": "Disposizione automatica dei nodi (layout organico)",
+   "en": "Automatic node layout (organic layout)"
+  },
+  "file": "cytoscape-fcose.txt",
+  "group": "js",
+  "bundled": true
+ },
+ {
+  "id": "cose-base",
+  "name": "cose-base",
+  "version": "2.2.0",
+  "license": "MIT",
+  "copyright": "Copyright (c) i-Vis Research Group, Bilkent University",
+  "url": "https://github.com/iVis-at-Bilkent/cose-base",
+  "role": {
+   "it": "Disposizione automatica dei nodi (layout organico)",
+   "en": "Automatic node layout (organic layout)"
+  },
+  "file": "cose-base.txt",
+  "group": "js",
+  "bundled": true
+ },
+ {
+  "id": "layout-base",
+  "name": "layout-base",
+  "version": "2.0.1",
+  "license": "MIT",
+  "copyright": "Copyright (c) i-Vis Research Group, Bilkent University",
+  "url": "https://github.com/iVis-at-Bilkent/layout-base",
+  "role": {
+   "it": "Disposizione automatica dei nodi (layout organico)",
+   "en": "Automatic node layout (organic layout)"
+  },
+  "file": "layout-base.txt",
+  "group": "js",
+  "bundled": true
+ },
+ {
+  "id": "font-awesome",
+  "name": "Font Awesome Free",
+  "version": "6",
+  "license": "Icone CC BY 4.0, codice MIT",
+  "copyright": "Fonticons, Inc.",
+  "url": "https://fontawesome.com",
+  "role": {
+   "it": "Icone dei tipi di nodo (persona, telefono, email…)",
+   "en": "Node type icons (person, phone, email…)"
+  },
+  "file": "font-awesome.txt",
+  "group": "assets",
+  "bundled": true
+ },
+ {
+  "id": "simple-icons",
+  "name": "Simple Icons",
+  "version": "",
+  "license": "CC0 1.0 (pubblico dominio); i loghi restano marchi dei rispettivi titolari",
+  "copyright": "Simple Icons contributors",
+  "url": "https://simpleicons.org",
+  "role": {
+   "it": "Loghi delle piattaforme social (Facebook, Instagram, Telegram…)",
+   "en": "Social platform logos (Facebook, Instagram, Telegram…)"
+  },
+  "file": "simple-icons.txt",
+  "group": "assets",
+  "bundled": true
+ },
+ {
+  "id": "panchang",
+  "name": "Panchang (carattere del logo)",
+  "version": "",
+  "license": "Fontshare Free Font License (solo contorni: il font non è distribuito)",
+  "copyright": "Indian Type Foundry",
+  "url": "https://www.fontshare.com/fonts/panchang",
+  "role": {
+   "it": "Logo «OSInt Graph» e icona «OG»",
+   "en": "“OSInt Graph” logo and “OG” icon"
+  },
+  "file": "panchang.txt",
+  "group": "assets",
+  "bundled": true
+ },
+ {
+  "id": "flask",
+  "name": "Flask",
+  "version": "3.1.3",
+  "license": "BSD-3-Clause",
+  "copyright": "",
+  "url": "https://pypi.org/project/Flask/",
+  "role": {
+   "it": "Server web dell'applicazione",
+   "en": "Application web server"
+  },
+  "file": "flask.txt",
+  "group": "python",
+  "bundled": true
+ },
+ {
+  "id": "werkzeug",
+  "name": "Werkzeug",
+  "version": "3.1.8",
+  "license": "BSD-3-Clause",
+  "copyright": "",
+  "url": "https://pypi.org/project/Werkzeug/",
+  "role": {
+   "it": "Libreria di base del server web",
+   "en": "Web server toolkit"
+  },
+  "file": "werkzeug.txt",
+  "group": "python",
+  "bundled": true
+ },
+ {
+  "id": "jinja2",
+  "name": "Jinja2",
+  "version": "3.1.6",
+  "license": "BSD-3-Clause",
+  "copyright": "",
+  "url": "https://pypi.org/project/Jinja2/",
+  "role": {
+   "it": "Modelli delle pagine",
+   "en": "Page templates"
+  },
+  "file": "jinja2.txt",
+  "group": "python",
+  "bundled": true
+ },
+ {
+  "id": "itsdangerous",
+  "name": "itsdangerous",
+  "version": "2.2.0",
+  "license": "BSD-3-Clause",
+  "copyright": "",
+  "url": "https://pypi.org/project/itsdangerous/",
+  "role": {
+   "it": "Firma dei dati (dipendenza di Flask)",
+   "en": "Data signing (Flask dependency)"
+  },
+  "file": "itsdangerous.txt",
+  "group": "python",
+  "bundled": true
+ },
+ {
+  "id": "click",
+  "name": "click",
+  "version": "8.5.0",
+  "license": "BSD-3-Clause",
+  "copyright": "",
+  "url": "https://pypi.org/project/click/",
+  "role": {
+   "it": "Riga di comando (dipendenza di Flask)",
+   "en": "Command line (Flask dependency)"
+  },
+  "file": "click.txt",
+  "group": "python",
+  "bundled": true
+ },
+ {
+  "id": "markupsafe",
+  "name": "MarkupSafe",
+  "version": "3.0.3",
+  "license": "BSD-3-Clause",
+  "copyright": "",
+  "url": "https://pypi.org/project/MarkupSafe/",
+  "role": {
+   "it": "Testo sicuro nelle pagine (dipendenza di Jinja2)",
+   "en": "Safe markup (Jinja2 dependency)"
+  },
+  "file": "markupsafe.txt",
+  "group": "python",
+  "bundled": true
+ },
+ {
+  "id": "blinker",
+  "name": "blinker",
+  "version": "1.9.0",
+  "license": "MIT",
+  "copyright": "",
+  "url": "https://pypi.org/project/blinker/",
+  "role": {
+   "it": "Segnali (dipendenza di Flask)",
+   "en": "Signals (Flask dependency)"
+  },
+  "file": "blinker.txt",
+  "group": "python",
+  "bundled": true
+ },
+ {
+  "id": "anyascii",
+  "name": "anyascii",
+  "version": "0.3.3",
+  "license": "ISC",
+  "copyright": "",
+  "url": "https://pypi.org/project/anyascii/",
+  "role": {
+   "it": "Traslitterazione in caratteri latini",
+   "en": "Transliteration to Latin characters"
+  },
+  "file": "anyascii.txt",
+  "group": "python",
+  "bundled": true
+ },
+ {
+  "id": "pypdf",
+  "name": "pypdf",
+  "version": "6.19.0",
+  "license": "BSD-3-Clause",
+  "copyright": "",
+  "url": "https://pypi.org/project/pypdf/",
+  "role": {
+   "it": "Lettura dei PDF nelle fonti",
+   "en": "Reading PDF sources"
+  },
+  "file": "pypdf.txt",
+  "group": "python",
+  "bundled": true
+ },
+ {
+  "id": "pdfminer-six",
+  "name": "pdfminer.six",
+  "version": "20260107",
+  "license": "MIT",
+  "copyright": "",
+  "url": "https://pypi.org/project/pdfminer.six/",
+  "role": {
+   "it": "Estrazione del testo dai PDF",
+   "en": "PDF text extraction"
+  },
+  "file": "pdfminer-six.txt",
+  "group": "python",
+  "bundled": true
+ },
+ {
+  "id": "python-docx",
+  "name": "python-docx",
+  "version": "1.2.0",
+  "license": "MIT",
+  "copyright": "",
+  "url": "https://pypi.org/project/python-docx/",
+  "role": {
+   "it": "Lettura dei documenti Word nelle fonti",
+   "en": "Reading Word documents"
+  },
+  "file": "python-docx.txt",
+  "group": "python",
+  "bundled": true
+ },
+ {
+  "id": "openpyxl",
+  "name": "openpyxl",
+  "version": "3.1.5",
+  "license": "MIT",
+  "copyright": "",
+  "url": "https://pypi.org/project/openpyxl/",
+  "role": {
+   "it": "Lettura e importazione di file Excel",
+   "en": "Reading and importing Excel files"
+  },
+  "file": "openpyxl.txt",
+  "group": "python",
+  "bundled": true
+ },
+ {
+  "id": "xlrd",
+  "name": "xlrd",
+  "version": "2.0.2",
+  "license": "BSD",
+  "copyright": "",
+  "url": "https://pypi.org/project/xlrd/",
+  "role": {
+   "it": "Lettura dei vecchi file Excel (.xls)",
+   "en": "Reading legacy Excel files (.xls)"
+  },
+  "file": "xlrd.txt",
+  "group": "python",
+  "bundled": true
+ },
+ {
+  "id": "lxml",
+  "name": "lxml",
+  "version": "6.1.3",
+  "license": "BSD-3-Clause",
+  "copyright": "",
+  "url": "https://pypi.org/project/lxml/",
+  "role": {
+   "it": "Elaborazione XML (dipendenza di python-docx)",
+   "en": "XML processing (python-docx dependency)"
+  },
+  "file": "lxml.txt",
+  "group": "python",
+  "bundled": true
+ },
+ {
+  "id": "et_xmlfile",
+  "name": "et_xmlfile",
+  "version": "2.0.0",
+  "license": "MIT",
+  "copyright": "",
+  "url": "https://pypi.org/project/et_xmlfile/",
+  "role": {
+   "it": "Scrittura XML (dipendenza di openpyxl)",
+   "en": "XML writing (openpyxl dependency)"
+  },
+  "file": "et_xmlfile.txt",
+  "group": "python",
+  "bundled": true
+ },
+ {
+  "id": "pillow",
+  "name": "Pillow",
+  "version": "12.3.0",
+  "license": "MIT-CMU (HPND)",
+  "copyright": "",
+  "url": "https://pypi.org/project/pillow/",
+  "role": {
+   "it": "Immagini: miniature e OCR",
+   "en": "Images: thumbnails and OCR"
+  },
+  "file": "pillow.txt",
+  "group": "python",
+  "bundled": true
+ },
+ {
+  "id": "pytesseract",
+  "name": "pytesseract",
+  "version": "0.3.13",
+  "license": "Apache-2.0",
+  "copyright": "",
+  "url": "https://pypi.org/project/pytesseract/",
+  "role": {
+   "it": "Collegamento con Tesseract per l'OCR",
+   "en": "Bridge to Tesseract for OCR"
+  },
+  "file": "pytesseract.txt",
+  "group": "python",
+  "bundled": true
+ },
+ {
+  "id": "python",
+  "name": "Python",
+  "version": "3.11.9",
+  "license": "PSF License",
+  "copyright": "Python Software Foundation",
+  "url": "https://www.python.org",
+  "role": {
+   "it": "Interprete incorporato nell'eseguibile",
+   "en": "Interpreter embedded in the executable"
+  },
+  "file": "python.txt",
+  "group": "python",
+  "bundled": true
+ },
+ {
+  "id": "tesseract",
+  "name": "Tesseract OCR",
+  "version": "5.3.3",
+  "license": "Apache-2.0",
+  "copyright": "Tesseract contributors (Google, Ray Smith e altri)",
+  "url": "https://github.com/tesseract-ocr/tesseract",
+  "role": {
+   "it": "Riconoscimento del testo nelle immagini. Scaricato a parte in tools/tesseract (non incluso nel programma)",
+   "en": "Text recognition in images. Downloaded separately into tools/tesseract (not bundled)"
+  },
+  "file": "apache-2.0.txt",
+  "group": "tools",
+  "bundled": false
+ },
+ {
+  "id": "leptonica",
+  "name": "Leptonica",
+  "version": "1.83",
+  "license": "BSD-2-Clause",
+  "copyright": "Copyright (C) 2001 Leptonica",
+  "url": "http://www.leptonica.org",
+  "role": {
+   "it": "Libreria di immagini usata da Tesseract (scaricata con Tesseract)",
+   "en": "Image library used by Tesseract (downloaded with it)"
+  },
+  "file": "leptonica.txt",
+  "group": "tools",
+  "bundled": false
+ },
+ {
+  "id": "pyinstaller",
+  "name": "PyInstaller",
+  "version": "",
+  "license": "GPL-2.0 con eccezione per il bootloader",
+  "copyright": "PyInstaller Development Team",
+  "url": "https://pyinstaller.org",
+  "role": {
+   "it": "Solo per compilare l'eseguibile: non fa parte del programma distribuito",
+   "en": "Build tool only: not part of the distributed program"
+  },
+  "file": "pyinstaller.txt",
+  "group": "tools",
+  "bundled": false
+ }
+]

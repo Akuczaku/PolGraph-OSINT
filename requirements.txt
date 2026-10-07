@@ -1,0 +1,13 @@
+# OSInt Graph - dipendenze per eseguire il programma
+#   .venv\Scripts\python.exe -m pip install -r requirements.txt
+Flask>=3.0
+anyascii>=0.3
+pdfminer.six>=20231228
+pypdf>=4.0
+python-docx>=1.1
+openpyxl>=3.1
+xlrd>=2.0
+Pillow>=10.0
+pytesseract>=0.3.10
+# facoltativo: traslitterazione di qualità migliore (richiede le librerie ICU)
+# PyICU

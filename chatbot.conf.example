@@ -1,0 +1,38 @@
+# chatbot.conf - chatbot remoto (AI): crea i nodi da un testo libero e
+# traslittera i testi non latini. Si modifica anche dall'app: pannello
+# "Intelligenza artificiale" > Configura.
+#
+# Questo e' un ESEMPIO: copialo come chatbot.conf accanto al programma e
+# inserisci i tuoi dati. chatbot.conf non va mai pubblicato (contiene la
+# chiave API). Ogni voce puo' essere sovrascritta da una variabile d'ambiente
+# CHATBOT_<NOME> (es. CHATBOT_ENDPOINT). Le righe che iniziano con '#' sono
+# commenti.
+
+# interruttore dell'AI (lo switch "AI attiva" dell'app), vale per tutto:
+# false = il chatbot non viene mai contattato
+enabled = false
+
+# server compatibile Ollama o OpenAI (es. http://127.0.0.1:11434)
+endpoint =
+api_key =
+model = gemma3:12b
+
+# secondi massimi di attesa per una risposta
+timeout = 25
+
+# come si presenta la chiave al server (intestazione HTTP e prefisso)
+auth_header = Authorization
+auth_prefix = Bearer
+
+# formato delle richieste: auto | ollama (/api/generate) | openai (/v1/chat/completions)
+api = auto
+
+# traslittera da solo durante la ricostruzione del grafo.
+# Se il chatbot non risponde si prosegue senza: nulla si blocca.
+auto = true
+
+# quante parole al massimo per esecuzione, quante per richiesta,
+# e quanti secondi al massimo puo' durare una esecuzione automatica
+max_words = 120
+batch = 15
+budget = 60

@@ -1,0 +1,16 @@
+﻿nome1;tipo1;etichetta1;nascita1;target1;nota1;collegamento;frecce;forma;colore;linea;spessore;nome2;tipo2;etichetta2;url2;nascita2;indirizzo2;civico2;lat2;lon2;colore2;nota2;Fonte;Data rilevazione
+Rossi Mario;persona;;12/03/1980;sì;Soggetto principale dell'indagine;utenza in uso;->;retta;;;;+39 333 1234567;telefono;;;;;;;;;Numero intestato a terzi;Segnalazione;15/01/2026
+Rossi Mario;persona;;12/03/1980;;;profilo;->;;blu;;;https://www.instagram.com/mario.rossi.80/;social;mario.rossi.80;;;;;;;;;Ricerca OSINT;16/01/2026
+Rossi Mario;persona;;12/03/1980;;;email;->;;;;;mario.rossi80@example.com;email;;;;;;;;;;Ricerca OSINT;16/01/2026
+Rossi Mario;persona;;12/03/1980;;;socio;<->;curva;rosso;tratteggiata;3;Bianchi Luca;persona;;;05/07/1975;;;;;;;Visura camerale;20/01/2026
+Bianchi Luca;persona;;05/07/1975;;;utenza in uso;->;;;;;+39 347 7654321;telefono;;;;;;;;;;Segnalazione;20/01/2026
+Bianchi Luca;persona;;05/07/1975;;;amministratore;->;;;;;ACME Logistica srl;persona;ACME Logistica srl (società);;;;;;;;;Visura camerale;20/01/2026
+ACME Logistica srl;persona;;;;;sede legale;->;spezzata;;;;Roma;luogo;;;;Via Nazionale;10;41.9000;12.4900;;;Visura camerale;20/01/2026
+ACME Logistica srl;persona;;;;;sito web;->;;;;;https://www.acme-logistica.example;link;Sito ACME Logistica;;;;;;;;;Ricerca OSINT;21/01/2026
+Rossi Mario;persona;;12/03/1980;;;veicolo in uso;->;;;punteggiata;;AB123CD;veicolo;Fiat Panda;;;;;;;Nero;;Controllo su strada;02/02/2026
+Bianchi Luca;persona;;05/07/1975;;;veicolo in uso;->;;;punteggiata;;AB123CD;veicolo;Fiat Panda;;;;;;;Nero;;Controllo su strada;05/02/2026
+Rossi Mario;persona;;12/03/1980;;;domicilio;->;angolo;;;;Milano;luogo;;;;Corso Buenos Aires;25;;;;;Segnalazione;15/01/2026
++39 333 1234567;telefono;;;;;contatti frequenti;<->;curva;;;;+39 347 7654321;telefono;;;;;;;;;;Tabulati;10/02/2026
+Rossi Mario;persona;;12/03/1980;;;appunto;->;;;;;Incontro del 10/02;testo;;;;;;;;;Incontro osservato presso un bar di via Roma, presenti anche due persone non identificate.;Osservazione;10/02/2026
+Verdi Anna;persona;;22/11/1990;;Da approfondire;;;;;;;;;;;;;;;;;;Segnalazione anonima;12/02/2026
+Verdi Anna;persona;;22/11/1990;;;profilo;->;;;;;https://t.me/anna_verdi90;social;;;;;;;;;;Ricerca OSINT;12/02/2026

@@ -1,0 +1,6 @@
+PyInstaller - https://pyinstaller.org
+
+PyInstaller is used only to build the Windows executable of OSInt Graph. It
+is licensed under the GNU GPL version 2 with a special exception for the
+bootloader, which allows the generated executable to be distributed under
+the license of the program itself (here: GNU GPL version 3).

@@ -1,0 +1,9 @@
+Panchang - a typeface by Indian Type Foundry (ITF)
+https://www.fontshare.com/fonts/panchang
+
+The logo and the icon of OSInt Graph (static/logo.svg, static/icon.svg and
+the same artwork inside the pages) are vector outlines set in Panchang. They
+contain outlines only: the font files are NOT distributed with this program.
+Panchang is available from Fontshare under the Fontshare Free Font License,
+which allows its use in logos and graphics but not the redistribution of the
+font files. ITF owns the trademarks and the copyright of the typeface.

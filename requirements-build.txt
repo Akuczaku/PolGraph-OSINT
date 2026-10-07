@@ -1,0 +1,4 @@
+# OSInt Graph - dipendenze per COMPILARE l'eseguibile (oltre a requirements.txt)
+#   .venv\Scripts\python.exe -m pip install -r requirements-build.txt
+#   .venv\Scripts\python.exe build_app.py
+pyinstaller>=6.0

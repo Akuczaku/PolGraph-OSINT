@@ -1,0 +1,89 @@
+OSInt Graph
+Copyright (C) 2025-2026 Andrea Cumini <andrea@osintinfo.net>
+https://www.osintinfo.net
+
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the Free
+Software Foundation, version 3 of the License, together with the additional
+terms below.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+The full text of the GNU General Public License version 3 is in the file
+LICENSE. It is also available at <https://www.gnu.org/licenses/gpl-3.0.html>.
+
+
+ADDITIONAL TERMS (GNU GPL version 3, section 7)
+===============================================
+
+1. Attribution (section 7(b))
+
+   Every copy of this program, and every work based on it, must preserve:
+
+   (a) the copyright and license notices in the source files, this NOTICE
+       file and the file THIRD-PARTY-NOTICES.md;
+
+   (b) the author attribution
+
+           Andrea Cumini - andrea@osintinfo.net - www.osintinfo.net
+
+       displayed in the user interface (the credits line under the logo in
+       the left panel, the credits window and the "Licenze" / licenses
+       window). This attribution is part of the Appropriate Legal Notices
+       of the program.
+
+   The attribution must remain legible. Modified versions may add their own
+   notices next to it, but may not remove, hide or alter it.
+
+2. Modified versions (section 7(c))
+
+   Modified versions must be marked in a reasonable way as different from
+   the original version, and must not misrepresent the origin of the
+   material.
+
+3. Name and logo (section 7(e))
+
+   The name "OSInt Graph", its logo and its "OG" icon (static/logo.svg,
+   static/logo-light.svg, static/icon.svg, static/icon.ico and the same
+   artwork inside the program's pages and executable) identify the original
+   program and its author. The License
+   does not grant any right to use them as a trade name, trademark or
+   service mark: a modified version distributed to others must use a
+   different name and logo. Unmodified copies may keep them.
+
+
+CREDITS
+=======
+
+The logo and the icon are set in Panchang, a typeface by Indian Type Foundry
+(ITF), which owns its trademarks and copyright
+<https://www.fontshare.com/fonts/panchang>. They contain outlines only: the
+font is not distributed with this program.
+
+The third-party libraries, icons and tools used by the program, with their
+licenses, are listed in THIRD-PARTY-NOTICES.md and can be read from the
+program itself ("Licenze" link in the left panel). Each of them keeps its
+own license.
+
+
+TRADEMARKS
+==========
+
+The names and logos of the social platforms shown next to profiles
+(Facebook, Instagram, Telegram, WhatsApp, X, YouTube, TikTok and the others)
+are trademarks of their respective owners. They are used only to identify
+the platform a profile belongs to. This project is not affiliated with,
+endorsed by or sponsored by any of these companies.
+
+Tesseract OCR is not part of this program: it is downloaded separately by
+the user, from its official distribution, into the folder tools/tesseract.
+
+
+PERSONAL DATA
+=============
+
+This program processes personal data collected from open sources. Whoever
+uses it is solely responsible for complying with the laws on data
+protection and on investigations that apply to them.
