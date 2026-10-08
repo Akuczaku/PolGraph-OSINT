@@ -1,0 +1,54 @@
+{
+  "person": [
+    "Osoba",
+    "PESEL",
+    "telefon",
+    "e-mail",
+    "adres"
+  ],
+  "company": [
+    "Podmiot gospodarczy",
+    "NIP",
+    "REGON",
+    "KRS",
+    "CEIDG"
+  ],
+  "vehicle": [
+    "Pojazd",
+    "numer rejestracyjny",
+    "VIN"
+  ],
+  "location": [
+    "Adres",
+    "miejscowość",
+    "województwo",
+    "współrzędne"
+  ],
+  "internet": [
+    "Domena",
+    "adres IP",
+    "e-mail",
+    "login",
+    "profil społecznościowy"
+  ],
+  "finance": [
+    "IBAN",
+    "rachunek bankowy",
+    "karta płatnicza",
+    "portfel kryptowalut"
+  ],
+  "document": [
+    "Dokument",
+    "dowód osobisty",
+    "paszport",
+    "umowa",
+    "faktura"
+  ],
+  "institution": [
+    "Urząd",
+    "spółka",
+    "fundacja",
+    "stowarzyszenie",
+    "jednostka publiczna"
+  ]
+}

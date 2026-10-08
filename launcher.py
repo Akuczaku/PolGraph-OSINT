@@ -20,7 +20,7 @@ server risponde. Il pannello si sposta trascinandolo dalla maniglia a sinistra;
 
 Cosa avvia, nell'ordine:
   1) app.py accanto al launcher, con il Python del progetto (.venv) se c'e';
-  2) altrimenti l'eseguibile compilato (OSIntGraph.exe / OSIntGraph).
+  2) altrimenti l'eseguibile compilato (PolGraphOSINT.exe / PolGraphOSINT).
 
 Porta: variabile PORT o opzione --port (default 5000, come app.py).
 L'output del server finisce in launcher.log, accanto al launcher.
@@ -69,7 +69,7 @@ def server_command():
         if IS_WIN and py.lower().endswith("pythonw.exe"):
             py = py[:-5] + ".exe"                     # serve l'output per il log
         return [py, app]
-    for name in ("OSIntGraph.exe", "OSIntGraph"):
+    for name in ("PolGraphOSINT.exe", "PolGraphOSINT"):
         exe = os.path.join(ROOT, name)
         if os.path.isfile(exe):
             return [exe]
@@ -209,7 +209,7 @@ class Launcher(tk.Tk):
             return
         cmd = server_command()
         if not cmd:
-            self._show_tip(self.b_start, "app.py / OSIntGraph non trovati")
+            self._show_tip(self.b_start, "app.py / PolGraphOSINT non trovati")
             self.after(2500, self._hide_tip)
             return
         env = dict(os.environ, PORT=str(PORT), PYTHONUNBUFFERED="1",

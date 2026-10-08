@@ -1,0 +1,29 @@
+name: Build Windows
+
+on:
+  workflow_dispatch:
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt -r requirements-build.txt
+      - name: Build
+        run: python build_app.py --noconsole
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PolGraphOSINT-Windows
+          path: |
+            dist/PolGraphOSINT.exe
+            dist/LICENSE
+            dist/NOTICE
+            dist/THIRD-PARTY-NOTICES.md
+            dist/chatbot.conf.example

@@ -1419,3 +1419,5 @@ body.rtl #credmodal-list { direction: ltr; text-align: left; }
 .imp-map-t select { width: 100%; max-width: 280px; padding: 5px 6px; font-size: 12px; }
 .imp-samples { color: var(--tx2); font-size: 11px; max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 #impmodal-back { margin-right: auto; }
+
+#fork-notice{font-size:10px;line-height:1.25;color:#8fa1bd;margin:3px 0 8px 0;}

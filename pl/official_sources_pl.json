@@ -1,0 +1,38 @@
+{
+  "KRS": {
+    "name": "Wyszukiwarka KRS",
+    "url": "https://wyszukiwarka-krs.ms.gov.pl/",
+    "official": true,
+    "note": "Ministerstwo Sprawiedliwości"
+  },
+  "CEIDG": {
+    "name": "CEIDG / Biznes.gov.pl",
+    "url": "https://aplikacja.ceidg.gov.pl/ceidg/ceidg.public.ui/search.aspx",
+    "official": true,
+    "note": "Centralna Ewidencja i Informacja o Działalności Gospodarczej"
+  },
+  "VAT": {
+    "name": "Wykaz podatników VAT",
+    "url": "https://www.podatki.gov.pl/wykaz-podatnikow-vat-wyszukiwarka",
+    "official": true,
+    "note": "Ministerstwo Finansów"
+  },
+  "REGON": {
+    "name": "REGON / GUS",
+    "url": "https://wyszukiwarkaregon.stat.gov.pl/appBIR/index.aspx",
+    "official": true,
+    "note": "Główny Urząd Statystyczny"
+  },
+  "BIP": {
+    "name": "Biuletyn Informacji Publicznej",
+    "url": "https://www.gov.pl/web/bip",
+    "official": true,
+    "note": "Centralna strona BIP"
+  },
+  "PRS": {
+    "name": "Portal Rejestrów Sądowych",
+    "url": "https://prs.ms.gov.pl/",
+    "official": true,
+    "note": "Ministerstwo Sprawiedliwości"
+  }
+}

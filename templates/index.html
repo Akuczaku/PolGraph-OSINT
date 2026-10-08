@@ -14,7 +14,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OSInt Graph</title>
+<title>PolGraph OSINT</title>
 <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='icon.svg') }}?v={{ asset_ver }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ asset_ver }}">
 <!-- Librerie del grafo servite DALL'APP, non da internet: l'eseguibile deve
@@ -29,39 +29,34 @@
 </head>
 <body>
 
-<!-- Logo "OSInt Graph": contorni del carattere Panchang (Indian Type Foundry),
-     generati una volta per tutte; il font non viene distribuito. Stesso stile
-     del logo di OSInt Tracker: prima parola nel colore del testo, seconda in
-     azzurro. -->
-<svg id="logo-defs" style="display:none" aria-hidden="true"><symbol id="logo-art" viewBox="0 0 1321.6 139.1"><path fill="currentColor" d="M81.4 112.8Q53.6 112.8 35.8 107.3Q18 101.8 9.5 90.3Q1 78.8 1 60.9Q1 42.9 9.5 31.5Q18 20.1 35.8 14.6Q53.6 9.1 81.4 9.1Q109.2 9.1 126.9 14.6Q144.7 20.1 153.2 31.5Q161.7 42.9 161.7 60.9Q161.7 78.8 153.2 90.3Q144.7 101.8 126.9 107.3Q109.2 112.8 81.4 112.8ZM81.4 92.6Q97.5 92.6 108.3 90.8Q119.2 88.9 125.7 85.1Q132.2 81.3 135.1 75.3Q137.9 69.3 137.9 60.9Q137.9 52.5 135.1 46.5Q132.2 40.5 125.7 36.7Q119.2 32.9 108.3 31.1Q97.5 29.3 81.4 29.3Q59.9 29.3 47.5 32.5Q35 35.7 29.8 42.7Q24.5 49.7 24.5 60.9Q24.5 72.2 29.8 79.2Q35 86.2 47.5 89.4Q59.9 92.6 81.4 92.6ZM319 83.5Q319 91.2 316 96.7Q312.9 102.3 305.8 105.8Q298.7 109.4 286.6 111.1Q274.5 112.7 256.1 112.7Q244.3 112.7 231.5 111.7Q218.6 110.7 206.9 109Q195.1 107.3 186.3 105.3L189.6 86.3Q197 87.9 205.4 89.3Q213.9 90.7 223.2 91.8Q232.5 92.9 242.3 93.5Q252.1 94.2 262.1 94.2Q273 94.2 279.8 93.6Q286.6 92.9 290.3 91.6Q294 90.3 295.4 88.1Q296.7 86 296.7 82.9Q296.7 78.4 295 76.3Q293.3 74.2 289.8 73.2Q286.4 72.3 281.2 71.8L225 67.7Q211 66.8 202.1 63.6Q193.1 60.4 188.9 54.5Q184.7 48.5 184.7 39.2Q184.7 28.5 191.1 21.9Q197.5 15.3 211.6 12.3Q225.6 9.3 248.4 9.3Q255.4 9.3 263.8 9.8Q272.2 10.3 281.2 11.2Q290.1 12.1 298.6 13.3Q307.1 14.6 314.2 16.1L310.5 34Q304.1 32.7 296.1 31.6Q288.1 30.5 279.2 29.6Q270.3 28.8 261.1 28.3Q252 27.8 243.3 27.8Q231.7 27.8 224.5 28.4Q217.3 28.9 213.5 30.1Q209.7 31.4 208.3 33.5Q206.9 35.6 206.9 38.7Q206.9 42.5 208.8 44.6Q210.7 46.6 214.5 47.4Q218.3 48.2 223.9 48.8L279 52.9Q289 53.5 296.4 55.5Q303.9 57.4 308.9 61Q313.9 64.6 316.5 70.2Q319 75.7 319 83.5ZM368.4 110.9H345V11H368.4ZM511.8 70.3V110.9H489.9V73.6Q489.9 66.9 487.1 62.5Q484.3 58 478.3 55.7Q472.3 53.4 462.9 53.4Q450.4 53.4 434 57.3Q417.7 61.1 399.3 67.8V55Q405.8 51.6 413.7 48.1Q421.7 44.6 430.9 41.6Q440 38.7 449.9 36.9Q459.7 35 469.9 35Q483.3 35 492.7 38.6Q502 42.2 506.9 50Q511.8 57.7 511.8 70.3ZM396.9 110.9V36.9H416L418.8 53.7V110.9ZM630.5 54.7H531.2V36.9H630.5ZM548.2 75.1V39.5L552.6 17.8H570.2V73.1Q570.2 81.1 572.5 85.7Q574.8 90.4 580.5 92.3Q586.2 94.2 596.2 94.2Q606.5 94.2 615.1 92.9Q623.6 91.5 631.5 89.9L635.7 107.4Q627.3 109.5 616.6 111.1Q605.8 112.8 594.3 112.8Q578.6 112.8 568.4 109.2Q558.2 105.5 553.2 97.2Q548.2 88.9 548.2 75.1Z"/><path fill="#7B95DD" d="M654.8 61Q654.8 48.2 659.1 38.6Q663.4 28.9 672.5 22.5Q681.6 16 696.1 12.7Q710.6 9.5 731 9.5Q742.7 9.5 754.5 10.7Q766.3 11.8 777.5 13.7Q788.7 15.6 798.4 18L794.1 37.5Q785.6 35.7 775 34Q764.5 32.2 752.9 30.9Q741.3 29.7 729.4 29.7Q714.4 29.7 704.5 31.6Q694.6 33.5 688.8 37.4Q683.1 41.3 680.7 47.1Q678.3 53 678.3 61Q678.3 69.1 680.7 74.9Q683.1 80.8 688.8 84.7Q694.6 88.6 704.5 90.5Q714.4 92.4 729.4 92.4Q737.3 92.4 745.2 91.7Q753.1 91.1 760.5 90Q767.9 89 774.1 88V59.7H798.4V104.2Q788.7 106.5 777.5 108.4Q766.3 110.3 754.5 111.5Q742.7 112.6 731 112.6Q710.6 112.6 696.1 109.4Q681.6 106.1 672.5 99.7Q663.4 93.2 659.1 83.5Q654.8 73.9 654.8 61ZM825.4 110.9V36.9H844.5L847.2 57.1V110.9ZM901.8 35V54.8Q891.5 54.8 882.5 55.8Q873.5 56.9 864.8 59.3Q856.2 61.7 847.1 65.5Q838.1 69.3 827.7 74.8V62.8Q833.6 58.3 841.5 53.5Q849.3 48.7 858.8 44.5Q868.3 40.3 879.1 37.6Q889.9 35 901.8 35ZM1013.5 42 1035.4 40.5V110.9H1016.2L1013.5 94ZM1035.4 40.4 1026.4 57.3Q1019.7 56.3 1010.4 55.3Q1001.2 54.4 991.2 53.8Q981.2 53.2 971.9 53.2Q961.8 53.2 954.7 55.2Q947.6 57.3 943.9 61.7Q940.2 66.2 940.2 73.8Q940.2 84.8 946.3 89.5Q952.5 94.2 966.4 94.2Q976.9 94.2 988 92Q999.1 89.7 1010.7 85.9Q1022.4 82 1033.9 77.5V89.8Q1027.4 93.5 1019.3 97.5Q1011.3 101.4 1002 104.8Q992.8 108.1 982.8 110.3Q972.7 112.4 962.2 112.4Q948.7 112.4 938.8 108.6Q929 104.7 923.6 96.4Q918.3 88 918.3 74.5Q918.3 59.6 925.3 51.1Q932.4 42.6 945 39Q957.6 35.4 974.2 35.4Q992.3 35.4 1007.9 37Q1023.4 38.6 1035.4 40.4ZM1073.4 106.3 1073.7 90.1Q1080.4 91.2 1089.6 92.2Q1098.8 93.3 1108.8 94Q1118.7 94.6 1127.8 94.6Q1137.7 94.6 1144.5 92.6Q1151.3 90.6 1154.8 85.9Q1158.3 81.2 1158.3 73.6Q1158.3 63 1152.3 58.3Q1146.3 53.6 1132.3 53.6Q1122.6 53.6 1111.2 55.8Q1099.8 58 1087.9 61.6Q1076 65.3 1064.5 69.7V58.1Q1070.7 54.6 1078.7 50.6Q1086.7 46.7 1096 43.2Q1105.3 39.8 1115.4 37.6Q1125.6 35.4 1136.2 35.4Q1150.1 35.4 1159.9 39.3Q1169.7 43.1 1174.9 51.4Q1180.1 59.7 1180.1 73.1Q1180.1 87.7 1173.5 96.2Q1166.9 104.8 1154.8 108.6Q1142.8 112.4 1126.7 112.4Q1111.9 112.4 1097.9 110.4Q1083.8 108.4 1073.4 106.3ZM1085 138.1H1063V36.9H1082.3L1085 54.4ZM1320.6 70.3V110.9H1298.7V73.6Q1298.7 66.9 1295.9 62.5Q1293.1 58 1287.1 55.7Q1281.1 53.4 1271.7 53.4Q1259.2 53.4 1242.8 57.3Q1226.5 61.1 1208.1 67.8V54.2Q1214.5 50.9 1222.5 47.5Q1230.5 44.1 1239.7 41.3Q1248.8 38.4 1258.7 36.7Q1268.6 35 1278.8 35Q1292.2 35 1301.5 38.6Q1310.8 42.2 1315.7 50Q1320.6 57.7 1320.6 70.3ZM1205.7 110.9V1H1227.6V110.9Z"/></symbol></svg>
-
 <aside id="side">
   <div id="app-logo">
-    <svg class="logo" viewBox="0 0 1321.6 139.1" role="img" aria-label="OSInt Graph"><use href="#logo-art"/></svg>
+    <img class="logo" src="{{ url_for('static', filename='logo.svg') }}?v={{ asset_ver }}" alt="PolGraph OSINT">
     <select id="langSel" data-i18n-title="lang.label"></select>
   </div>
   <div id="credits"><button type="button" id="creditsLink" data-i18n-title="credits.title">Andrea Cumini</button> - <a href="mailto:andrea@osintinfo.net">andrea@osintinfo.net</a> - <a href="https://www.osintinfo.net" target="_blank" rel="noopener">www.osintinfo.net</a></div>
-  <div id="help-links"><a href="#" id="manualLink" data-i18n="help.manual">Manuale</a><a href="#" id="licLink" data-i18n="lic.link">Licenze</a></div>
+  <div id="fork-notice">PolGraph OSINT · niezależna wersja zmodyfikowana · bazuje na OSInt Graph</div>
+  <div id="help-links"><a href="#" id="manualLink" data-i18n="help.manual">Instrukcja</a><a href="#" id="licLink" data-i18n="lic.link">Licencje</a></div>
 
   <div class="grp case-box">
-    <div class="grp-t" data-i18n="case.title">Caso</div>
+    <div class="grp-t" data-i18n="case.title">Sprawa</div>
     <select id="caseSel" data-i18n-title="case.switchTip"></select>
     <div id="caseDesc" class="case-desc"></div>
     <div class="case-btns btn-grid">
-      <button id="caseNew" class="mini" data-i18n="case.new">➕ Nuovo</button>
-      <button id="caseEdit" class="mini" data-i18n="case.edit">✏️ Modifica</button>
-      <button id="caseMerge" class="mini" data-i18n="case.merge">⧉ Unisci</button>
-      <button id="caseDel" class="mini danger" data-i18n="case.delete">🗑 Elimina</button>
+      <button id="caseNew" class="mini" data-i18n="case.new">➕ Nowa</button>
+      <button id="caseEdit" class="mini" data-i18n="case.edit">✏️ Edytuj</button>
+      <button id="caseMerge" class="mini" data-i18n="case.merge">⧉ Połącz</button>
+      <button id="caseDel" class="mini danger" data-i18n="case.delete">🗑 Usuń</button>
     </div>
   </div>
 
   <div class="search-container">
     <div class="search-row">
-      <input id="search" data-i18n-ph="search.ph" placeholder="Cerca nodo…" autocomplete="off">
-      <button id="searchBtn" data-i18n="search.btn">Cerca</button>
+      <input id="search" data-i18n-ph="search.ph" placeholder="Szukaj węzła…" autocomplete="off">
+      <button id="searchBtn" data-i18n="search.btn">Szukaj</button>
     </div>
     <div class="tools fuzzy-row">
-      <label><input type="checkbox" id="fuzzy"> <span data-i18n="search.fuzzy">Ricerca approssimata</span></label>
+      <label><input type="checkbox" id="fuzzy"> <span data-i18n="search.fuzzy">Wyszukiwanie przybliżone</span></label>
       <select id="fuzzyLevel" disabled>
         <option value="1" selected>1</option>
         <option value="2">2</option>
@@ -75,29 +70,29 @@
   </div>
 
   <div class="tools btn-grid">
-    <button id="addAll" data-i18n="btn.addAll">Aggiungi tutti i risultati</button>
-    <button id="loadTargets" data-i18n="btn.loadTargets">🎯 Carica tutti i target</button>
-    <button id="clearGraph" data-i18n="btn.clearGraph">Svuota grafo</button>
-    <button id="showDeleted" data-i18n="btn.showDeleted">🗑 Nodi cancellati</button>
-    <button id="showManual" data-i18n="btn.showManual">✎ Modifiche manuali</button>
-    <button id="newNode" data-i18n="btn.newNode">➕ Nuovo nodo</button>
-    <button id="importData" data-i18n="btn.import">📥 Importa CSV/Excel</button>
+    <button id="addAll" data-i18n="btn.addAll">Dodaj wszystkie wyniki</button>
+    <button id="loadTargets" data-i18n="btn.loadTargets">🎯 Załaduj wszystkie cele</button>
+    <button id="clearGraph" data-i18n="btn.clearGraph">Wyczyść graf</button>
+    <button id="showDeleted" data-i18n="btn.showDeleted">🗑 Usunięte węzły</button>
+    <button id="showManual" data-i18n="btn.showManual">✎ Zmiany ręczne</button>
+    <button id="newNode" data-i18n="btn.newNode">➕ Nowy węzeł</button>
+    <button id="importData" data-i18n="btn.import">📥 Importuj CSV/Excel</button>
     <button id="aiTranslit" hidden>Traslittera con AI</button>
-    <button id="reloadData" data-i18n="btn.reloadData">Ricarica dati</button>
+    <button id="reloadData" data-i18n="btn.reloadData">Odśwież dane</button>
   </div>
 
   <div class="grp">
-    <div class="grp-t" data-i18n="grp.ai">Intelligenza artificiale</div>
+    <div class="grp-t" data-i18n="grp.ai">Sztuczna inteligencja</div>
     <div class="ai-side">
       <label class="sw"><input type="checkbox" id="aiSwitch"><span class="sw-t"></span>
-        <span data-i18n="ai.active">AI attiva</span></label>
-      <button id="aiSettings" class="mini" data-i18n="ai.configure">⚙ Configura</button>
+        <span data-i18n="ai.active">AI włączone</span></label>
+      <button id="aiSettings" class="mini" data-i18n="ai.configure">⚙ Konfiguruj</button>
     </div>
     <div id="aiSideStatus" class="ai-side-st"></div>
   </div>
 
   <div class="grp">
-    <div class="grp-t" data-i18n="grp.views">Viste salvate</div>
+    <div class="grp-t" data-i18n="grp.views">Zapisane widoki</div>
     <div class="view-save">
       <input id="viewName" autocomplete="off" data-i18n-ph="views.namePh" maxlength="80">
       <button id="viewSave" class="mini" data-i18n="views.save">💾 Salva vista</button>
@@ -110,7 +105,7 @@
   </div>
 
   <div class="grp">
-    <div class="grp-t" data-i18n="grp.sources">Fonti documentali</div>
+    <div class="grp-t" data-i18n="grp.sources">Źródła dokumentowe</div>
     <div class="src-row">
       <button id="srcScan" class="mini" data-i18n="src.scan">📁 Scansiona la cartella fonti</button>
     </div>
@@ -247,7 +242,7 @@
 
 <!-- Menu contestuale del tasto destro sullo sfondo del grafo -->
 <div id="ctxmenu" hidden>
-  <button type="button" id="ctx-new-node" data-i18n="btn.newNode">Nuovo nodo</button>
+  <button type="button" id="ctx-new-node" data-i18n="btn.newNode">Nowy węzeł</button>
 </div>
 
 <div id="lightbox" hidden>
@@ -260,7 +255,7 @@
   <div id="manmodal-box">
     <div id="manmodal-head">
       <div>
-        <div id="manmodal-title" data-i18n="man.title">✎ Modifiche manuali</div>
+        <div id="manmodal-title" data-i18n="man.title">✎ Zmiany ręczne</div>
         <div id="manmodal-sub"></div>
       </div>
       <button id="manmodal-close">✕</button>
@@ -502,7 +497,7 @@
     </div>
     <div id="aimodal-body">
       <label class="sw sw-big"><input type="checkbox" id="aic-enabled"><span class="sw-t"></span>
-        <span data-i18n="ai.active">AI attiva</span></label>
+        <span data-i18n="ai.active">AI włączone</span></label>
       <label class="af-lb" for="aic-endpoint" data-i18n="aicfg.endpoint">Endpoint</label>
       <input id="aic-endpoint" autocomplete="off" placeholder="http://127.0.0.1:11434">
       <label class="af-lb" for="aic-key" data-i18n="aicfg.key">Chiave API</label>
@@ -553,16 +548,16 @@
   <div id="impmodal-box">
     <div id="impmodal-head">
       <div>
-        <div id="impmodal-title" data-i18n="imp.title">📥 Importa nodi da CSV / Excel</div>
-        <div id="impmodal-sub" data-i18n="imp.sub">Crea molti nodi e collegamenti in una volta</div>
+        <div id="impmodal-title" data-i18n="imp.title">📥 Importuj węzły z CSV / Excel</div>
+        <div id="impmodal-sub" data-i18n="imp.sub">Utwórz wiele węzłów i połączeń jednocześnie</div>
       </div>
       <button id="impmodal-close">✕</button>
     </div>
     <div id="impmodal-body">
       <div class="imp-steps">
         <span class="imp-step on" data-step="1"><b>1</b> <span data-i18n="imp.step1">File</span></span>
-        <span class="imp-step" data-step="2"><b>2</b> <span data-i18n="imp.step2">Colonne</span></span>
-        <span class="imp-step" data-step="3"><b>3</b> <span data-i18n="imp.step3">Anteprima</span></span>
+        <span class="imp-step" data-step="2"><b>2</b> <span data-i18n="imp.step2">Kolumny</span></span>
+        <span class="imp-step" data-step="3"><b>3</b> <span data-i18n="imp.step3">Podgląd</span></span>
       </div>
 
       <!-- passo 1: il file -->
@@ -571,10 +566,10 @@
           <div data-i18n="imp.help1">Una riga per collegamento: nome nodo 1, tipo nodo 1, collegamento, nome nodo 2, tipo nodo 2. Senza nodo 2 si crea un nodo isolato.</div>
           <div data-i18n="imp.help2">Colonne facoltative (per il nodo 1 o 2, es. url1, url2): url, piattaforma, etichetta, testo, indirizzo, lat, lon, nota. Per il collegamento: frecce (-> &lt;- &lt;-&gt;), forma, colore, linea, spessore.</div>
           <div data-i18n="imp.help3">Tipi: persona, telefono, email, username, social (o direttamente instagram, facebook, tiktok…), link, luogo, veicolo, testo, target. Se il tipo manca viene dedotto dal valore.</div>
-          <button type="button" id="imp-template" class="mini" data-i18n="imp.template">Scarica un file di esempio</button>
+          <button type="button" id="imp-template" class="mini" data-i18n="imp.template">Pobierz przykładowy plik</button>
         </div>
         <div id="imp-drop" tabindex="0">
-          <span id="imp-drop-txt" data-i18n="imp.drop">Trascina qui il file .csv / .xlsx o clicca per sceglierlo</span>
+          <span id="imp-drop-txt" data-i18n="imp.drop">Przeciągnij tutaj plik .csv / .xlsx albo kliknij, aby go wybrać</span>
         </div>
         <input id="imp-file" type="file" accept=".csv,.tsv,.txt,.xlsx,.xlsm" hidden>
       </div>
@@ -604,7 +599,7 @@
     </div>
     <div id="impmodal-foot">
       <button id="impmodal-back" data-i18n="imp.back" hidden>Indietro</button>
-      <button id="impmodal-next" data-i18n="imp.next" hidden>Anteprima</button>
+      <button id="impmodal-next" data-i18n="imp.next" hidden>Podgląd</button>
       <button id="impmodal-go" data-i18n="imp.go" hidden>Importa</button>
     </div>
   </div>
@@ -642,7 +637,7 @@
   <div id="delmodal-box">
     <div id="delmodal-head">
       <div>
-        <div id="delmodal-title" data-i18n="del.title">🗑 Nodi cancellati</div>
+        <div id="delmodal-title" data-i18n="del.title">🗑 Usunięte węzły</div>
         <div id="delmodal-sub"></div>
       </div>
       <button id="delmodal-close">✕</button>
@@ -675,7 +670,7 @@
   <div id="licmodal-box">
     <div id="licmodal-head">
       <div>
-        <div id="licmodal-title" data-i18n="lic.title">Licenze</div>
+        <div id="licmodal-title" data-i18n="lic.title">Licencje</div>
         <div id="licmodal-sub" data-i18n="lic.sub"></div>
       </div>
       <button id="licmodal-close">✕</button>
@@ -747,5 +742,7 @@
 </script>
 <script src="{{ url_for('static', filename='i18n.js') }}?v={{ asset_ver }}"></script>
 <script src="{{ url_for('static', filename='app.js') }}?v={{ asset_ver }}"></script>
+  <script src="/static/my_databases_panel.js"></script>
+  <script src="/static/polish_osint_profile.js"></script>
 </body>
 </html>

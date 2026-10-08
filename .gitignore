@@ -1,44 +1,45 @@
-# ===== Dati personali e segreti: MAI nel repository =====
-# archivio dei casi (nodi, schede, note, viste) e copie di sicurezza
+# ===== Case data / personal data / secrets: NEVER commit =====
 data/
 backup/
-# documenti delle fonti (cartella «fonti» accanto al programma)
 fonti/
-# configurazione del chatbot: contiene la chiave API e l'indirizzo del proxy
 chatbot.conf
-# log del launcher e del server (percorsi locali)
+.env
+.env.*
+!.env.example
+*.db
+*.sqlite
+*.sqlite3
+*.graph.json
+*.bak
 *.log
 
-# ===== Strumenti estranei al programma =====
-# backup/versioning personale
-versioning.exe
-versioning.conf
-# cartella tools: Tesseract (si scarica a parte) e script di servizio locali
+# Local tools / downloaded OCR
 tools/
 
-# ===== Materiale non più usato =====
-Garbage/
-GARBAGE/
-garbage/
+# Personal versioning helpers
+versioning.exe
+versioning.conf
 
-# ===== Ambiente locale =====
+# Python
 .venv/
 venv/
-.idea/
-.vscode/
-.claude/
 __pycache__/
 *.py[cod]
 *.egg-info/
 .pytest_cache/
 .mypy_cache/
 
-# ===== Build (PyInstaller) =====
+# IDE
+.idea/
+.vscode/
+.claude/
+
+# Build
 build/
 dist/
 *.spec
 
-# ===== Sistema operativo =====
+# OS
 Thumbs.db
 desktop.ini
 .DS_Store

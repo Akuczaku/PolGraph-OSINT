@@ -32,13 +32,13 @@ Cosa fa:
     LICENSE, NOTICE, THIRD-PARTY-NOTICES.md e chatbot.conf.example.
 
 Opzioni:
-  --name NOME   nome dell'eseguibile (default: OSIntGraph)
+  --name NOME   nome dell'eseguibile (default: PolGraphOSINT)
   --noconsole   nasconde la finestra console (solo browser). Di default la
                 console resta visibile: mostra l'indirizzo, i log ed è il modo
                 per fermare il server (Ctrl+C o chiudendo la finestra).
   --keep        non cancella build/ e il file .spec al termine
 
-Risultato:  dist/OSIntGraph.exe  (Windows)   /   dist/OSIntGraph  (Linux)
+Risultato:  dist/PolGraphOSINT.exe  (Windows)   /   dist/PolGraphOSINT  (Linux)
             + LICENSE, NOTICE, THIRD-PARTY-NOTICES.md, chatbot.conf.example
 
 Uso dell'eseguibile:
@@ -101,7 +101,7 @@ def main():
     argv = sys.argv[1:]
     noconsole = "--noconsole" in argv
     keep = "--keep" in argv
-    name = "OSIntGraph"
+    name = "PolGraphOSINT"
     if "--name" in argv:
         i = argv.index("--name")
         if i + 1 < len(argv):

@@ -1,0 +1,16 @@
+{
+  "profile_key": "osintgraph.profile",
+  "default": "standard",
+  "profiles": {
+    "standard": {
+      "label_pl": "Standard",
+      "extra_gui": false
+    },
+    "pl_osint": {
+      "label_pl": "Polski OSINT",
+      "extra_gui": true
+    }
+  },
+  "language_independent": true,
+  "data_removed_when_disabled": false
+}

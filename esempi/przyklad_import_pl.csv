@@ -1,0 +1,4 @@
+Imię i nazwisko;Typ;Data urodzenia;Cel;Notatka;Relacja;Kierunek;Nazwa 2;Typ 2;Telefon;Email;Firma;NIP;REGON;KRS;Adres;Źródło;Data pozyskania
+Jan Kowalski;osoba;1980-03-12;tak;Główny podmiot analizy;korzysta z telefonu;->;+48 500 600 700;telefon;+48 500 600 700;;;;;;Zgłoszenie;2026-01-15
+Jan Kowalski;osoba;1980-03-12;;;pracuje w;->;ABC Sp. z o.o.;firma;;;ABC Sp. z o.o.;1234563218;123456785;0000123456;Szczecin, ul. Portowa 12;KRS/CEIDG;2026-01-16
+Jan Kowalski;osoba;1980-03-12;;;korzysta z adresu e-mail;->;jan.kowalski@example.com;email;;jan.kowalski@example.com;;;;;;Analiza OSINT;2026-01-16

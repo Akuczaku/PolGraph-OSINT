@@ -1,2 +1,30 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="OSInt Graph"><title>OSInt Graph</title><rect width="256" height="256" rx="51.2" fill="#1A1A1A"/><path fill="#FFFFFF" d="M72.9 164.3Q53.5 164.3 41 160.5Q28.5 156.6 22.6 148.6Q16.6 140.5 16.6 128Q16.6 115.4 22.6 107.4Q28.5 99.4 41 95.5Q53.5 91.7 72.9 91.7Q92.4 91.7 104.9 95.5Q117.3 99.4 123.3 107.4Q129.2 115.4 129.2 128Q129.2 140.5 123.3 148.6Q117.3 156.6 104.9 160.5Q92.4 164.3 72.9 164.3ZM72.9 150.2Q84.2 150.2 91.8 148.9Q99.4 147.6 104 144.9Q108.6 142.2 110.5 138.1Q112.5 133.9 112.5 128Q112.5 122.1 110.5 117.9Q108.6 113.7 104 111Q99.4 108.3 91.8 107.1Q84.2 105.8 72.9 105.8Q57.9 105.8 49.2 108.1Q40.5 110.3 36.7 115.2Q33 120.1 33 128Q33 135.9 36.7 140.8Q40.5 145.7 49.2 147.9Q57.9 150.2 72.9 150.2Z"/><path fill="#7B95DD" d="M138.8 128.1Q138.8 119.1 141.8 112.3Q144.8 105.6 151.2 101Q157.6 96.5 167.7 94.2Q177.9 91.9 192.2 91.9Q200.4 91.9 208.7 92.8Q216.9 93.6 224.8 94.9Q232.6 96.2 239.4 97.9L236.4 111.6Q230.4 110.3 223 109.1Q215.7 107.8 207.5 107Q199.4 106.1 191.1 106.1Q180.6 106.1 173.6 107.4Q166.7 108.8 162.6 111.5Q158.6 114.2 156.9 118.3Q155.3 122.4 155.3 128.1Q155.3 133.7 156.9 137.8Q158.6 141.9 162.6 144.7Q166.7 147.4 173.6 148.7Q180.6 150.1 191.1 150.1Q196.6 150.1 202.1 149.6Q207.6 149.1 212.8 148.4Q218 147.7 222.4 147V127.1H239.4V158.3Q232.6 159.9 224.8 161.3Q216.9 162.6 208.7 163.4Q200.4 164.2 192.2 164.2Q177.9 164.2 167.7 161.9Q157.6 159.7 151.2 155.1Q144.8 150.6 141.8 143.8Q138.8 137.1 138.8 128.1Z"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="PolGraph OSINT">
+<defs>
+  <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#44e0ff"/>
+    <stop offset=".5" stop-color="#5478ff"/>
+    <stop offset="1" stop-color="#a46cff"/>
+  </linearGradient>
+  <radialGradient id="orb" cx="35%" cy="28%" r="75%">
+    <stop offset="0" stop-color="#ffffff"/>
+    <stop offset=".22" stop-color="#72e9ff"/>
+    <stop offset=".65" stop-color="#4e72f5"/>
+    <stop offset="1" stop-color="#1a2854"/>
+  </radialGradient>
+  <filter id="s" x="-35%" y="-35%" width="170%" height="170%">
+    <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#030713" flood-opacity=".7"/>
+  </filter>
+</defs>
+<rect width="512" height="512" rx="112" fill="#091226"/>
+<rect x="16" y="16" width="480" height="480" rx="100" fill="none" stroke="#263a68" stroke-width="4"/>
+<g filter="url(#s)">
+  <path d="M108 289 L180 139 L307 173 L352 308 L219 377 Z" fill="none" stroke="url(#g)" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="108" cy="289" r="32" fill="url(#orb)"/>
+  <circle cx="180" cy="139" r="34" fill="url(#orb)"/>
+  <circle cx="307" cy="173" r="30" fill="url(#orb)"/>
+  <circle cx="352" cy="308" r="35" fill="url(#orb)"/>
+  <circle cx="219" cy="377" r="28" fill="url(#orb)"/>
+  <circle cx="252" cy="250" r="89" fill="none" stroke="#f7fbff" stroke-width="24"/>
+  <path d="M318 316 L410 408" stroke="#f7fbff" stroke-width="31" stroke-linecap="round"/>
+</g>
+</svg>

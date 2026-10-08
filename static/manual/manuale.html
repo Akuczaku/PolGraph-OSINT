@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <!--
-     OSInt Graph - esplorazione grafica di dati OSINT per casi investigativi
+     PolGraph OSINT - esplorazione grafica di dati OSINT per casi investigativi
      Copyright (C) 2025-2026 Andrea Cumini <andrea@osintinfo.net> - www.osintinfo.net
      SPDX-License-Identifier: GPL-3.0-or-later
-     Manuale d'uso in sei lingue (it, en, fr, de, es, ar): il testo e' nel
+     Manuale d'uso in sette lingue (it, pl, en, fr, de, es, ar): il testo e' nel
      blocco M qui sotto, le schermate in img/. Si apre con ?lang=xx.
 -->
 <html lang="it">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OSInt Graph · Manuale</title>
+<title>PolGraph OSINT · Manuale</title>
 <link rel="icon" type="image/svg+xml" href="../icon.svg">
 <style>
   :root { --bg:#1a1a1a; --panel:#2a2a2a; --line:#3a3a3a; --tx:#fff; --tx2:#aaa; --acc:#4ade80; --brand:#7B95DD; }
@@ -77,7 +77,7 @@ const M = {};
 
 /* ================================================================ ITALIANO */
 M.it = {
-  title: 'Manuale d\'uso', sub: 'OSInt Graph · esplorazione grafica di dati OSINT per casi investigativi',
+  title: 'Manuale d\'uso', sub: 'PolGraph OSINT · esplorazione grafica di dati OSINT per casi investigativi',
   toc: 'Indice', shortcuts: 'Scorciatoie da mouse e tastiera',
   kbdHead: ['Azione', 'Effetto'],
   kbd: [
@@ -96,19 +96,19 @@ M.it = {
     ['Barra del titolo di una finestra', 'Trascinala per spostare la finestra; doppio clic per ricentrarla'],
   ],
   sections: [
-   { id: 'intro', h: '1. Che cos\'è OSInt Graph', body: `
-<p>OSInt Graph rappresenta come <b>grafo</b> le informazioni di un caso investigativo: persone, telefoni, email, profili social, veicoli, luoghi, documenti e i collegamenti fra loro. Ogni elemento è un <b>nodo</b>, ogni relazione un <b>collegamento</b>. Il programma gira sul tuo computer: i dati non lasciano mai il PC, salvo l'uso facoltativo di un servizio di intelligenza artificiale che configuri tu.</p>
+   { id: 'intro', h: '1. Che cos\'è PolGraph OSINT', body: `
+<p>PolGraph OSINT rappresenta come <b>grafo</b> le informazioni di un caso investigativo: persone, telefoni, email, profili social, veicoli, luoghi, documenti e i collegamenti fra loro. Ogni elemento è un <b>nodo</b>, ogni relazione un <b>collegamento</b>. Il programma gira sul tuo computer: i dati non lasciano mai il PC, salvo l'uso facoltativo di un servizio di intelligenza artificiale che configuri tu.</p>
 <p>Si avvia con un doppio clic sull'eseguibile (oppure, dal codice sorgente, con <code>python app.py</code>): parte un piccolo server locale e si apre il browser all'indirizzo <code>http://127.0.0.1:5000</code>. La finestra della console mostra i messaggi del programma e serve a fermarlo (<kbd>Ctrl</kbd>+<kbd>C</kbd> o chiusura della finestra). La porta si cambia con la variabile d'ambiente <code>PORT</code>.</p>
-<div class="note">Il programma è software libero (GNU GPL v3 con obbligo di attribuzione). Le licenze del programma e di tutti i componenti si leggono dal link <b>Licenze</b> nel pannello di sinistra.</div>` },
+<div class="note">Il programma è software libero (GNU GPL v3 con obbligo di attribuzione). Le licenze del programma e di tutti i componenti si leggono dal link <b>Licencje</b> nel pannello di sinistra.</div>` },
    { id: 'cases', h: '2. Casi: primo avvio e gestione', body: `
 <p>Tutto il lavoro è organizzato in <b>casi</b> (fascicoli). Ogni caso è un archivio separato con i propri nodi, collegamenti, note, viste e file importati. Al primo avvio non esiste alcun caso: il programma chiede subito di crearne uno, e finché non c'è un caso aperto non si possono aggiungere nodi né importare dati.</p>
 ${fig(IMG.first, 'Primo avvio: nessun caso aperto, la finestra «Nuovo caso» si apre da sola.')}
 <p>Nel riquadro <b>Caso</b> in alto nel pannello:</p>
 <ul>
 <li>la <b>tendina</b> mostra il caso aperto; scegliendone un altro la pagina si ricarica con i suoi dati;</li>
-<li><b>Nuovo</b> crea un caso vuoto e lo apre; <b>Modifica</b> cambia nome e descrizione;</li>
-<li><b>Unisci</b> crea un nuovo caso con il contenuto di due o più casi: i nodi uguali (stessa persona, stesso telefono…) diventano uno solo e i dati diversi restano come schede separate dello stesso nodo; a scelta i casi originali vengono eliminati;</li>
-<li><b>Elimina</b> cancella il caso con tutto il suo contenuto. L'operazione non si può annullare: se era l'ultimo caso si torna allo stato iniziale senza casi.</li>
+<li><b>Nowa</b> crea un caso vuoto e lo apre; <b>Edytuj</b> cambia nome e descrizione;</li>
+<li><b>Połącz</b> crea un nuovo caso con il contenuto di due o più casi: i nodi uguali (stessa persona, stesso telefono…) diventano uno solo e i dati diversi restano come schede separate dello stesso nodo; a scelta i casi originali vengono eliminati;</li>
+<li><b>Usuń</b> cancella il caso con tutto il suo contenuto. L'operazione non si può annullare: se era l'ultimo caso si torna allo stato iniziale senza casi.</li>
 </ul>
 ${fig(IMG.caseEdit, 'Modifica di nome e descrizione del caso.')}` },
    { id: 'interface', h: '3. L\'interfaccia', body: `
@@ -125,7 +125,7 @@ ${fig(IMG.search, 'Risultati della ricerca con tipo del nodo e segno di spunta p
 <p>Con <b>Ricerca approssimata</b> si trovano anche le grafie vicine (errori di battitura, traslitterazioni diverse); il livello da 1 a 6 indica quante differenze tollerare. <b>Svuota grafo</b> toglie tutti i nodi dalla vista senza cancellare nulla.</p>` },
    { id: 'graph', h: '5. Muoversi nel grafo', body: `
 <p>Il grafo si sposta trascinando lo sfondo e si ingrandisce con la rotella. <b>Adatta</b> riporta tutto nella finestra. Un <b>clic su un nodo</b> lo espande, mostrando i nodi collegati entro la profondità scelta in <b>Prof.</b> (1 = solo i vicini diretti); un <b>secondo clic</b> lo contrae, nascondendo i vicini che si vedevano grazie a lui (restano quelli collegati ad altri nodi espansi o selezionati). <b>Espandi tutto</b> e <b>Comprimi</b> agiscono su tutti i nodi visibili.</p>
-<p>Il <b>tasto destro</b> su un nodo apre la sua scheda; su un collegamento apre la finestra del collegamento; sullo sfondo apre un menu con <b>Nuovo nodo</b>.</p>
+<p>Il <b>tasto destro</b> su un nodo apre la sua scheda; su un collegamento apre la finestra del collegamento; sullo sfondo apre un menu con <b>Nowy węzeł</b>.</p>
 ${fig(IMG.ctx, 'Tasto destro sullo sfondo: menu contestuale.')}
 <p>Con <kbd>Ctrl</kbd>+clic (o <kbd>Ctrl</kbd>+trascinamento di un riquadro) si costruisce una <b>selezione</b> di nodi, elencata nel riquadro <b>Selezione</b>: da lì si evidenziano tutti i percorsi fra i nodi scelti (entro un numero massimo di salti) e si creano collegamenti fra loro. <kbd>H</kbd>+clic evidenzia un nodo e i suoi collegamenti attenuando il resto; <kbd>N</kbd>+clic nasconde un nodo (il pulsante <b>Mostra nascosti</b> li fa ricomparire). <kbd>Alt</kbd>+clic su un profilo social lo apre nel browser secondo la scelta in <b>Alt+Click sui social</b>.</p>
 <p><b>Mostra nodi con</b> filtra il grafo per numero minimo di collegamenti: utile per far emergere i nodi più connessi.</p>` },
@@ -134,7 +134,7 @@ ${fig(IMG.ctx, 'Tasto destro sullo sfondo: menu contestuale.')}
 ${fig(IMG.card, 'Scheda del target con nota, riepilogo dei collegamenti e pulsanti in basso.')}
 <p>I pulsanti in basso: <b>Espandi ramo / Comprimi</b>, <b>Centra nel grafo</b>, <b>Cerca nelle fonti</b> (i termini della scheda nei documenti indicizzati), <b>Aggiungi</b> (un nuovo nodo collegato a questo), <b>Importa con AI</b> (testo libero interpretato dall'AI), <b>Rinomina</b>, <b>Modifica valori</b>, <b>Nota</b>, <b>PDF</b> (la scheda stampabile) ed <b>Elimina nodo</b>. Un nodo dei dati eliminato finisce fra i <b>Nodi cancellati</b>, da cui si può ripristinare; un nodo creato a mano viene cancellato davvero.</p>` },
    { id: 'add', h: '7. Aggiungere un nodo', body: `
-<p><b>Nuovo nodo</b> nel pannello (o nel menu del tasto destro sullo sfondo) crea un nodo indipendente; <b>Aggiungi</b> nella scheda di un nodo crea un nodo già collegato a quello. Si sceglie il <b>tipo</b> e si compilano i campi relativi: URL del profilo per i social (la piattaforma viene riconosciuta dall'indirizzo), numero, email, username, cognome, nome e data di nascita per le persone, città, indirizzo, civico e coordinate per i luoghi, targa e colore per i veicoli, titolo e testo per gli appunti, immagine per le foto, più gli elementi investigativi (armi, stupefacenti, documenti…).</p>
+<p><b>Nowy węzeł</b> nel pannello (o nel menu del tasto destro sullo sfondo) crea un nodo indipendente; <b>Aggiungi</b> nella scheda di un nodo crea un nodo già collegato a quello. Si sceglie il <b>tipo</b> e si compilano i campi relativi: URL del profilo per i social (la piattaforma viene riconosciuta dall'indirizzo), numero, email, username, cognome, nome e data di nascita per le persone, città, indirizzo, civico e coordinate per i luoghi, targa e colore per i veicoli, titolo e testo per gli appunti, immagine per le foto, più gli elementi investigativi (armi, stupefacenti, documenti…).</p>
 ${fig(IMG.add, 'Nuovo nodo collegato a un target: tipo, valore, spunta target, proprietà del collegamento e anteprima.')}
 <p>Qualsiasi nodo può essere evidenziato come <b>target</b> con la spunta <b>Evidenzia come target</b>. Se il nodo nasce collegato a un altro, in basso ci sono le <b>proprietà del collegamento</b>: nome, forma della linea, tipo di linea, spessore e colore. Le <b>frecce</b> si impostano direttamente sull'<b>anteprima</b>: un clic accanto a un nodo mette o toglie la punta della freccia verso quel nodo (al passaggio del mouse compare la punta in trasparenza).</p>
 <p>Il pulsante <b>✨ AI</b> in alto nella finestra passa alla modalità testo libero: incolli un testo (un verbale, una segnalazione, un messaggio) e l'AI propone persone, telefoni, email, profili, luoghi e veicoli con le loro relazioni; prima di crearli si controllano in un'anteprima.</p>` },
@@ -183,7 +183,7 @@ ${fig(IMG.manual, 'Modifiche manuali: nodi aggiunti a mano con data e collegamen
    { id: 'export', h: '16. Esportare', body: `
 <p><b>Grafo in PDF</b> stampa il grafo com'è a schermo, con legenda e intestazione del caso. <b>Scheda tabellare</b> produce un documento con tutti i nodi visibili e i loro dati, in tabella, pronto per la stampa o il salvataggio in PDF dal browser. Dalla scheda di un nodo, <b>PDF</b> esporta quella sola scheda. Il file CSV d'esempio si scarica dalla finestra di importazione.</p>` },
    { id: 'lang', h: '17. Lingue, licenze e crediti', body: `
-<p>La lingua dell'interfaccia si sceglie dalla tendina accanto al logo (italiano, inglese, francese, tedesco, spagnolo, arabo con testo da destra a sinistra); i contenuti dei dati non vengono tradotti. Sotto il logo ci sono i crediti dell'autore e il link <b>Licenze</b>, che elenca il programma e tutti i componenti di terze parti con i testi completi delle licenze.</p>
+<p>La lingua dell'interfaccia si sceglie dalla tendina accanto al logo (italiano, inglese, francese, tedesco, spagnolo, arabo con testo da destra a sinistra); i contenuti dei dati non vengono tradotti. Sotto il logo ci sono i crediti dell'autore e il link <b>Licencje</b>, che elenca il programma e tutti i componenti di terze parti con i testi completi delle licenze.</p>
 ${fig(IMG.lic, 'Finestra delle licenze: a sinistra i componenti, a destra il testo.')}` },
    { id: 'files', h: '18. Dati, cartelle e file', body: `
 <table>
@@ -200,9 +200,120 @@ ${fig(IMG.lic, 'Finestra delle licenze: a sinistra i componenti, a destra il tes
   ]
 };
 
+
+/* ================================================================= POLSKI */
+M.pl = {
+  title: 'Instrukcja obsługi', sub: 'PolGraph OSINT · graficzna analiza danych OSINT dla spraw analitycznych i dochodzeniowych',
+  toc: 'Spis treści', shortcuts: 'Skróty myszy i klawiatury',
+  kbdHead: ['Czynność', 'Efekt'],
+  kbd: [
+    ['Kliknięcie węzła', 'Rozwija węzeł i pokazuje jego połączenia; drugie kliknięcie zwija go'],
+    ['Prawy przycisk myszy na węźle', 'Otwiera kartę węzła'],
+    ['Prawy przycisk myszy na relacji', 'Otwiera edycję relacji'],
+    ['Prawy przycisk myszy na tle', 'Otwiera menu kontekstowe z opcją „Nowy węzeł”'],
+    ['Ctrl+kliknięcie (lub ⌘+kliknięcie) węzła', 'Dodaje lub usuwa węzeł z zaznaczenia'],
+    ['Ctrl+przeciągnięcie na tle', 'Tworzy prostokąt zaznaczenia; objęte węzły trafiają do zaznaczenia'],
+    ['Alt+kliknięcie węzła społecznościowego', 'Otwiera profil zgodnie z ustawieniem w panelu'],
+    ['H+kliknięcie węzła', 'Podświetla węzeł i jego połączenia, wygaszając pozostałe'],
+    ['N+kliknięcie węzła', 'Ukrywa węzeł z widoku bez usuwania danych'],
+    ['Kółko myszy / przeciąganie', 'Powiększanie i przesuwanie grafu'],
+    ['Esc', 'Zamyka otwarte okno'],
+    ['Enter w polu nazwy relacji', 'Zapisuje zmiany'],
+    ['Pasek tytułu okna', 'Przeciągnij, aby przenieść okno; kliknij dwukrotnie, aby je wyśrodkować'],
+  ],
+  sections: [
+   { id: 'intro', h: '1. Czym jest PolGraph OSINT', body: `
+<p>PolGraph OSINT przedstawia informacje dotyczące sprawy jako interaktywny <b>graf</b>: osoby, telefony, adresy e-mail, profile społecznościowe, pojazdy, miejsca, dokumenty i relacje pomiędzy nimi. Każdy element jest <b>węzłem</b>, a każde powiązanie — <b>relacją</b>. Program działa lokalnie na komputerze. Dane nie opuszczają komputera, z wyjątkiem opcjonalnego użycia usługi AI skonfigurowanej przez użytkownika.</p>
+<p>Program uruchamia się z pliku wykonywalnego albo ze źródeł poleceniem <code>python app.py</code>. Startuje lokalny serwer i otwiera przeglądarkę pod adresem <code>http://127.0.0.1:5000</code>. Port można zmienić zmienną środowiskową <code>PORT</code>.</p>
+<div class="note">PolGraph OSINT jest oprogramowaniem wolnym na licencji GNU GPL v3 z dodatkowymi warunkami atrybucji. Oryginalne teksty licencji są dostępne z poziomu aplikacji.</div>` },
+   { id: 'cases', h: '2. Sprawy: pierwszy start i zarządzanie', body: `
+<p>Cała praca jest uporządkowana w <b>sprawy</b>. Każda sprawa ma oddzielny zestaw węzłów, relacji, notatek, zapisanych widoków i danych. Przy pierwszym uruchomieniu aplikacja poprosi o utworzenie pierwszej sprawy.</p>
+${fig(IMG.first, 'Pierwsze uruchomienie: brak otwartej sprawy.')}
+<p>W sekcji <b>Sprawa</b> możesz wybrać istniejącą sprawę, utworzyć nową, edytować jej nazwę i opis, połączyć kilka spraw lub usunąć sprawę wraz z jej zawartością.</p>
+<ul><li><b>Nowa</b> — tworzy pustą sprawę.</li><li><b>Edytuj</b> — zmienia nazwę i opis.</li><li><b>Połącz</b> — tworzy nową sprawę z zawartości kilku spraw, próbując scalać odpowiadające sobie węzły.</li><li><b>Usuń</b> — usuwa sprawę; operacji nie można cofnąć.</li></ul>
+${fig(IMG.caseEdit, 'Edycja nazwy i opisu sprawy.')}` },
+   { id: 'interface', h: '3. Interfejs', body: `
+<p>Po lewej stronie znajduje się <b>panel sterowania</b>, a po prawej <b>graf</b>. Panel zawiera m.in. wybór sprawy, wyszukiwanie, główne operacje, AI, zapisane widoki, źródła dokumentowe, filtry kategorii, ustawienia relacji i układu oraz eksport.</p>
+${fig(IMG.over, 'Widok główny: panel sterowania po lewej, graf po prawej.')}
+<div class="two">${fig(IMG.sideTop, 'Górna część panelu.', 'narrow')}${fig(IMG.sideBottom, 'Dolna część panelu.', 'narrow')}</div>
+<p>Kolory i ikony pomagają rozróżniać typy węzłów. Węzeł oznaczony jako <b>cel</b> jest wyróżniony. Węzeł rozwinięty ma dodatkowe oznaczenie.</p>` },
+   { id: 'search', h: '4. Wyszukiwanie i dodawanie węzłów do grafu', body: `
+<p>Wpisz co najmniej trzy znaki w polu <b>Szukaj węzła</b>. Wyniki mogą obejmować nazwę, aliasy, notatki i wartości zapisane w kartach węzła. Kliknięcie wyniku dodaje węzeł do grafu i centruje widok.</p>
+${fig(IMG.search, 'Wyniki wyszukiwania z typem węzła.')}
+<p><b>Wyszukiwanie przybliżone</b> pozwala odnajdywać podobne zapisy, literówki i różne transliteracje. <b>Wyczyść graf</b> usuwa elementy jedynie z bieżącego widoku — nie kasuje danych.</p>` },
+   { id: 'graph', h: '5. Poruszanie się po grafie', body: `
+<p>Przeciąganie tła przesuwa graf, a kółko myszy zmienia powiększenie. <b>Dopasuj</b> ustawia wszystkie widoczne elementy w obszarze roboczym. Kliknięcie węzła rozwija jego sąsiadów zgodnie z ustawioną głębokością, kolejne kliknięcie zwija gałąź.</p>
+${fig(IMG.ctx, 'Menu kontekstowe grafu.')}
+<p>Za pomocą <kbd>Ctrl</kbd> można zaznaczać wiele węzłów. <kbd>H</kbd> podświetla sąsiedztwo, a <kbd>N</kbd> ukrywa węzeł w bieżącym widoku. Operacje te nie usuwają danych ze sprawy.</p>` },
+   { id: 'card', h: '6. Karta węzła', body: `
+<p>Karta węzła pokazuje wszystkie informacje o wybranym elemencie: notatkę, podsumowanie relacji, dane źródłowe, dodatkowe pola i obrazy. Wartości można kopiować, a nazwy powiązanych węzłów prowadzą do odpowiednich elementów grafu.</p>
+${fig(IMG.card, 'Karta węzła z danymi i relacjami.')}
+<p>Z karty można rozwinąć gałąź, wyśrodkować węzeł, przeszukać źródła, dodać powiązany węzeł, użyć importu AI, zmienić nazwę, edytować dane, dodać notatkę, wygenerować PDF lub usunąć węzeł.</p>` },
+   { id: 'add', h: '7. Dodawanie węzła', body: `
+<p><b>Nowy węzeł</b> tworzy niezależny element, a przycisk <b>Dodaj</b> z karty istniejącego węzła tworzy element już z nim połączony. Dostępne są m.in. osoby, telefony, e-maile, konta społecznościowe, pojazdy, miejsca, linki, tekst, zdjęcia i elementy analityczne.</p>
+${fig(IMG.add, 'Dodawanie nowego węzła wraz z właściwościami relacji.')}
+<p>Każdy węzeł można oznaczyć jako <b>cel</b>. Przy tworzeniu relacji można ustawić jej nazwę, kształt, styl linii, szerokość, kolor oraz kierunek strzałek.</p>
+<p>Tryb <b>AI</b> pozwala wkleić tekst, z którego skonfigurowany model może zaproponować węzły i relacje do zatwierdzenia.</p>` },
+   { id: 'links', h: '8. Relacje', body: `
+<p>Aby połączyć istniejące węzły, zaznacz je i wybierz opcję tworzenia relacji. Relacja może mieć nazwę, kierunek, kształt, styl, kolor i szerokość. Pomiędzy tymi samymi dwoma węzłami może istnieć więcej niż jedna relacja.</p>
+${fig(IMG.link, 'Tworzenie relacji pomiędzy zaznaczonymi węzłami.')}
+${fig(IMG.edge, 'Edycja relacji i jej wyglądu.')}
+<p>Prawy przycisk myszy na relacji otwiera jej edytor. Ustawienia wyglądu nie muszą zmieniać danych źródłowych — mogą być tylko sposobem prezentacji grafu.</p>` },
+   { id: 'edit', h: '9. Edycja wartości węzła', body: `
+<p><b>Edytuj wartości</b> pozwala zmieniać etykietę, adres URL, notatkę, status celu oraz pola zapisane w kartach danych. Można też dodawać własne pola. Zmiany są przechowywane w sprawie i nie modyfikują oryginalnych plików źródłowych.</p>
+${fig(IMG.edit, 'Edycja pól węzła.')}` },
+   { id: 'import', h: '10. Import z CSV lub Excel', body: `
+<p><b>Importuj CSV/Excel</b> służy do tworzenia wielu węzłów i relacji jednocześnie. Kreator działa w trzech etapach: wybór pliku, mapowanie kolumn i podgląd przed importem.</p>
+${fig(IMG.imp1, 'Krok 1: wybór pliku CSV lub Excel.')}
+<p>W <b>kroku 2</b> każdej kolumnie przypisujesz znaczenie. Rozpoznane nagłówki mogą zostać przypisane automatycznie, a nieznane kolumny mogą trafić jako pola dodatkowe.</p>
+${fig(IMG.imp2, 'Krok 2: mapowanie kolumn.')}
+<p><b>Krok 3</b> pokazuje, jakie węzły i relacje zostaną utworzone. Poszczególne wiersze można wyłączyć przed zatwierdzeniem.</p>
+${fig(IMG.imp3, 'Krok 3: podgląd importu.')}
+<h3>Polskie nagłówki</h3><p>W polskiej wersji można dodatkowo używać nagłówków takich jak: <code>imię i nazwisko</code>, <code>telefon</code>, <code>email</code>, <code>adres</code>, <code>miasto</code>, <code>PESEL</code>, <code>NIP</code>, <code>REGON</code>, <code>KRS</code>, <code>VIN</code> i <code>IBAN</code>.</p>
+<div class="note warn">Dla osób staraj się używać stabilnego identyfikatora albo konsekwentnie podawać imię, nazwisko i datę urodzenia. Niespójne dane mogą utworzyć kilka podobnych węzłów.</div>` },
+   { id: 'filters', h: '11. Kategorie, układ i wygląd', body: `
+<p>Filtry <b>Kategorie</b> pokazują lub ukrywają całe grupy węzłów. Dostępne układy obejmują m.in. organiczny, kołowy, hierarchiczny i siatkowy. Funkcja redukcji przecięć może poprawić czytelność dużych grafów.</p>
+<p>Opcja identyfikatorów pozwala pokazywać lub ukrywać pośrednie węzły, np. telefony, adresy e-mail i nazwy użytkowników.</p>` },
+   { id: 'views', h: '12. Zapisane widoki', body: `
+<p><b>Zapisany widok</b> przechowuje stan prezentacji grafu: widoczne węzły, rozwinięcia, położenie, powiększenie i zaznaczenia. Ułatwia to powrót do konkretnego sposobu analizy lub przygotowanie widoku do eksportu.</p>` },
+   { id: 'sources', h: '13. Źródła dokumentowe i OCR', body: `
+<p>Dokumenty można umieścić w folderze <code>fonti</code> i zindeksować z poziomu programu. Obsługiwane są m.in. PDF, Word, Excel, CSV, pliki tekstowe oraz obrazy. Wyszukiwanie źródeł pokazuje dokument, kontekst wystąpienia i możliwość otwarcia pliku.</p>
+<p>Obrazy mogą być analizowane przez <b>Tesseract OCR</b>. Na Windows aplikacja może pobrać Tesseract do lokalnego folderu <code>tools/tesseract</code>.</p>` },
+   { id: 'ai', h: '14. Sztuczna inteligencja', body: `
+<p>PolGraph OSINT może korzystać z serwera zgodnego z Ollama lub API OpenAI. AI jest opcjonalna i służy m.in. do proponowania węzłów z tekstu oraz transliteracji nazw zapisanych innymi alfabetami.</p>
+${fig(IMG.ai, 'Konfiguracja AI: endpoint, klucz, model, format API, limit czasu i transliteracja.')}
+<p>W ustawieniach podajesz adres serwera, opcjonalny klucz API, model, format żądania oraz limit czasu. Ustawienia mogą być przechowywane w <code>chatbot.conf</code>.</p>
+<div class="note warn">Tekst wysyłany do AI trafia do skonfigurowanego przez Ciebie serwera. Dla danych wrażliwych używaj zaufanej infrastruktury, najlepiej lokalnej, i stosuj obowiązujące przepisy.</div>` },
+   { id: 'manual', h: '15. Zmiany ręczne i usunięte węzły', body: `
+<p><b>Zmiany ręczne</b> pokazują elementy utworzone lub zmienione przez operatora, w tym importowane dane i propozycje zaakceptowane z AI. Sekcja <b>Usunięte węzły</b> pozwala przywracać elementy usunięte z widoku danych, jeśli aplikacja zachowała je jako możliwe do odtworzenia.</p>
+${fig(IMG.manual, 'Lista zmian ręcznych i elementów utworzonych przez operatora.')}` },
+   { id: 'export', h: '16. Eksport', body: `
+<p><b>Graf do PDF</b> przygotowuje bieżący widok grafu do wydruku. <b>Raport tabelaryczny</b> zestawia widoczne węzły i dane w formie tabel. Z karty węzła można również wyeksportować pojedynczą kartę.</p>` },
+   { id: 'lang', h: '17. Języki, licencje i informacje o autorze', body: `
+<p>Język interfejsu wybiera się z listy obok logo. Polska wersja jest niezależna od profilu <b>Polski OSINT</b>. Zmiana języka nie zmienia danych zapisanych w sprawach.</p>
+${fig(IMG.lic, 'Okno licencji: lista komponentów i oryginalne teksty licencji.')}
+<div class="note">Teksty licencji i informacji prawnych pozostają w oryginalnym brzmieniu. Tłumaczenia instrukcji nie zastępują treści licencyjnych.</div>` },
+   { id: 'files', h: '18. Dane, foldery i pliki', body: `
+<table><tr><th>Folder / plik</th><th>Zawartość</th></tr>
+<tr><td><code>data/</code></td><td>Bazy danych spraw, słowniki i indeksy.</td></tr>
+<tr><td><code>data/media/</code></td><td>Obrazy dołączone do węzłów.</td></tr>
+<tr><td><code>fonti/</code></td><td>Dokumenty przeznaczone do indeksowania.</td></tr>
+<tr><td><code>chatbot.conf</code></td><td>Konfiguracja AI; pliku z kluczem API nie należy udostępniać.</td></tr>
+<tr><td><code>tools/tesseract/</code></td><td>Lokalna instalacja Tesseract OCR.</td></tr>
+<tr><td><code>esempi/</code></td><td>Przykładowe pliki importu; polska wersja zawiera także przykład PL.</td></tr>
+<tr><td><code>pl/</code></td><td>Dodatki polskiego profilu OSINT i narzędzia importu własnych baz.</td></tr>
+<tr><td><code>LICENSE</code>, <code>NOTICE</code>, <code>THIRD-PARTY-NOTICES.md</code></td><td>Oryginalne informacje licencyjne.</td></tr></table>
+<p>Do kopii zapasowej najważniejszy jest folder <code>data</code>; jeżeli korzystasz ze źródeł dokumentowych, zachowaj również <code>fonti</code>.</p>` },
+   { id: 'pladdons', h: '19. Dodatki polskiej wersji', body: `
+<p>Polska odmiana zawiera opcjonalny profil <b>Polski OSINT</b>. Profil jest niezależny od języka interfejsu i można go włączać lub wyłączać bez usuwania danych.</p>
+<ul><li>walidacja i rozpoznawanie PESEL, NIP, REGON, KRS i polskiego IBAN;</li><li>skróty do oficjalnych polskich rejestrów;</li><li>polskie typy danych i relacje;</li><li>panel <b>Moje bazy</b> do importu własnych zbiorów;</li><li>import CSV / JSON / Graph JSON, a dla SQLite pomocniczy konwerter;</li><li>pole <code>source_db</code> pozwalające śledzić pochodzenie danych.</li></ul>
+<p>Funkcje polskiego profilu są dodatkiem do podstawowej aplikacji i nie zmieniają oryginalnych informacji o autorze ani warunków licencji.</p>` },
+  ]
+};
+
 /* ================================================================= ENGLISH */
 M.en = {
-  title: 'User manual', sub: 'OSInt Graph · graph exploration of OSINT data for investigative cases',
+  title: 'User manual', sub: 'PolGraph OSINT · graph exploration of OSINT data for investigative cases',
   toc: 'Contents', shortcuts: 'Mouse and keyboard shortcuts',
   kbdHead: ['Action', 'Effect'],
   kbd: [
@@ -221,8 +332,8 @@ M.en = {
     ['Title bar of a window', 'Drag to move the window; double-click to re-centre it'],
   ],
   sections: [
-   { id: 'intro', h: '1. What OSInt Graph is', body: `
-<p>OSInt Graph shows the information of an investigative case as a <b>graph</b>: people, phones, emails, social profiles, vehicles, places, documents and the connections between them. Every item is a <b>node</b>, every relation a <b>connection</b>. The program runs on your computer: data never leaves the PC, except for the optional artificial-intelligence service you configure yourself.</p>
+   { id: 'intro', h: '1. What PolGraph OSINT is', body: `
+<p>PolGraph OSINT shows the information of an investigative case as a <b>graph</b>: people, phones, emails, social profiles, vehicles, places, documents and the connections between them. Every item is a <b>node</b>, every relation a <b>connection</b>. The program runs on your computer: data never leaves the PC, except for the optional artificial-intelligence service you configure yourself.</p>
 <p>Start it by double-clicking the executable (or, from source, with <code>python app.py</code>): a small local server starts and the browser opens at <code>http://127.0.0.1:5000</code>. The console window shows the program's messages and is the way to stop it (<kbd>Ctrl</kbd>+<kbd>C</kbd> or closing the window). The port can be changed with the <code>PORT</code> environment variable.</p>
 <div class="note">The program is free software (GNU GPL v3 with an attribution requirement). The licenses of the program and of all its components can be read from the <b>Licenses</b> link in the left panel.</div>` },
    { id: 'cases', h: '2. Cases: first start and management', body: `
@@ -327,7 +438,7 @@ ${fig(IMG.lic, 'Licenses window: components on the left, text on the right.')}` 
 
 /* ================================================================ FRANÇAIS */
 M.fr = {
-  title: 'Manuel d\'utilisation', sub: 'OSInt Graph · exploration graphique de données OSINT pour les dossiers d\'enquête',
+  title: 'Manuel d\'utilisation', sub: 'PolGraph OSINT · exploration graphique de données OSINT pour les dossiers d\'enquête',
   toc: 'Sommaire', shortcuts: 'Raccourcis souris et clavier',
   kbdHead: ['Action', 'Effet'],
   kbd: [
@@ -346,8 +457,8 @@ M.fr = {
     ['Barre de titre d\'une fenêtre', 'Glisser pour déplacer la fenêtre ; double-clic pour la recentrer'],
   ],
   sections: [
-   { id: 'intro', h: '1. Qu\'est-ce qu\'OSInt Graph', body: `
-<p>OSInt Graph représente sous forme de <b>graphe</b> les informations d'un dossier d'enquête : personnes, téléphones, e-mails, profils sociaux, véhicules, lieux, documents et les liaisons entre eux. Chaque élément est un <b>nœud</b>, chaque relation une <b>liaison</b>. Le programme tourne sur votre ordinateur : les données ne quittent jamais le PC, sauf pour le service d'intelligence artificielle facultatif que vous configurez vous-même.</p>
+   { id: 'intro', h: '1. Qu\'est-ce qu\'PolGraph OSINT', body: `
+<p>PolGraph OSINT représente sous forme de <b>graphe</b> les informations d'un dossier d'enquête : personnes, téléphones, e-mails, profils sociaux, véhicules, lieux, documents et les liaisons entre eux. Chaque élément est un <b>nœud</b>, chaque relation une <b>liaison</b>. Le programme tourne sur votre ordinateur : les données ne quittent jamais le PC, sauf pour le service d'intelligence artificielle facultatif que vous configurez vous-même.</p>
 <p>Lancez-le par un double-clic sur l'exécutable (ou, depuis le code source, avec <code>python app.py</code>) : un petit serveur local démarre et le navigateur s'ouvre à l'adresse <code>http://127.0.0.1:5000</code>. La fenêtre de console affiche les messages du programme et sert à l'arrêter (<kbd>Ctrl</kbd>+<kbd>C</kbd> ou fermeture de la fenêtre). Le port se change avec la variable d'environnement <code>PORT</code>.</p>
 <div class="note">Le programme est un logiciel libre (GNU GPL v3 avec obligation d'attribution). Les licences du programme et de tous ses composants se lisent depuis le lien <b>Licences</b> du panneau de gauche.</div>` },
    { id: 'cases', h: '2. Dossiers : premier démarrage et gestion', body: `
@@ -452,7 +563,7 @@ ${fig(IMG.lic, 'Fenêtre des licences : composants à gauche, texte à droite.')
 
 /* ================================================================= DEUTSCH */
 M.de = {
-  title: 'Benutzerhandbuch', sub: 'OSInt Graph · grafische Erkundung von OSINT-Daten für Ermittlungsfälle',
+  title: 'Benutzerhandbuch', sub: 'PolGraph OSINT · grafische Erkundung von OSINT-Daten für Ermittlungsfälle',
   toc: 'Inhalt', shortcuts: 'Maus- und Tastaturkürzel',
   kbdHead: ['Aktion', 'Wirkung'],
   kbd: [
@@ -471,8 +582,8 @@ M.de = {
     ['Titelleiste eines Fensters', 'Ziehen, um das Fenster zu verschieben; Doppelklick zentriert es wieder'],
   ],
   sections: [
-   { id: 'intro', h: '1. Was OSInt Graph ist', body: `
-<p>OSInt Graph stellt die Informationen eines Ermittlungsfalls als <b>Graph</b> dar: Personen, Telefone, E-Mails, Social-Media-Profile, Fahrzeuge, Orte, Dokumente und die Verbindungen zwischen ihnen. Jedes Element ist ein <b>Knoten</b>, jede Beziehung eine <b>Verbindung</b>. Das Programm läuft auf Ihrem Rechner: Die Daten verlassen den PC nie, abgesehen vom optionalen KI-Dienst, den Sie selbst konfigurieren.</p>
+   { id: 'intro', h: '1. Was PolGraph OSINT ist', body: `
+<p>PolGraph OSINT stellt die Informationen eines Ermittlungsfalls als <b>Graph</b> dar: Personen, Telefone, E-Mails, Social-Media-Profile, Fahrzeuge, Orte, Dokumente und die Verbindungen zwischen ihnen. Jedes Element ist ein <b>Knoten</b>, jede Beziehung eine <b>Verbindung</b>. Das Programm läuft auf Ihrem Rechner: Die Daten verlassen den PC nie, abgesehen vom optionalen KI-Dienst, den Sie selbst konfigurieren.</p>
 <p>Gestartet wird es per Doppelklick auf die ausführbare Datei (oder aus dem Quellcode mit <code>python app.py</code>): Ein kleiner lokaler Server startet und der Browser öffnet <code>http://127.0.0.1:5000</code>. Das Konsolenfenster zeigt die Meldungen des Programms und dient zum Beenden (<kbd>Strg</kbd>+<kbd>C</kbd> oder Schließen des Fensters). Der Port lässt sich mit der Umgebungsvariablen <code>PORT</code> ändern.</p>
 <div class="note">Das Programm ist freie Software (GNU GPL v3 mit Namensnennungspflicht). Die Lizenzen des Programms und aller Komponenten sind über den Link <b>Lizenzen</b> im linken Panel einsehbar.</div>` },
    { id: 'cases', h: '2. Fälle: erster Start und Verwaltung', body: `
@@ -577,7 +688,7 @@ ${fig(IMG.lic, 'Lizenzfenster: links die Komponenten, rechts der Text.')}` },
 
 /* ================================================================= ESPAÑOL */
 M.es = {
-  title: 'Manual de uso', sub: 'OSInt Graph · exploración gráfica de datos OSINT para casos de investigación',
+  title: 'Manual de uso', sub: 'PolGraph OSINT · exploración gráfica de datos OSINT para casos de investigación',
   toc: 'Índice', shortcuts: 'Atajos de ratón y teclado',
   kbdHead: ['Acción', 'Efecto'],
   kbd: [
@@ -596,8 +707,8 @@ M.es = {
     ['Barra de título de una ventana', 'Arrástrala para mover la ventana; doble clic para volver a centrarla'],
   ],
   sections: [
-   { id: 'intro', h: '1. Qué es OSInt Graph', body: `
-<p>OSInt Graph representa como <b>grafo</b> la información de un caso de investigación: personas, teléfonos, correos, perfiles sociales, vehículos, lugares, documentos y las conexiones entre ellos. Cada elemento es un <b>nodo</b>, cada relación una <b>conexión</b>. El programa se ejecuta en tu ordenador: los datos nunca salen del PC, salvo por el servicio opcional de inteligencia artificial que configures tú mismo.</p>
+   { id: 'intro', h: '1. Qué es PolGraph OSINT', body: `
+<p>PolGraph OSINT representa como <b>grafo</b> la información de un caso de investigación: personas, teléfonos, correos, perfiles sociales, vehículos, lugares, documentos y las conexiones entre ellos. Cada elemento es un <b>nodo</b>, cada relación una <b>conexión</b>. El programa se ejecuta en tu ordenador: los datos nunca salen del PC, salvo por el servicio opcional de inteligencia artificial que configures tú mismo.</p>
 <p>Se inicia con doble clic en el ejecutable (o, desde el código fuente, con <code>python app.py</code>): arranca un pequeño servidor local y el navegador se abre en <code>http://127.0.0.1:5000</code>. La ventana de consola muestra los mensajes del programa y sirve para detenerlo (<kbd>Ctrl</kbd>+<kbd>C</kbd> o cerrando la ventana). El puerto se cambia con la variable de entorno <code>PORT</code>.</p>
 <div class="note">El programa es software libre (GNU GPL v3 con obligación de atribución). Las licencias del programa y de todos sus componentes se leen desde el enlace <b>Licencias</b> del panel izquierdo.</div>` },
    { id: 'cases', h: '2. Casos: primer inicio y gestión', body: `
@@ -702,7 +813,7 @@ ${fig(IMG.lic, 'Ventana de licencias: a la izquierda los componentes, a la derec
 
 /* ================================================================= العربية */
 M.ar = {
-  title: 'دليل الاستخدام', sub: 'OSInt Graph · استكشاف بياني لبيانات OSINT في القضايا التحقيقية',
+  title: 'دليل الاستخدام', sub: 'PolGraph OSINT · استكشاف بياني لبيانات OSINT في القضايا التحقيقية',
   toc: 'الفهرس', shortcuts: 'اختصارات الفأرة ولوحة المفاتيح',
   kbdHead: ['الإجراء', 'الأثر'],
   kbd: [
@@ -721,8 +832,8 @@ M.ar = {
     ['شريط عنوان النافذة', 'اسحبه لتحريك النافذة؛ نقرة مزدوجة لإعادتها إلى الوسط'],
   ],
   sections: [
-   { id: 'intro', h: '1. ما هو OSInt Graph', body: `
-<p>يمثّل OSInt Graph معلومات القضية التحقيقية على شكل <b>رسم بياني</b>: أشخاص وهواتف وبريد إلكتروني وحسابات اجتماعية ومركبات وأماكن ووثائق والروابط بينها. كل عنصر <b>عقدة</b>، وكل علاقة <b>رابط</b>. يعمل البرنامج على حاسوبك: لا تغادر البيانات الجهاز أبداً، باستثناء خدمة الذكاء الاصطناعي الاختيارية التي تضبطها بنفسك.</p>
+   { id: 'intro', h: '1. ما هو PolGraph OSINT', body: `
+<p>يمثّل PolGraph OSINT معلومات القضية التحقيقية على شكل <b>رسم بياني</b>: أشخاص وهواتف وبريد إلكتروني وحسابات اجتماعية ومركبات وأماكن ووثائق والروابط بينها. كل عنصر <b>عقدة</b>، وكل علاقة <b>رابط</b>. يعمل البرنامج على حاسوبك: لا تغادر البيانات الجهاز أبداً، باستثناء خدمة الذكاء الاصطناعي الاختيارية التي تضبطها بنفسك.</p>
 <p>يُشغَّل بنقرة مزدوجة على الملف التنفيذي (أو من الشيفرة المصدرية بالأمر <code>python app.py</code>): يبدأ خادم محلي صغير ويُفتح المتصفح على <code>http://127.0.0.1:5000</code>. تعرض نافذة الطرفية رسائل البرنامج وتُستخدم لإيقافه (<kbd>Ctrl</kbd>+<kbd>C</kbd> أو إغلاق النافذة). يُغيَّر المنفذ بمتغير البيئة <code>PORT</code>.</p>
 <div class="note">البرنامج برمجية حرة (GNU GPL v3 مع وجوب الإسناد). يمكن قراءة تراخيص البرنامج وكل مكوّناته من رابط <b>التراخيص</b> في اللوحة اليسرى.</div>` },
    { id: 'cases', h: '2. القضايا: التشغيل الأول والإدارة', body: `
@@ -826,7 +937,7 @@ ${fig(IMG.lic, 'نافذة التراخيص: المكوّنات على اليس�
 };
 
 /* ------------------------------------------------------------- rendering -- */
-const LANGS = [['it', 'Italiano'], ['en', 'English'], ['fr', 'Français'], ['de', 'Deutsch'], ['es', 'Español'], ['ar', 'العربية']];
+const LANGS = [['it', 'Italiano'], ['pl', 'Polski'], ['en', 'English'], ['fr', 'Français'], ['de', 'Deutsch'], ['es', 'Español'], ['ar', 'العربية']];
 function pickLang() {
   const q = new URLSearchParams(location.search).get('lang');
   if (q && M[q]) return q;
@@ -838,7 +949,7 @@ function render(lang) {
   const m = M[lang];
   document.documentElement.lang = lang;
   document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-  document.title = `OSInt Graph · ${m.title}`;
+  document.title = `PolGraph OSINT · ${m.title}`;
   document.getElementById('hsub').textContent = m.sub;
   document.getElementById('langs').innerHTML = LANGS.map(([c, n]) =>
     `<button type="button" data-lang="${c}" class="${c === lang ? 'active' : ''}">${n}</button>`).join('');
@@ -846,7 +957,7 @@ function render(lang) {
   const kbd = `<h2 id="shortcuts">${m.shortcuts}</h2><table><tr><th>${m.kbdHead[0]}</th><th>${m.kbdHead[1]}</th></tr>` +
     m.kbd.map(([k, a]) => `<tr><td><kbd>${k}</kbd></td><td>${a}</td></tr>`).join('') + '</table>';
   document.getElementById('main').innerHTML =
-    `<h1>${m.title}</h1><div class="meta">OSInt Graph · Andrea Cumini · <a href="https://www.osintinfo.net" target="_blank" rel="noopener">www.osintinfo.net</a></div>` +
+    `<h1>${m.title}</h1><div class="meta">PolGraph OSINT · based on OSInt Graph by Andrea Cumini · <a href="https://www.osintinfo.net" target="_blank" rel="noopener">www.osintinfo.net</a></div>` +
     `<div class="toc"><b>${m.toc}</b>${toc}</div>` +
     m.sections.map(s => `<h2 id="${s.id}">${s.h}</h2>${s.body}`).join('') + kbd;
   try { localStorage.setItem('manualLang', lang); } catch (_) {}

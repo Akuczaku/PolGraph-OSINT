@@ -1,0 +1,95 @@
+{
+  "name": [
+    "imię",
+    "imie",
+    "imiona",
+    "nazwa",
+    "osoba",
+    "imię i nazwisko",
+    "imie i nazwisko"
+  ],
+  "surname": [
+    "nazwisko",
+    "nazwisko rodowe"
+  ],
+  "birth": [
+    "data urodzenia",
+    "data_urodzenia"
+  ],
+  "phone": [
+    "telefon",
+    "nr telefonu",
+    "numer telefonu",
+    "tel",
+    "komórka",
+    "komorka"
+  ],
+  "email": [
+    "email",
+    "e-mail",
+    "mail",
+    "adres email",
+    "adres e-mail"
+  ],
+  "address": [
+    "adres",
+    "ulica",
+    "adres zamieszkania",
+    "adres pobytu"
+  ],
+  "city": [
+    "miasto",
+    "miejscowość",
+    "miejscowosc"
+  ],
+  "postal": [
+    "kod pocztowy",
+    "kod_pocztowy"
+  ],
+  "plate": [
+    "rejestracja",
+    "nr rejestracyjny",
+    "numer rejestracyjny",
+    "tablica rejestracyjna"
+  ],
+  "vin": [
+    "vin",
+    "nr vin",
+    "numer vin"
+  ],
+  "pesel": [
+    "pesel"
+  ],
+  "nip": [
+    "nip"
+  ],
+  "regon": [
+    "regon"
+  ],
+  "krs": [
+    "krs"
+  ],
+  "iban": [
+    "iban",
+    "rachunek",
+    "konto bankowe",
+    "numer rachunku"
+  ],
+  "url": [
+    "url",
+    "link",
+    "adres www",
+    "strona www"
+  ],
+  "ip": [
+    "ip",
+    "adres ip"
+  ],
+  "username": [
+    "login",
+    "nick",
+    "pseudonim",
+    "nazwa użytkownika",
+    "nazwa uzytkownika"
+  ]
+}

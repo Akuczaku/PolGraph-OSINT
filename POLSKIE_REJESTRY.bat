@@ -1,0 +1,1 @@
+@echo off\nchcp 65001 >nul\ncd /d "%~dp0"\nwhere py >nul 2>nul\nif %errorlevel%==0 (py -3 pl\\polish_registry_helper.py) else (python pl\\polish_registry_helper.py)\npause\n

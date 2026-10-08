@@ -4749,7 +4749,7 @@ if __name__ == "__main__":
         import threading
         import webbrowser
         threading.Timer(1.5, lambda: webbrowser.open(f"http://127.0.0.1:{port}")).start()
-        logging.info(f"OSInt Graph avviato su http://127.0.0.1:{port}")
+        logging.info(f"PolGraph OSINT avviato su http://127.0.0.1:{port}")
         logging.info(f"Dati letti da: {DATA_DIR}")
         if not os.path.isdir(DATA_DIR):
             logging.warning("La cartella 'data' non è accanto all'eseguibile: "
