@@ -1,6 +1,6 @@
 {
   "name": "PolGraph OSINT",
-  "version": "1.3.3-pl.1",
+  "version": "1.3.4",
   "type": "public GitHub fork source package",
   "upstream_project": "OSInt Graph",
   "upstream_author": "Andrea Cumini",
@@ -17,5 +17,23 @@
     "fonti/ excluded by .gitignore",
     "chatbot.conf excluded by .gitignore",
     "database/export formats excluded by .gitignore"
+  ],
+  "default_readme_language": "pl",
+  "english_readme": "README_EN.md",
+  "polish_fork_maintainer": "Arek / Czaku",
+  "manual_pl_chapters": 28,
+  "manual_updated_features": [
+    "Polski OSINT profile",
+    "PESEL/NIP/REGON/KRS/IBAN",
+    "Polish public registers",
+    "My Databases",
+    "Graph JSON",
+    "SQLite helper",
+    "source_db provenance",
+    "privacy and backups",
+    "Windows build",
+    "GitHub fork",
+    "Arek / Czaku maintainer attribution",
+    "analytical workflow"
   ]
 }

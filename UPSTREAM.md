@@ -7,6 +7,10 @@ This fork is based on **OSInt Graph** by Andrea Cumini.
 - Upstream author: Andrea Cumini
 - Base release used by this fork: `1.0.0`
 
+## Fork maintainer
+
+Polish fork development and maintenance: **Arek / Czaku**.
+
 ## Sync policy
 
 When bringing upstream changes into this fork:

@@ -203,7 +203,7 @@ ${fig(IMG.lic, 'Finestra delle licenze: a sinistra i componenti, a destra il tes
 
 /* ================================================================= POLSKI */
 M.pl = {
-  title: 'Instrukcja obsługi', sub: 'PolGraph OSINT · graficzna analiza danych OSINT dla spraw analitycznych i dochodzeniowych',
+  title: 'Instrukcja obsługi', sub: 'PolGraph OSINT 1.3.4 · graficzna analiza danych OSINT dla spraw analitycznych i dochodzeniowych',
   toc: 'Spis treści', shortcuts: 'Skróty myszy i klawiatury',
   kbdHead: ['Czynność', 'Efekt'],
   kbd: [
@@ -304,10 +304,164 @@ ${fig(IMG.lic, 'Okno licencji: lista komponentów i oryginalne teksty licencji.'
 <tr><td><code>pl/</code></td><td>Dodatki polskiego profilu OSINT i narzędzia importu własnych baz.</td></tr>
 <tr><td><code>LICENSE</code>, <code>NOTICE</code>, <code>THIRD-PARTY-NOTICES.md</code></td><td>Oryginalne informacje licencyjne.</td></tr></table>
 <p>Do kopii zapasowej najważniejszy jest folder <code>data</code>; jeżeli korzystasz ze źródeł dokumentowych, zachowaj również <code>fonti</code>.</p>` },
-   { id: 'pladdons', h: '19. Dodatki polskiej wersji', body: `
-<p>Polska odmiana zawiera opcjonalny profil <b>Polski OSINT</b>. Profil jest niezależny od języka interfejsu i można go włączać lub wyłączać bez usuwania danych.</p>
-<ul><li>walidacja i rozpoznawanie PESEL, NIP, REGON, KRS i polskiego IBAN;</li><li>skróty do oficjalnych polskich rejestrów;</li><li>polskie typy danych i relacje;</li><li>panel <b>Moje bazy</b> do importu własnych zbiorów;</li><li>import CSV / JSON / Graph JSON, a dla SQLite pomocniczy konwerter;</li><li>pole <code>source_db</code> pozwalające śledzić pochodzenie danych.</li></ul>
-<p>Funkcje polskiego profilu są dodatkiem do podstawowej aplikacji i nie zmieniają oryginalnych informacji o autorze ani warunków licencji.</p>` },
+   { id: 'pladdons', h: '19. Profil Polski OSINT', body: `
+<p>Profil <b>Polski OSINT</b> jest opcjonalnym rozszerzeniem PolGraph OSINT. Nie jest tym samym co język polski interfejsu. Możesz używać polskiego GUI w trybie Standard albo włączyć Polski OSINT również przy interfejsie angielskim.</p>
+<h3>Włączenie profilu</h3>
+<ol>
+<li>Otwórz ustawienia profilu OSINT.</li>
+<li>Wybierz <b>Polski OSINT</b>.</li>
+<li>Panel dodatkowych narzędzi pojawi się w GUI.</li>
+</ol>
+<p>Wyłączenie profilu jedynie ukrywa dodatkowe funkcje. <b>Nie usuwa danych zapisanych w sprawie.</b> Wybrany profil jest zapamiętywany lokalnie.</p>
+<h3>Co dodaje Polski OSINT</h3>
+<ul>
+<li>rozpoznawanie i walidację PESEL;</li>
+<li>walidację NIP;</li>
+<li>walidację REGON 9- i 14-cyfrowego;</li>
+<li>rozpoznawanie numeru KRS;</li>
+<li>walidację polskiego IBAN;</li>
+<li>polskie typy danych i relacje;</li>
+<li>skróty do oficjalnych rejestrów publicznych;</li>
+<li>narzędzia do pracy z własnymi bazami danych.</li>
+</ul>
+<div class="note">Język interfejsu i profil OSINT są zapisywane niezależnie.</div>` },
+
+{ id: 'plids', h: '20. Polskie identyfikatory: PESEL, NIP, REGON, KRS i IBAN', body: `
+<p>PolGraph OSINT może rozpoznawać najczęściej używane polskie identyfikatory. Funkcja pomaga operatorowi ocenić, z jakim typem danych ma do czynienia, ale <b>nie potwierdza prawdziwości danych ani tożsamości osoby lub podmiotu</b>.</p>
+<table>
+<tr><th>Identyfikator</th><th>Zastosowanie</th><th>Kontrola</th></tr>
+<tr><td>PESEL</td><td>osoba fizyczna</td><td>11 cyfr i suma kontrolna</td></tr>
+<tr><td>NIP</td><td>podatnik / przedsiębiorca</td><td>10 cyfr i suma kontrolna</td></tr>
+<tr><td>REGON</td><td>podmiot gospodarki narodowej</td><td>9 lub 14 cyfr i suma kontrolna</td></tr>
+<tr><td>KRS</td><td>podmiot wpisany do KRS</td><td>format 10 cyfr; dane należy potwierdzić w rejestrze</td></tr>
+<tr><td>IBAN PL</td><td>rachunek bankowy</td><td>PL + 26 cyfr i kontrola modulo 97</td></tr>
+</table>
+<p>Wartość można wpisać ręcznie albo pobrać z zaznaczonego węzła. Po analizie program pokazuje rozpoznany typ.</p>
+<div class="note warn">Walidacja formatu i cyfry kontrolnej nie oznacza, że numer faktycznie istnieje lub należy do konkretnej osoby.</div>` },
+
+{ id: 'plregisters', h: '21. Polskie źródła i rejestry publiczne', body: `
+<p>Profil Polski OSINT zawiera skróty do wybranych <b>oficjalnych</b> źródeł publicznych. Narzędzie otwiera serwis w przeglądarce i nie próbuje omijać CAPTCHA, logowania ani innych zabezpieczeń.</p>
+<table>
+<tr><th>Źródło</th><th>Do czego służy</th></tr>
+<tr><td><b>KRS / Wyszukiwarka KRS</b></td><td>weryfikacja podmiotów wpisanych do Krajowego Rejestru Sądowego</td></tr>
+<tr><td><b>Portal Rejestrów Sądowych (PRS)</b></td><td>dostęp do usług i dokumentów rejestrowych Ministerstwa Sprawiedliwości</td></tr>
+<tr><td><b>CEIDG</b></td><td>informacje o jednoosobowych działalnościach gospodarczych i wspólnikach spółek cywilnych</td></tr>
+<tr><td><b>Wykaz podatników VAT</b></td><td>weryfikacja statusu VAT i danych publikowanych przez Ministerstwo Finansów</td></tr>
+<tr><td><b>REGON / GUS</b></td><td>wyszukiwanie podmiotów w rejestrze REGON</td></tr>
+<tr><td><b>BIP</b></td><td>informacje publikowane przez podmioty zobowiązane do prowadzenia Biuletynu Informacji Publicznej</td></tr>
+</table>
+<p>Przy pracy analitycznej zapisuj w notatce węzła <b>źródło, datę dostępu i zakres informacji</b>. Jeżeli materiał ma znaczenie dowodowe, zachowaj także dokument lub zrzut zgodnie z przyjętą procedurą.</p>
+<div class="note">Skróty do rejestrów mają charakter pomocniczy. Operator odpowiada za zgodne z prawem wykorzystanie danych i ocenę ich aktualności.</div>` },
+
+{ id: 'mydb', h: '22. Moje bazy — własne zbiory danych', body: `
+<p>Panel <b>Moje bazy</b> pozwala budować graf na podstawie własnych zbiorów danych bez ręcznego dodawania każdego elementu.</p>
+<h3>Obsługiwane bezpośrednio formaty</h3>
+<ul>
+<li><b>CSV</b> — dane tabelaryczne;</li>
+<li><b>JSON</b> — tablica obiektów;</li>
+<li><b>Graph JSON</b> — gotowa struktura węzłów i relacji.</li>
+</ul>
+<h3>Typowy przebieg importu</h3>
+<ol>
+<li>Wybierz plik.</li>
+<li>Podaj nazwę źródła, np. <i>Baza członków</i>, <i>Lista pojazdów</i> lub <i>Dane raportu</i>.</li>
+<li>Wybierz preset mapowania, np. <b>Osoba ↔ Firma</b>, <b>Podmiot gospodarczy</b> albo <b>Pojazd</b>.</li>
+<li>Użyj <b>Podgląd</b>, aby sprawdzić pierwsze tworzone elementy.</li>
+<li>Wybierz <b>Importuj do grafu</b>.</li>
+</ol>
+<p>Każdy importowany element może otrzymać pole <code>source_db</code>, dzięki czemu wiadomo, z którego zbioru pochodzi.</p>
+<h3>Przykładowe kolumny</h3>
+<p><code>Imię i nazwisko</code>, <code>Telefon</code>, <code>Email</code>, <code>Firma</code>, <code>NIP</code>, <code>REGON</code>, <code>KRS</code>, <code>Adres</code>, <code>VIN</code>.</p>
+<div class="note">Przed dużym importem wykonaj kopię zapasową sprawy i rozpocznij od niewielkiej próbki danych.</div>` },
+
+{ id: 'graphjson', h: '23. Graph JSON, SQLite i śledzenie pochodzenia danych', body: `
+<h3>Graph JSON</h3>
+<p>Format Graph JSON zawiera dwie główne listy: <code>nodes</code> i <code>edges</code>. Pozwala przenosić przygotowane węzły i relacje między narzędziami lub przygotować import poza GUI.</p>
+<h3>SQLite</h3>
+<p>Dla baz SQLite dostępny jest pomocniczy skrypt <code>pl/my_databases_importer.py</code> oraz <code>IMPORT_MY_DATABASE.bat</code>. Operator wskazuje bazę i zapytanie <code>SELECT</code>, a wynik jest przekształcany do Graph JSON.</p>
+<p>Przykład:</p>
+<pre>python pl/my_databases_importer.py moja.db ^
+  --sqlite-query "SELECT full_name AS label, phone AS telefon, company AS firma, nip FROM contacts" ^
+  --source-name "Kontakty" ^
+  --output kontakty.graph.json</pre>
+<h3>source_db</h3>
+<p>Pole <code>source_db</code> identyfikuje źródło pochodzenia węzła lub relacji. Używaj nazw jednoznacznych i stabilnych, np. <i>Raport_2026_10</i>, <i>CEIDG_weryfikacja</i> albo <i>Baza_wewnetrzna_A</i>.</p>
+<h3>Deduplikacja</h3>
+<p>Importer stara się nie tworzyć wielokrotnie elementów o tym samym identyfikatorze. Deduplikacja nie zastępuje jednak kontroli analityka — różne osoby mogą mieć podobne nazwy, a ten sam podmiot może być zapisany w kilku wariantach.</p>` },
+
+{ id: 'plrelations', h: '24. Polskie typy węzłów i relacje', body: `
+<p>Polski profil dodaje słownik typowych relacji wykorzystywanych w analizie. Można je traktować jako propozycje — użytkownik nadal może tworzyć własne nazwy relacji.</p>
+<h3>Przykłady</h3>
+<ul>
+<li><b>mieszka pod adresem</b>, <b>przebywa pod adresem</b>;</li>
+<li><b>jest właścicielem</b>, <b>jest współwłaścicielem</b>, <b>jest użytkownikiem</b>;</li>
+<li><b>jest członkiem zarządu</b>, <b>jest wspólnikiem</b>, <b>reprezentuje</b>;</li>
+<li><b>pracuje w</b>, <b>prowadzi działalność</b>;</li>
+<li><b>korzysta z telefonu</b>, <b>korzysta z adresu e-mail</b>;</li>
+<li><b>posiada pojazd</b>, <b>użytkuje pojazd</b>;</li>
+<li><b>występuje w dokumencie</b>, <b>jest nadawcą</b>, <b>jest odbiorcą</b>.</li>
+</ul>
+<p>Relacja powinna opisywać <b>fakt lub hipotezę w sposób możliwie precyzyjny</b>. Jeżeli związek nie jest potwierdzony, zaznacz to w notatce lub nazwie relacji.</p>` },
+
+{ id: 'privacypl', h: '25. Prywatność, bezpieczeństwo i kopie zapasowe', body: `
+<p>PolGraph OSINT jest przeznaczony do pracy lokalnej, ale użytkownik nadal musi chronić dane spraw.</p>
+<h3>Nie publikuj</h3>
+<ul>
+<li>folderu <code>data/</code>;</li>
+<li>folderu <code>fonti/</code>;</li>
+<li>pliku <code>chatbot.conf</code> zawierającego klucze;</li>
+<li>baz <code>.db</code>, <code>.sqlite</code>, <code>.sqlite3</code>;</li>
+<li>eksportów zawierających rzeczywiste dane;</li>
+<li>materiałów źródłowych i danych osobowych.</li>
+</ul>
+<h3>Kopie zapasowe</h3>
+<p>Regularnie kopiuj folder <code>data/</code>. Jeżeli wykorzystujesz źródła dokumentowe, zabezpiecz także <code>fonti/</code>. Kopia powinna być chroniona zgodnie z wrażliwością danych.</p>
+<h3>AI</h3>
+<p>Jeżeli korzystasz z zewnętrznego AI, informacje wysyłane do modelu mogą opuścić komputer. Do materiałów wrażliwych preferuj model lokalny lub zaufaną infrastrukturę.</p>
+<div class="note warn">Nigdy nie umieszczaj prawdziwych danych spraw w publicznym repozytorium GitHub ani w zgłoszeniach Issues.</div>` },
+
+{ id: 'buildpl', h: '26. Uruchamianie i budowa Windows', body: `
+<p>Wersję źródłową można uruchomić przez <code>URUCHOM_PL.bat</code> albo poleceniem <code>python app.py</code>.</p>
+<h3>Budowa EXE</h3>
+<p>Do budowy użyj <code>BUILD_WINDOWS_PL.bat</code> albo:</p>
+<pre>python -m pip install -r requirements.txt -r requirements-build.txt
+python build_app.py --noconsole</pre>
+<p>Domyślna nazwa pliku wykonywalnego forka to <code>PolGraphOSINT.exe</code>.</p>
+<p>Repozytorium zawiera także workflow GitHub Actions <b>Build Windows</b>, który może przygotować artefakt Windows po ręcznym uruchomieniu.</p>` },
+
+{ id: 'forkpl', h: '27. Fork, GitHub i autor polskiej wersji', body: `
+<p><b>PolGraph OSINT</b> jest niezależnym zmodyfikowanym forkiem projektu <b>OSInt Graph</b> autorstwa Andrea Cumini.</p>
+<h3>Autor i opiekun polskiej wersji</h3>
+<p>Polska lokalizacja, rozszerzenia Polski OSINT oraz rozwój forka są prowadzone przez:</p>
+<p><b>Arek / Czaku</b></p>
+<h3>Projekt bazowy</h3>
+<p><b>OSInt Graph by Andrea Cumini</b><br>
+Repozytorium bazowe: <code>https://github.com/tingon11/OsintGraph</code></p>
+<p>Oryginalne pliki <code>LICENSE</code>, <code>NOTICE</code> i <code>THIRD-PARTY-NOTICES.md</code> pozostają zachowane. Publiczny zmodyfikowany fork używa odrębnej nazwy i logo.</p>
+<h3>Dokumenty repozytorium</h3>
+<ul>
+<li><code>README.md</code> — główny opis po polsku;</li>
+<li><code>README_EN.md</code> — opis po angielsku;</li>
+<li><code>FORK-NOTICE.md</code> — informacja o pochodzeniu i zmianach;</li>
+<li><code>UPSTREAM.md</code> — informacje o synchronizacji z projektem bazowym;</li>
+<li><code>CHANGELOG.md</code> — historia zmian;</li>
+<li><code>SECURITY.md</code> — zasady bezpieczeństwa.</li>
+</ul>` },
+
+{ id: 'workflowpl', h: '28. Zalecany workflow analityczny', body: `
+<ol>
+<li><b>Utwórz sprawę</b> i nadaj jej jednoznaczną nazwę.</li>
+<li><b>Wykonaj kopię bazową</b>, jeśli pracujesz na istniejących danych.</li>
+<li><b>Dodaj lub zaimportuj źródła</b> i zapisuj ich pochodzenie.</li>
+<li><b>Importuj własne bazy</b> małymi partiami, sprawdzając deduplikację.</li>
+<li><b>Buduj relacje</b> i odróżniaj fakty potwierdzone od hipotez.</li>
+<li><b>Weryfikuj polskie identyfikatory</b> w oficjalnych rejestrach.</li>
+<li><b>Używaj zapisanych widoków</b> do rozdzielania wątków analizy.</li>
+<li><b>Eksportuj raport</b> dopiero po ręcznej kontroli grafu.</li>
+<li><b>Zapisz źródła i daty dostępu</b> w notatkach lub polach węzłów.</li>
+<li><b>Zabezpiecz kopię sprawy</b> po zakończeniu istotnego etapu pracy.</li>
+</ol>
+<div class="note">Graf jest narzędziem wspierającym analizę. Ostateczne wnioski powinny wynikać z jakości i wiarygodności źródeł, a nie wyłącznie z wyglądu połączeń na ekranie.</div>` },
   ]
 };
 

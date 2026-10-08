@@ -1,106 +1,159 @@
+**🇵🇱 Polski** | [🇬🇧 English](README_EN.md)
+
 <p align="center">
   <img src="static/logo.svg" alt="PolGraph OSINT" width="520">
 </p>
 
 # PolGraph OSINT
 
-**PolGraph OSINT** is an independent modified fork of
-[OSInt Graph](https://github.com/tingon11/OsintGraph) by **Andrea Cumini**.
+**PolGraph OSINT** to niezależna, zmodyfikowana polska wersja projektu
+[OSInt Graph](https://github.com/tingon11/OsintGraph) autorstwa **Andrea Cumini**.
 
-The fork keeps the original graph-analysis workflow and adds a complete Polish
-localization, a Polish user manual and optional Polish OSINT helpers while
-keeping language selection independent from the `Standard / Polski OSINT`
-profile.
+Projekt zachowuje podstawowy model analizy grafowej oryginału, a jednocześnie dodaje
+pełną polską lokalizację, polski manual, opcjonalny profil **Polski OSINT**
+oraz narzędzia do pracy z własnymi bazami danych.
 
-> **Upstream attribution:** OSInt Graph — Copyright (C) 2025-2026 Andrea Cumini  
+
+> **Polska wersja i rozwój forka: Arek / Czaku**
+
+> **Projekt bazowy:** OSInt Graph — Copyright (C) 2025-2026 Andrea Cumini  
 > andrea@osintinfo.net · https://www.osintinfo.net
 
-## What this fork adds
+## Najważniejsze funkcje
 
-- complete Polish (`pl`) UI localization;
-- Polish built-in manual and Polish documentation;
-- optional **Polski OSINT** profile, independent from the UI language;
-- PESEL, NIP, REGON and Polish IBAN validation helpers;
-- Polish public-register shortcuts;
-- **Moje bazy** panel for importing your own data;
-- CSV / JSON / Graph JSON support in the GUI;
-- SQLite → Graph JSON helper;
-- source tracking through `source_db`;
-- Polish CSV examples and AI configuration example;
-- a **new name and new logo**, as required by the upstream `NOTICE`.
+- pełny polski interfejs użytkownika;
+- wbudowany polski manual;
+- niezależny wybór języka interfejsu;
+- niezależny profil **Standard / Polski OSINT**;
+- walidacja PESEL, NIP, REGON, KRS i polskiego IBAN;
+- skróty do oficjalnych polskich rejestrów publicznych;
+- panel **Moje bazy**;
+- import CSV, JSON i Graph JSON;
+- pomocnicza obsługa SQLite;
+- zapisywanie źródła danych przez `source_db`;
+- polskie przykłady danych i konfiguracji AI;
+- możliwość budowy wersji Windows.
 
-## Privacy
+## Profil Polski OSINT
 
-Cases and imported investigative data are local. **Do not commit case databases,
-documents, API keys or exported datasets to GitHub.** The repository `.gitignore`
-excludes `data/`, `fonti/`, `chatbot.conf`, SQLite databases, Graph JSON exports
-and common secret/config files.
+Profil **Polski OSINT** jest opcjonalny i działa niezależnie od języka interfejsu.
 
-## Quick start
+Możesz używać:
+- polskiego interfejsu + profilu Standard,
+- polskiego interfejsu + Polski OSINT,
+- angielskiego interfejsu + Polski OSINT.
 
-Python 3.10+:
+Wyłączenie profilu nie usuwa danych ze sprawy.
+
+## Moje bazy
+
+Moduł **Moje bazy** pozwala importować własne zbiory danych i tworzyć z nich węzły oraz relacje.
+
+Obsługiwane dane mogą obejmować m.in. osoby, firmy, telefony, e-maile, adresy,
+NIP, REGON, KRS, VIN, pojazdy i własne relacje.
+
+Każdy zaimportowany element może zachować informację o źródle przez `source_db`.
+
+
+## Autor polskiej wersji
+
+Polska wersja, lokalizacja oraz rozszerzenia **PolGraph OSINT**
+zostały przygotowane i są rozwijane przez:
+
+**Arek / Czaku**
+
+Zakres prac obejmuje m.in.:
+
+- pełną polską lokalizację interfejsu,
+- polski manual i dokumentację,
+- profil Polski OSINT,
+- obsługę polskich identyfikatorów i rejestrów,
+- moduł **Moje bazy**,
+- import własnych danych,
+- dostosowanie aplikacji do polskich zastosowań OSINT,
+- rozwój i utrzymanie forka PolGraph OSINT.
+
+Projekt bazowy: **OSInt Graph by Andrea Cumini**.
+
+## Prywatność
+
+**Nie publikuj w repozytorium:**
+- `data/`,
+- `fonti/`,
+- `chatbot.conf`,
+- plików `.db`, `.sqlite`, `.sqlite3`,
+- eksportów `*.graph.json`,
+- dokumentów źródłowych,
+- kluczy API,
+- danych osobowych.
+
+Repozytorium zawiera reguły `.gitignore`, które pomagają ograniczyć ryzyko przypadkowego
+wysłania takich danych.
+
+## Szybkie uruchomienie
+
+Wymagany Python 3.10+.
 
 ```bash
 python -m pip install -r requirements.txt
 python app.py
 ```
 
-The application starts locally on `http://127.0.0.1:5000`.
+Aplikacja uruchamia się lokalnie pod adresem:
 
-### Windows
+```text
+http://127.0.0.1:5000
+```
 
-Convenience scripts are included:
+## Windows
 
-- `URUCHOM_PL.bat` — run from source;
-- `BUILD_WINDOWS_PL.bat` — build the Windows executable;
-- `IMPORT_MY_DATABASE.bat` — convert/import your own datasets;
-- `POLSKIE_REJESTRY.bat` — Polish register helper.
+W repozytorium znajdują się:
+- `URUCHOM_PL.bat` — uruchomienie ze źródeł;
+- `BUILD_WINDOWS_PL.bat` — budowa EXE;
+- `IMPORT_MY_DATABASE.bat` — import własnych danych;
+- `POLSKIE_REJESTRY.bat` — pomocnik polskich rejestrów.
 
-Manual build:
+Ręczna budowa EXE:
 
 ```bash
 python -m pip install -r requirements.txt -r requirements-build.txt
 python build_app.py --noconsole
 ```
 
-Default executable name: `PolGraphOSINT.exe`.
+Domyślna nazwa programu:
 
-## Repository structure
+```text
+PolGraphOSINT.exe
+```
 
-| Path | Purpose |
-|---|---|
-| `app.py` | Flask application / API |
-| `store.py` | local SQLite case storage |
-| `sources.py` | document extraction and OCR |
-| `ontology.py`, `ontology_i18n.py` | graph ontology |
-| `templates/`, `static/` | browser GUI |
-| `static/manual/` | built-in multilingual manual |
-| `pl/` | Polish OSINT profile and import helpers |
-| `esempi/` | safe example imports |
-| `.github/workflows/` | CI and Windows build workflow |
+## Projekt bazowy i licencja
 
-## Upstream and modifications
+PolGraph OSINT bazuje na projekcie **OSInt Graph** autorstwa **Andrea Cumini**.
 
-See [FORK-NOTICE.md](FORK-NOTICE.md) and [UPSTREAM.md](UPSTREAM.md).
+Repozytorium bazowe:  
+https://github.com/tingon11/OsintGraph
 
-This repository intentionally keeps the original upstream legal files
-**unchanged**:
+Szczegóły:
+- [FORK-NOTICE.md](FORK-NOTICE.md)
+- [UPSTREAM.md](UPSTREAM.md)
 
+Oryginalne pliki prawne pozostają zachowane bez zmian:
 - [LICENSE](LICENSE)
 - [NOTICE](NOTICE)
 - [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)
 
-The upstream `NOTICE` requires modified public distributions to use a different
-name and logo. This fork therefore uses the name **PolGraph OSINT** and independent
-artwork.
+## Dokumentacja
 
-## Security / responsible use
+- [English README](README_EN.md)
+- [Instrukcja publikacji na GitHub](GITHUB_PUBLISH_PL.md)
+- [Historia zmian](CHANGELOG.md)
+- [Informacja o forku](FORK-NOTICE.md)
+- [Informacja o projekcie bazowym](UPSTREAM.md)
 
-Do not post real personal data, case databases, source documents, credentials or
-API keys in GitHub Issues. See [SECURITY.md](SECURITY.md).
+## Wersja
 
-## Version
+`1.3.4`
 
-`1.3.3-pl.1`
+---
 
-See [CHANGELOG.md](CHANGELOG.md).
+**PolGraph OSINT — polska wersja narzędzia do analizy grafowej OSINT.**

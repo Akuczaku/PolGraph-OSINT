@@ -33,6 +33,15 @@ itself as the original OSInt Graph application and uses the independent name
 
 The original author attribution is preserved as required.
 
+
+## Polish fork maintainer
+
+The Polish localization, Polish OSINT additions and ongoing maintenance of this
+fork are carried out by **Arek / Czaku**.
+
+This does not alter the attribution of the upstream project, which remains
+**OSInt Graph by Andrea Cumini**.
+
 ## License
 
 All modifications are distributed under the same GPL-3.0-or-later terms together

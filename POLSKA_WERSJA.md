@@ -9,3 +9,10 @@ W 1.3.2 dodano polskie odpowiedniki dla rozszerzeń: Sprawy, AI, konfiguracja AI
 Usunięto warstwę `pl_runtime_full_fix.js`, ponieważ nie jest już potrzebna.
 
 Projekt bazowy i jego licencja pozostają bez zmian.
+
+
+## Autor polskiej wersji
+
+Polska wersja i rozszerzenia forka są rozwijane przez **Arek / Czaku**.
+
+Projekt bazowy: **OSInt Graph by Andrea Cumini**.

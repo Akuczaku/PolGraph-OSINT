@@ -1,40 +1,61 @@
-# Dodatki polskiej wersji
+# PolGraph OSINT — dodatki polskiej wersji
 
 ## Polski OSINT
+Profil Polski OSINT jest opcjonalny i niezależny od języka GUI.
 
-Profil można włączać niezależnie od języka aplikacji. Włączenie profilu odsłania polskie funkcje i skróty, a jego wyłączenie nie usuwa danych ze sprawy.
-
-### Obsługiwane identyfikatory
-
+Dodaje:
 - PESEL,
 - NIP,
-- REGON 9 i 14 cyfr,
+- REGON,
 - KRS,
-- polski IBAN.
+- IBAN PL,
+- polskie typy danych i relacje,
+- skróty do oficjalnych rejestrów.
 
-### Oficjalne źródła
-
-Profil zawiera skróty do oficjalnych serwisów publicznych, m.in. KRS/PRS, CEIDG, wykazu podatników VAT, REGON/GUS i BIP. Aplikacja nie omija CAPTCHA, logowania ani innych zabezpieczeń.
+## Polskie źródła publiczne
+- KRS / Wyszukiwarka KRS,
+- Portal Rejestrów Sądowych,
+- CEIDG,
+- Wykaz podatników VAT,
+- REGON / GUS,
+- BIP.
 
 ## Moje bazy
-
-Panel umożliwia dodawanie własnych danych do grafu.
-
-Obsługa w GUI:
+Obsługiwane w GUI:
 - CSV,
 - JSON,
 - Graph JSON.
 
-SQLite można przekształcić do Graph JSON przez `pl/my_databases_importer.py` lub `IMPORT_MY_DATABASE.bat`.
+SQLite może być konwertowane przez:
+- `pl/my_databases_importer.py`,
+- `IMPORT_MY_DATABASE.bat`.
 
-### Pochodzenie danych
+Pole `source_db` służy do zapisywania pochodzenia danych.
 
-Importowane węzły i relacje otrzymują pole `source_db`, dzięki któremu można ustalić, z której bazy pochodzi element.
+## Import i deduplikacja
+Importowane zbiory powinny mieć stabilne identyfikatory. Deduplikacja pomaga ograniczyć powtórzenia,
+ale wymaga kontroli analityka.
 
-### Deduplikacja
+## Bezpieczeństwo
+Nie publikuj:
+- `data/`,
+- `fonti/`,
+- `chatbot.conf`,
+- baz SQLite,
+- danych osobowych,
+- materiałów spraw,
+- kluczy API.
 
-Importer próbuje zapobiegać wielokrotnemu dodawaniu elementów o tym samym identyfikatorze. Przed dużym importem warto wykonać kopię folderu `data/`.
+## Windows
+- `URUCHOM_PL.bat`
+- `BUILD_WINDOWS_PL.bat`
+- `PolGraphOSINT.exe`
 
-## Ikona 3D
+## Autor polskiej wersji
+Polska lokalizacja, rozszerzenia Polski OSINT i rozwój forka:
 
-Folder `branding/` zawiera opis i miejsce na własną ikonę 3D. Własny plik `icon_3d.ico` można wykorzystać w buildzie Windows jako ikonę EXE, okna i skrótu.
+**Arek / Czaku**
+
+Projekt bazowy:
+
+**OSInt Graph by Andrea Cumini**
